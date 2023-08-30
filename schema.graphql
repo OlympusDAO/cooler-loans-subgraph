@@ -69,3 +69,57 @@ type RollLoan @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
+# Mirrors the Request struct in Cooler.sol
+type CoolerRequest @entity(immutable: true) {
+  id: Bytes! # cooler-createdBlock-reqID
+  createdBlock: BigInt!
+  createdTimestamp: BigInt!
+  createdTransaction: Bytes!
+  cooler: Bytes! # address
+  reqID: BigInt! # uint256
+  borrower: Bytes! # address
+  amount: BigDecimal!
+  interest: BigDecimal!
+  loanToCollateralRatio: BigDecimal!
+  duration: BigInt!
+  active: Boolean!
+  type: String! # New or Rollover
+  collateralToken: Bytes! # address
+  debtToken: Bytes! # address
+}
+
+# Mirrors the Loan struct in Cooler.sol
+type CoolerLoan @entity(immutable: true) {
+  id: Bytes! # cooler-createdBlock-loanID
+  createdBlock: BigInt!
+  createdTimestamp: BigInt!
+  createdTransaction: Bytes!
+  cooler: Bytes! # address
+  loanID: BigInt! # uint256
+  borrower: Bytes! # address
+  amount: BigDecimal!
+  unclaimed: BigDecimal!
+  collateral: BigDecimal!
+  expiry: BigInt!
+  lender: Bytes! # address
+  repayDirect: Boolean!
+  hasCallback: Boolean!
+  collateralToken: Bytes! # address
+  debtToken: Bytes! # address
+}
+
+type CoolerLoanSnapshot @entity(immutable: true) {
+  id: Bytes! # cooler-loanID-blockNumber
+  cooler: Bytes! # address
+  loanID: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  status: String! # Active, Repaid, Defaulted
+  expiry: BigInt!
+  amount: BigDecimal!
+  payable: BigDecimal!
+  collateral: BigDecimal!
+  collateralToken: Bytes! # address
+  debtToken: Bytes! # address
+}

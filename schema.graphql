@@ -63,7 +63,7 @@ type CoolerLoan @entity(immutable: true) {
 }
 
 type CoolerLoanSnapshot @entity(immutable: true) {
-  id: Bytes! # cooler-loanID-blockNumber
+  id: Bytes! # CoolerLoanID-blockNumber
   cooler: Bytes! # address
   loanID: BigInt! # uint256
   blockNumber: BigInt!

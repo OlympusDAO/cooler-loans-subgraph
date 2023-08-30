@@ -25,3 +25,38 @@ dataSources:
         - event: Reactivated()
           handler: handleReactivated
       file: ./src/clearinghouse.ts
+  - kind: ethereum
+    name: CoolerFactory
+    network: goerli
+    source:
+      address: "0x7279c46abda211a7c87b3b27845275cc0ee029ce"
+      abi: CoolerFactory
+      startBlock: 9533843
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ClearRequest
+        - DefaultLoan
+        - RepayLoan
+        - RequestLoan
+        - RescindRequest
+        - RollLoan
+      abis:
+        - name: CoolerFactory
+          file: ./abis/CoolerFactory.json
+      eventHandlers:
+        - event: ClearRequest(address,uint256)
+          handler: handleClearRequest
+        - event: DefaultLoan(address,uint256)
+          handler: handleDefaultLoan
+        - event: RepayLoan(address,uint256,uint256)
+          handler: handleRepayLoan
+        - event: RequestLoan(address,address,address,uint256)
+          handler: handleRequestLoan
+        - event: RescindRequest(address,uint256)
+          handler: handleRescindRequest
+        - event: RollLoan(address,uint256)
+          handler: handleRollLoan
+      file: ./src/cooler-factory.ts

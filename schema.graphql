@@ -13,3 +13,59 @@ type Reactivated @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+type ClearRequest @entity(immutable: true) {
+  id: Bytes!
+  cooler: Bytes! # address
+  reqID: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DefaultLoan @entity(immutable: true) {
+  id: Bytes!
+  cooler: Bytes! # address
+  loanID: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RepayLoan @entity(immutable: true) {
+  id: Bytes!
+  cooler: Bytes! # address
+  loanID: BigInt! # uint256
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RequestLoan @entity(immutable: true) {
+  id: Bytes!
+  cooler: Bytes! # address
+  collateral: Bytes! # address
+  debt: Bytes! # address
+  reqID: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RescindRequest @entity(immutable: true) {
+  id: Bytes!
+  cooler: Bytes! # address
+  reqID: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RollLoan @entity(immutable: true) {
+  id: Bytes!
+  cooler: Bytes! # address
+  loanID: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

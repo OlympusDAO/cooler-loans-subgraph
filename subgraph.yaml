@@ -1,0 +1,27 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Clearinghouse
+    network: goerli
+    source:
+      address: "0xA1081f6630EAD894E83BBC7eAB4C02C41b3fbc74"
+      abi: Clearinghouse
+      startBlock: 9571742
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Deactivated
+        - Reactivated
+      abis:
+        - name: Clearinghouse
+          file: ./abis/Clearinghouse.json
+      eventHandlers:
+        - event: Deactivated()
+          handler: handleDeactivated
+        - event: Reactivated()
+          handler: handleReactivated
+      file: ./src/clearinghouse.ts

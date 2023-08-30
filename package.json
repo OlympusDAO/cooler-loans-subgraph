@@ -4,12 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ cooler-subgraph",
+    "create-local": "graph create --node http://localhost:8020/ cooler-subgraph",
+    "remove-local": "graph remove --node http://localhost:8020/ cooler-subgraph",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cooler-subgraph",
+    "test": "graph test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.56.0",
+    "@graphprotocol/graph-ts": "0.30.0"
+  },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "^0.56.0"
+    "matchstick-as": "0.5.0"
   }
 }

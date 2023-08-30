@@ -13,14 +13,6 @@ type Reactivated @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
-type ClearRequest @entity(immutable: true) {
-  id: Bytes!
-  cooler: Bytes! # address
-  reqID: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
 
 type DefaultLoan @entity(immutable: true) {
   id: Bytes!
@@ -41,26 +33,6 @@ type RepayLoan @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type RequestLoan @entity(immutable: true) {
-  id: Bytes!
-  cooler: Bytes! # address
-  collateral: Bytes! # address
-  debt: Bytes! # address
-  reqID: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RescindRequest @entity(immutable: true) {
-  id: Bytes!
-  cooler: Bytes! # address
-  reqID: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 type RollLoan @entity(immutable: true) {
   id: Bytes!
   cooler: Bytes! # address
@@ -68,25 +40,6 @@ type RollLoan @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-}
-
-# Mirrors the Request struct in Cooler.sol
-type CoolerRequest @entity(immutable: true) {
-  id: Bytes! # cooler-createdBlock-reqID
-  createdBlock: BigInt!
-  createdTimestamp: BigInt!
-  createdTransaction: Bytes!
-  cooler: Bytes! # address
-  reqID: BigInt! # uint256
-  borrower: Bytes! # address
-  amount: BigDecimal!
-  interest: BigDecimal!
-  loanToCollateralRatio: BigDecimal!
-  duration: BigInt!
-  active: Boolean!
-  type: String! # New or Rollover
-  collateralToken: Bytes! # address
-  debtToken: Bytes! # address
 }
 
 # Mirrors the Loan struct in Cooler.sol

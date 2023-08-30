@@ -37,26 +37,17 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ClearRequest
         - DefaultLoan
         - RepayLoan
-        - RequestLoan
-        - RescindRequest
         - RollLoan
       abis:
         - name: CoolerFactory
           file: ./abis/CoolerFactory.json
       eventHandlers:
-        - event: ClearRequest(address,uint256)
-          handler: handleClearRequest
         - event: DefaultLoan(address,uint256)
           handler: handleDefaultLoan
         - event: RepayLoan(address,uint256,uint256)
           handler: handleRepayLoan
-        - event: RequestLoan(address,address,address,uint256)
-          handler: handleRequestLoan
-        - event: RescindRequest(address,uint256)
-          handler: handleRescindRequest
         - event: RollLoan(address,uint256)
           handler: handleRollLoan
       file: ./src/cooler-factory.ts

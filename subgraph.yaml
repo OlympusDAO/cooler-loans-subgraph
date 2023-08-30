@@ -40,10 +40,13 @@ dataSources:
         - DefaultLoan
         - RepayLoan
         - RollLoan
+        - ClearRequest
       abis:
         - name: CoolerFactory
           file: ./abis/CoolerFactory.json
       eventHandlers:
+        - event: ClearRequest(address,uint256)
+          handler: handleClearRequest
         - event: DefaultLoan(address,uint256)
           handler: handleDefaultLoan
         - event: RepayLoan(address,uint256,uint256)

@@ -1,4 +1,5 @@
 import {
+  ClearRequest as ClearRequestEvent,
   DefaultLoan as DefaultLoanEvent,
   RepayLoan as RepayLoanEvent,
   RollLoan as RollLoanEvent
@@ -8,6 +9,22 @@ import {
   RepayLoan,
   RollLoan
 } from "../generated/schema"
+
+// ======================= Handle loan requests ======================= //
+
+export function handleClearRequest(event: ClearRequestEvent): void {
+  // let entity = new ClearRequest(
+  //   event.transaction.hash.concatI32(event.logIndex.toI32())
+  // )
+  // entity.cooler = event.params.cooler
+  // entity.reqID = event.params.reqID
+
+  // entity.blockNumber = event.block.number
+  // entity.blockTimestamp = event.block.timestamp
+  // entity.transactionHash = event.transaction.hash
+
+  // entity.save()
+}
 
 // ======================= Handle loan actions ======================= //
 

@@ -44,6 +44,10 @@ dataSources:
       abis:
         - name: CoolerFactory
           file: ./abis/CoolerFactory.json
+        - name: Cooler
+          file: ./abis/Cooler.json
+        - name: Clearinghouse
+          file: ./abis/Clearinghouse.json
       eventHandlers:
         - event: ClearRequest(address,uint256)
           handler: handleClearRequest

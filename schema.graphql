@@ -44,7 +44,7 @@ type RollLoan @entity(immutable: true) {
 
 # Mirrors the Loan struct in Cooler.sol
 type CoolerLoan @entity(immutable: true) {
-  id: Bytes! # cooler-createdBlock-loanID
+  id: String! # cooler-loanID
   createdBlock: BigInt!
   createdTimestamp: BigInt!
   createdTransaction: Bytes!
@@ -63,7 +63,7 @@ type CoolerLoan @entity(immutable: true) {
 }
 
 type CoolerLoanSnapshot @entity(immutable: true) {
-  id: Bytes! # CoolerLoanID-blockNumber
+  id: String! # CoolerLoanID-blockNumber
   cooler: Bytes! # address
   loanID: BigInt! # uint256
   blockNumber: BigInt!
@@ -75,4 +75,5 @@ type CoolerLoanSnapshot @entity(immutable: true) {
   collateral: BigDecimal!
   collateralToken: Bytes! # address
   debtToken: Bytes! # address
+  # Time to expiry?
 }

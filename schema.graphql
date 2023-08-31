@@ -1,79 +1,42 @@
-type Deactivated @entity(immutable: true) {
-  id: Bytes!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Reactivated @entity(immutable: true) {
-  id: Bytes!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type DefaultLoan @entity(immutable: true) {
-  id: Bytes!
-  cooler: Bytes! # address
-  loanID: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RepayLoan @entity(immutable: true) {
-  id: Bytes!
-  cooler: Bytes! # address
-  loanID: BigInt! # uint256
-  amount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RollLoan @entity(immutable: true) {
-  id: Bytes!
-  cooler: Bytes! # address
-  loanID: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 # Mirrors the Loan struct in Cooler.sol
 type CoolerLoan @entity(immutable: true) {
   id: String! # cooler-loanID
+  snapshots: [CoolerLoanSnapshot!]! @derivedFrom(field: "loan")
   createdBlock: BigInt!
   createdTimestamp: BigInt!
   createdTransaction: Bytes!
   cooler: Bytes! # address
   loanID: BigInt! # uint256
   borrower: Bytes! # address
-  amount: BigDecimal!
+  lender: Bytes! # address
+  amount: BigDecimal! # Total amount of debt, including interest
+  interest: BigDecimal!
+  principal: BigDecimal!
   unclaimed: BigDecimal!
   collateral: BigDecimal!
-  expiry: BigInt!
-  lender: Bytes! # address
+  expiryTimestamp: BigInt!
   repayDirect: Boolean!
   hasCallback: Boolean!
   collateralToken: Bytes! # address
   debtToken: Bytes! # address
 }
 
+enum LoanStatus {
+  Active
+  Defaulted
+  Repaid
+}
+
 type CoolerLoanSnapshot @entity(immutable: true) {
   id: String! # CoolerLoanID-blockNumber
-  cooler: Bytes! # address
-  loanID: BigInt! # uint256
+  loan: CoolerLoan!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  status: String! # Active, Repaid, Defaulted
-  expiry: BigInt!
-  amount: BigDecimal!
-  payable: BigDecimal!
-  collateral: BigDecimal!
-  collateralToken: Bytes! # address
-  debtToken: Bytes! # address
-  # Time to expiry?
+  transaction: Bytes!
+  status: LoanStatus!
+  secondsToExpiry: BigInt!
+  loanPayable: BigDecimal!
+  collateralDeposited: BigDecimal!
+  repaidUnclaimed: BigDecimal!
+  income: BigDecimal! # Non-cumulative income earned at the time of the snapshot
 }

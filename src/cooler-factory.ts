@@ -13,6 +13,7 @@ import {
   ClearLoanRequestEvent,
   RepayLoanEvent,
   CoolerLoan,
+  RollLoanEvent,
 } from "../generated/schema"
 import { oracles } from "@protofire/subgraph-devkit";
 
@@ -191,11 +192,29 @@ export function handleRepayLoan(event: RepayLoan): void {
 }
 
 export function handleRollLoan(event: RollLoan): void {
-  // TODO handle rollover
+  // Access the Cooler
+  const cooler: Cooler = Cooler.bind(event.params.cooler);
 
-  // Create new CoolerLoan
+  // Get the loan information
+  const loanId: BigInt = event.params.loanID;
+  const loanData = cooler.getLoan(loanId);
+  const loanRecord: CoolerLoan | null = getLoanRecord(cooler._address, loanId);
+  if (loanRecord == null) {
+    throw new Error("Loan not found with record id: " + getLoanRecordId(cooler._address, loanId));
+  }
 
-  // Create new CoolerLoanSnapshot for rollover
+  // Create the event record
+  const eventRecord: RollLoanEvent = new RollLoanEvent(getLoanRecordId(cooler._address, loanId) + "-" + event.block.number.toString());
+  eventRecord.blockNumber = event.block.number;
+  eventRecord.blockTimestamp = event.block.timestamp;
+  eventRecord.transactionHash = event.transaction.hash;
 
-  // Create new CoolerLoanSnapshot for previous loan
+  eventRecord.loan = loanRecord.id;
+
+  // TODO awaiting contract changes
+  eventRecord.newDebtQuantity = toDecimal(event.params.newDebt, ERC20.bind(cooler.debt()).decimals());
+  eventRecord.newCollateralQuantity = toDecimal(event.params.newCollateral, ERC20.bind(cooler.collateral()).decimals());
+  eventRecord.newExpiryTimestamp = loanData.expiry;
+
+  eventRecord.save();
 }

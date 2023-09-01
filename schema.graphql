@@ -98,11 +98,14 @@ type RepayLoanEvent @entity(immutable: true) {
 
 type RollLoanEvent @entity(immutable: true) {
   # Context
-  id: String!
+  id: String! # cooler-loanId-blockNumber
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   # Loan information
   loan: CoolerLoan!
-  # ???
+  # Event information
+  newDebtQuantity: BigDecimal!
+  newCollateralQuantity: BigDecimal!
+  newExpiryTimestamp: BigInt!
 }

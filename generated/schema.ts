@@ -1091,6 +1091,45 @@ export class RollLoanEvent extends Entity {
   set loan(value: string) {
     this.set("loan", Value.fromString(value));
   }
+
+  get newDebtQuantity(): BigDecimal {
+    let value = this.get("newDebtQuantity");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set newDebtQuantity(value: BigDecimal) {
+    this.set("newDebtQuantity", Value.fromBigDecimal(value));
+  }
+
+  get newCollateralQuantity(): BigDecimal {
+    let value = this.get("newCollateralQuantity");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set newCollateralQuantity(value: BigDecimal) {
+    this.set("newCollateralQuantity", Value.fromBigDecimal(value));
+  }
+
+  get newExpiryTimestamp(): BigInt {
+    let value = this.get("newExpiryTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set newExpiryTimestamp(value: BigInt) {
+    this.set("newExpiryTimestamp", Value.fromBigInt(value));
+  }
 }
 
 export class ClearLoanRequestEventLoader extends Entity {

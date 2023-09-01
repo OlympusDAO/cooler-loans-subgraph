@@ -1,12 +1,11 @@
 # Mirrors the Loan struct in Cooler.sol
 type CoolerLoan @entity(immutable: true) {
-  id: String! # cooler-loanID
-  snapshots: [CoolerLoanSnapshot!]! @derivedFrom(field: "loan")
+  id: String! # cooler-loanId
   createdBlock: BigInt!
   createdTimestamp: BigInt!
   createdTransaction: Bytes!
   cooler: Bytes! # address
-  loanID: BigInt! # uint256
+  loanId: BigInt! # uint256
   borrower: Bytes! # address
   lender: Bytes! # address
   amount: BigDecimal! # Total amount of debt, including interest
@@ -19,24 +18,91 @@ type CoolerLoan @entity(immutable: true) {
   hasCallback: Boolean!
   collateralToken: Bytes! # address
   debtToken: Bytes! # address
+  # Related records
+  creationEvents: [ClearLoanRequestEvent!]! @derivedFrom(field: "loan")
+  defaultedClaimEvents: [ClaimDefaultedLoanEvent!]! @derivedFrom(field: "loan")
+  repaymentEvents: [RepayLoanEvent!]! @derivedFrom(field: "loan")
+  rolloverEvents: [RollLoanEvent!]! @derivedFrom(field: "loan")
 }
 
-enum LoanStatus {
-  Active
-  Defaulted
-  Repaid
-}
+### Events
 
-type CoolerLoanSnapshot @entity(immutable: true) {
-  id: String! # CoolerLoanID-blockNumber
-  loan: CoolerLoan!
+type RequestLoanEvent @entity(immutable: true) {
+  # Context
+  id: String! # cooler-requestId
   blockNumber: BigInt!
   blockTimestamp: BigInt!
-  transaction: Bytes!
-  status: LoanStatus!
+  transactionHash: Bytes!
+  # Event information
+  cooler: Bytes! # address
+  collateralToken: Bytes! # address
+  debtToken: Bytes! # address
+  requestId: BigInt! # uint256
+}
+
+type RescindLoanRequestEvent @entity(immutable: true) {
+  # Context
+  id: String! # cooler-requestId
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  # Event information
+  cooler: Bytes! # address
+  requestId: BigInt! # uint256
+}
+
+type ClearLoanRequestEvent @entity(immutable: true) {
+  # Context
+  id: String! # cooler-requestId
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  # Event information
+  requestId: BigInt! # uint256
+  loan: CoolerLoan!
+}
+
+type ClaimDefaultedLoanEvent @entity(immutable: true) {
+  # Context
+  id: String! # cooler-loanId
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  # Loan information
+  loan: CoolerLoan!
+  secondsSinceExpiry: BigInt!
+  # Income
+  collateralQuantityClaimed: BigDecimal!
+  collateralPrice: BigDecimal!
+  collateralValueClaimed: BigDecimal!
+  collateralIncome: BigDecimal!
+}
+
+type RepayLoanEvent @entity(immutable: true) {
+  # Context
+  id: String! # cooler-loanId-blockNumber
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  # Loan information
+  loan: CoolerLoan!
   secondsToExpiry: BigInt!
   loanPayable: BigDecimal!
   collateralDeposited: BigDecimal!
   repaidUnclaimed: BigDecimal!
-  income: BigDecimal! # Non-cumulative income earned at the time of the snapshot
+  # Event information
+  amountPaid: BigDecimal!
+  # Income
+  interestIncome: BigDecimal!
+}
+
+type RollLoanEvent @entity(immutable: true) {
+  # Context
+  id: String!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  # Loan information
+  loan: CoolerLoan!
+  # ???
 }

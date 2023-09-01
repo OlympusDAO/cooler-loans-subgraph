@@ -15,7 +15,13 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - CoolerLoan
-        - CoolerLoanSnapshot
+        # Event records
+        - RequestLoanEvent
+        - RescindLoanRequestEvent
+        - ClearLoanRequestEvent
+        - ClaimDefaultedLoanEvent
+        - RepayLoanEvent
+        - RollLoanEvent
       abis:
         - name: CoolerFactory
           file: ./abis/CoolerFactory.json

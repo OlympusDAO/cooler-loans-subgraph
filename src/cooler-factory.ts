@@ -1,16 +1,18 @@
 import { Address, BigDecimal, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts"
 import {
-  ClearRequest as ClearRequestEvent,
-  DefaultLoan as DefaultLoanEvent,
-  RepayLoan as RepayLoanEvent,
-  RollLoan as RollLoanEvent
+  ClearRequest,
+  DefaultLoan,
+  RepayLoan,
+  RollLoan
 } from "../generated/CoolerFactory/CoolerFactory"
 import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory/Cooler"
 import { ERC20 } from "../generated/CoolerFactory/ERC20"
 import { gOHM } from "../generated/CoolerFactory/gOHM"
 import {
+  ClaimDefaultedLoanEvent,
+  ClearLoanRequestEvent,
+  RepayLoanEvent,
   CoolerLoan,
-  CoolerLoanSnapshot
 } from "../generated/schema"
 import { oracles } from "@protofire/subgraph-devkit";
 
@@ -47,10 +49,6 @@ function getLoanRecord(cooler: Bytes, loanID: BigInt): CoolerLoan | null {
   return CoolerLoan.load(getLoanRecordId(cooler, loanID));
 }
 
-function getLoanSnapshotRecordId(cooler: Bytes, loanID: BigInt, blockNumber: BigInt): string {
-  return cooler.toHexString() + "-" + loanID.toString() + "-" + blockNumber.toString();
-}
-
 function populateLoan(cooler: Cooler, loanId: BigInt, loanData: Cooler__getLoanResultValue0Struct, block: ethereum.Block, transaction: ethereum.Transaction): CoolerLoan {
   const debtDecimals = ERC20.bind(cooler.debt()).decimals();
   const collateralDecimals = ERC20.bind(cooler.collateral()).decimals();
@@ -59,7 +57,7 @@ function populateLoan(cooler: Cooler, loanId: BigInt, loanData: Cooler__getLoanR
   loanRecord.createdBlock = block.number;
   loanRecord.createdTimestamp = block.timestamp;
   loanRecord.createdTransaction = transaction.hash;
-  loanRecord.loanID = loanId;
+  loanRecord.loanId = loanId;
   loanRecord.cooler = cooler._address;
   loanRecord.borrower = cooler.owner();
   loanRecord.amount = toDecimal(loanData.amount, debtDecimals);
@@ -75,27 +73,6 @@ function populateLoan(cooler: Cooler, loanId: BigInt, loanData: Cooler__getLoanR
   loanRecord.debtToken = cooler.debt();
 
   return loanRecord;
-}
-
-function populateLoanSnapshot(cooler: Cooler, loanData: Cooler__getLoanResultValue0Struct, block: ethereum.Block, transaction: ethereum.Transaction, loanRecord: CoolerLoan): CoolerLoanSnapshot {
-  const debtDecimals = ERC20.bind(cooler.debt()).decimals();
-  const collateralDecimals = ERC20.bind(cooler.collateral()).decimals();
-
-  const snapshotRecord: CoolerLoanSnapshot = new CoolerLoanSnapshot(getLoanSnapshotRecordId(cooler._address, loanRecord.loanID, block.number));
-  snapshotRecord.loan = loanRecord.id;
-  snapshotRecord.blockNumber = block.number;
-  snapshotRecord.blockTimestamp = block.timestamp;
-  snapshotRecord.transaction = transaction.hash;
-  snapshotRecord.secondsToExpiry = loanData.expiry.lt(block.timestamp) ? BigInt.zero() : loanData.expiry.minus(block.timestamp);
-
-  // The loan struct at the time of snapshot reflects the amount payable and collateral deposited
-  snapshotRecord.loanPayable = toDecimal(loanData.amount, debtDecimals);
-  snapshotRecord.collateralDeposited = toDecimal(loanData.collateral, collateralDecimals);
-  snapshotRecord.repaidUnclaimed = toDecimal(loanData.unclaimed, debtDecimals);
-
-  snapshotRecord.income = BigDecimal.zero(); // Will be set if needed
-
-  return snapshotRecord;
 }
 
 function getOhmPrice(): BigDecimal {
@@ -114,28 +91,29 @@ function getGOhmPrice(): BigDecimal {
 
 // === Event handling ===
 
-export function handleClearRequest(event: ClearRequestEvent): void {
+export function handleClearRequest(event: ClearRequest): void {
   // Access the Cooler
   const cooler: Cooler = Cooler.bind(event.params.cooler);
 
   // Get the loan information
-  const loanId: BigInt = event.params.loanID;
+  const loanId: BigInt = event.params.loanID; // TODO awaiting contract changes
   const loanData = cooler.getLoan(loanId);
 
   // Create a new CoolerLoan
-  // This record is immutable
-  // Changes in the balance will be tracked through CoolerLoanSnapshot
   const loanRecord: CoolerLoan = populateLoan(cooler, loanId, loanData, event.block, event.transaction);
   loanRecord.save();
 
-  // Also create a new snapshot
-  const snapshotRecord: CoolerLoanSnapshot = populateLoanSnapshot(cooler, loanData, event.block, event.transaction, loanRecord);
-  snapshotRecord.status = "Active";
-  snapshotRecord.income = loanRecord.interest; // Assumes interest income is recognised at the time of loan origination
-  snapshotRecord.save();
+  // Create an event record
+  const eventRecord: ClearLoanRequestEvent = new ClearLoanRequestEvent(getLoanRecordId(cooler._address, loanId));
+  eventRecord.blockNumber = event.block.number;
+  eventRecord.blockTimestamp = event.block.timestamp;
+  eventRecord.transactionHash = event.transaction.hash;
+  eventRecord.loan = loanRecord.id;
+  eventRecord.requestId = event.params.reqID;
+  eventRecord.save();
 }
 
-export function handleDefaultLoan(event: DefaultLoanEvent): void {
+export function handleDefaultLoan(event: DefaultLoan): void {
   // Access the Cooler
   const cooler: Cooler = Cooler.bind(event.params.cooler);
 
@@ -147,20 +125,31 @@ export function handleDefaultLoan(event: DefaultLoanEvent): void {
     throw new Error("Loan not found with record id: " + getLoanRecordId(cooler._address, loanId));
   }
 
-  // Create a new snapshot
-  const snapshotRecord: CoolerLoanSnapshot = populateLoanSnapshot(cooler, loanData, event.block, event.transaction, loanRecord);
-  snapshotRecord.status = "Defaulted";
+  // Create an event record
+  const eventRecord: ClaimDefaultedLoanEvent = new ClaimDefaultedLoanEvent(getLoanRecordId(cooler._address, loanId));
+  eventRecord.blockNumber = event.block.number;
+  eventRecord.blockTimestamp = event.block.timestamp;
+  eventRecord.transactionHash = event.transaction.hash;
+
+  eventRecord.loan = loanRecord.id;
+  eventRecord.secondsSinceExpiry = event.block.timestamp.minus(loanData.expiry);
+
+  // Assumes that the loan record still exists on the contract (which is not the case in the current version)
 
   // Calculate the income from the default. Value of collateral liquidated - debt payable.
   const collateralPrice: BigDecimal = getGOhmPrice();
   const debtPayable: BigDecimal = loanRecord.amount;
   const collateralValue: BigDecimal = loanRecord.collateral.times(collateralPrice);
-  snapshotRecord.income = collateralValue.minus(debtPayable);
 
-  snapshotRecord.save();
+  eventRecord.collateralQuantityClaimed = loanRecord.collateral;
+  eventRecord.collateralPrice = collateralPrice;
+  eventRecord.collateralValueClaimed = collateralValue;
+  eventRecord.collateralIncome = collateralValue.minus(debtPayable);
+
+  eventRecord.save();
 }
 
-export function handleRepayLoan(event: RepayLoanEvent): void {
+export function handleRepayLoan(event: RepayLoan): void {
   // Access the Cooler
   const cooler: Cooler = Cooler.bind(event.params.cooler);
 
@@ -172,15 +161,19 @@ export function handleRepayLoan(event: RepayLoanEvent): void {
     throw new Error("Loan not found with record id: " + getLoanRecordId(cooler._address, loanId));
   }
 
-  // Create a new snapshot
-  const snapshotRecord: CoolerLoanSnapshot = populateLoanSnapshot(cooler, loanData, event.block, event.transaction, loanRecord);
+  // Create an event record
+  const eventRecord: RepayLoanEvent = new RepayLoanEvent(getLoanRecordId(cooler._address, loanId) + "-" + event.block.number.toString());
+  eventRecord.blockNumber = event.block.number;
+  eventRecord.blockTimestamp = event.block.timestamp;
+  eventRecord.transactionHash = event.transaction.hash;
 
-  // If the loan is fully repaid, mark it as such
-  if (loanData.amount.equals(BigInt.zero())) {
-    snapshotRecord.status = "Repaid";
-  } else {
-    snapshotRecord.status = "Active";
-  }
+  eventRecord.loan = loanRecord.id;
+  eventRecord.secondsToExpiry = loanData.expiry.minus(event.block.timestamp);
+  eventRecord.loanPayable = toDecimal(loanData.amount, ERC20.bind(cooler.debt()).decimals());
+  eventRecord.collateralDeposited = toDecimal(loanData.collateral, ERC20.bind(cooler.collateral()).decimals());
+  eventRecord.repaidUnclaimed = toDecimal(loanData.unclaimed, ERC20.bind(cooler.debt()).decimals());
+
+  eventRecord.amountPaid = toDecimal(event.params.amount, ERC20.bind(cooler.debt()).decimals());
 
   /**
    * Calculate the income from the repayment.
@@ -191,14 +184,13 @@ export function handleRepayLoan(event: RepayLoanEvent): void {
    * 
    * Thus, interest income is recognised proportionally at the time of repayment.
    */
-  const repaymentAmount = toDecimal(event.params.amount, ERC20.bind(cooler.debt()).decimals());
-  const repaymentRatio = repaymentAmount.div(loanRecord.amount);
-  snapshotRecord.income = loanRecord.interest.times(repaymentRatio);
+  const repaymentRatio = eventRecord.amountPaid.div(loanRecord.amount);
+  eventRecord.interestIncome = loanRecord.interest.times(repaymentRatio);
 
-  snapshotRecord.save();
+  eventRecord.save();
 }
 
-export function handleRollLoan(event: RollLoanEvent): void {
+export function handleRollLoan(event: RollLoan): void {
   // TODO handle rollover
 
   // Create new CoolerLoan

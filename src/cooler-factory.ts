@@ -182,6 +182,19 @@ export function handleRepayLoan(event: RepayLoanEvent): void {
     snapshotRecord.status = "Active";
   }
 
+  /**
+   * Calculate the income from the repayment.
+   * 
+   * It is calculated in the following manner:
+   * 
+   * Current interest income = (repaid amount / total amount) * total interest
+   * 
+   * Thus, interest income is recognised proportionally at the time of repayment.
+   */
+  const repaymentAmount = toDecimal(event.params.amount, ERC20.bind(cooler.debt()).decimals());
+  const repaymentRatio = repaymentAmount.div(loanRecord.amount);
+  snapshotRecord.income = loanRecord.interest.times(repaymentRatio);
+
   snapshotRecord.save();
 }
 

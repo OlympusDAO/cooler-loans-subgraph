@@ -15,7 +15,10 @@ type CoolerLoanRequest @entity {
   durationSeconds: BigInt! # duration of loan in seconds
   isRescinded: Boolean!
   # Related records
-  loan: CoolerLoan @derivedFrom(field: "request")
+  requestEvents: [RequestLoanEvent!]! @derivedFrom(field: "request")
+  rescindEvents: [RescindLoanRequestEvent!]! @derivedFrom(field: "request")
+  clearEvents: [ClearLoanRequestEvent!]! @derivedFrom(field: "request")
+  loans: [CoolerLoan!]! @derivedFrom(field: "request")
 }
 
 # Mirrors the Loan struct in Cooler.sol

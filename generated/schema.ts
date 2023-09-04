@@ -223,11 +223,35 @@ export class CoolerLoanRequest extends Entity {
     this.set("isRescinded", Value.fromBoolean(value));
   }
 
-  get loan(): CoolerLoanLoader {
+  get requestEvents(): RequestLoanEventLoader {
+    return new RequestLoanEventLoader(
+      "CoolerLoanRequest",
+      this.get("id")!.toString(),
+      "requestEvents"
+    );
+  }
+
+  get rescindEvents(): RescindLoanRequestEventLoader {
+    return new RescindLoanRequestEventLoader(
+      "CoolerLoanRequest",
+      this.get("id")!.toString(),
+      "rescindEvents"
+    );
+  }
+
+  get clearEvents(): ClearLoanRequestEventLoader {
+    return new ClearLoanRequestEventLoader(
+      "CoolerLoanRequest",
+      this.get("id")!.toString(),
+      "clearEvents"
+    );
+  }
+
+  get loans(): CoolerLoanLoader {
     return new CoolerLoanLoader(
       "CoolerLoanRequest",
       this.get("id")!.toString(),
-      "loan"
+      "loans"
     );
   }
 }
@@ -1314,7 +1338,7 @@ export class RollLoanEvent extends Entity {
   }
 }
 
-export class CoolerLoanLoader extends Entity {
+export class RequestLoanEventLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -1326,9 +1350,27 @@ export class CoolerLoanLoader extends Entity {
     this._field = field;
   }
 
-  load(): CoolerLoan[] {
+  load(): RequestLoanEvent[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<CoolerLoan[]>(value);
+    return changetype<RequestLoanEvent[]>(value);
+  }
+}
+
+export class RescindLoanRequestEventLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): RescindLoanRequestEvent[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<RescindLoanRequestEvent[]>(value);
   }
 }
 
@@ -1347,6 +1389,24 @@ export class ClearLoanRequestEventLoader extends Entity {
   load(): ClearLoanRequestEvent[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<ClearLoanRequestEvent[]>(value);
+  }
+}
+
+export class CoolerLoanLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CoolerLoan[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CoolerLoan[]>(value);
   }
 }
 

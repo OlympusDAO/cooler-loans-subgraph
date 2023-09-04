@@ -1,3 +1,23 @@
+# Mirrors the Request struct in Cooler.sol
+type CoolerLoanRequest @entity {
+  id: String! # cooler-requestId
+  createdBlock: BigInt!
+  createdTimestamp: BigInt!
+  createdTransaction: Bytes!
+  cooler: Bytes! # address
+  requestId: BigInt! # uint256
+  borrower: Bytes! # address
+  collateralToken: Bytes! # address
+  debtToken: Bytes! # address
+  amount: BigDecimal! # amount to be borrowed
+  interestPercentage: BigDecimal! # annualized percentage to be paid as interest. Represented as a decimal, e.g. 0.1 = 10%
+  loanToCollateralRatio: BigDecimal! # ratio of the quantity of debt token to 1 collateral token, e.g. 3000 DAI/gOHM
+  durationSeconds: BigInt! # duration of loan in seconds
+  isRescinded: Boolean!
+  # Related records
+  loan: CoolerLoan @derivedFrom(field: "request")
+}
+
 # Mirrors the Loan struct in Cooler.sol
 type CoolerLoan @entity(immutable: true) {
   id: String! # cooler-loanId
@@ -5,6 +25,7 @@ type CoolerLoan @entity(immutable: true) {
   createdTimestamp: BigInt!
   createdTransaction: Bytes!
   cooler: Bytes! # address
+  request: CoolerLoanRequest! # request that created this loan
   loanId: BigInt! # uint256
   borrower: Bytes! # address
   lender: Bytes! # address
@@ -33,11 +54,7 @@ type RequestLoanEvent @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-  # Event information
-  cooler: Bytes! # address
-  collateralToken: Bytes! # address
-  debtToken: Bytes! # address
-  requestId: BigInt! # uint256
+  request: CoolerLoanRequest!
 }
 
 type RescindLoanRequestEvent @entity(immutable: true) {
@@ -46,9 +63,7 @@ type RescindLoanRequestEvent @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-  # Event information
-  cooler: Bytes! # address
-  requestId: BigInt! # uint256
+  request: CoolerLoanRequest!
 }
 
 type ClearLoanRequestEvent @entity(immutable: true) {
@@ -58,7 +73,7 @@ type ClearLoanRequestEvent @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   # Event information
-  requestId: BigInt! # uint256
+  request: CoolerLoanRequest!
   loan: CoolerLoan!
 }
 

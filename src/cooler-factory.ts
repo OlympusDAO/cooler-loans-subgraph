@@ -3,6 +3,8 @@ import {
   ClearRequest,
   DefaultLoan,
   RepayLoan,
+  RequestLoan,
+  RescindRequest,
   RollLoan
 } from "../generated/CoolerFactory/CoolerFactory"
 import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory/Cooler"
@@ -14,6 +16,8 @@ import {
   RepayLoanEvent,
   CoolerLoan,
   RollLoanEvent,
+  CoolerLoanRequest,
+  RescindLoanRequestEvent,
 } from "../generated/schema"
 import { oracles } from "@protofire/subgraph-devkit";
 
@@ -50,7 +54,7 @@ function getLoanRecord(cooler: Bytes, loanID: BigInt): CoolerLoan | null {
   return CoolerLoan.load(getLoanRecordId(cooler, loanID));
 }
 
-function populateLoan(cooler: Cooler, loanId: BigInt, loanData: Cooler__getLoanResultValue0Struct, block: ethereum.Block, transaction: ethereum.Transaction): CoolerLoan {
+function populateLoan(cooler: Cooler, request: CoolerLoanRequest, loanId: BigInt, loanData: Cooler__getLoanResultValue0Struct, block: ethereum.Block, transaction: ethereum.Transaction): CoolerLoan {
   const debtDecimals = ERC20.bind(cooler.debt()).decimals();
   const collateralDecimals = ERC20.bind(cooler.collateral()).decimals();
 
@@ -60,6 +64,7 @@ function populateLoan(cooler: Cooler, loanId: BigInt, loanData: Cooler__getLoanR
   loanRecord.createdTransaction = transaction.hash;
   loanRecord.loanId = loanId;
   loanRecord.cooler = cooler._address;
+  loanRecord.request = request.id;
   loanRecord.borrower = cooler.owner();
   loanRecord.amount = toDecimal(loanData.amount, debtDecimals);
   loanRecord.interest = toDecimal(loanData.request.interest, debtDecimals);
@@ -90,7 +95,81 @@ function getGOhmPrice(): BigDecimal {
   return ohmPrice.times(toDecimal(gOHMContract.index(), 9));
 }
 
-// === Event handling ===
+function getRequestRecordId(cooler: Bytes, requestId: BigInt): string {
+  return cooler.toHexString() + "-" + requestId.toString();
+}
+
+function getRequestRecord(cooler: Cooler, requestId: BigInt): CoolerLoanRequest | null {
+  return CoolerLoanRequest.load(getRequestRecordId(cooler._address, requestId));
+}
+
+// === Request handling ===
+
+export function handleRequest(event: RequestLoan): void {
+  // Access the Cooler
+  const cooler: Cooler = Cooler.bind(event.params.cooler);
+  const debtDecimals = ERC20.bind(cooler.debt()).decimals();
+
+  // Get the request information
+  const requestId: BigInt = event.params.reqID;
+  const request = cooler.getRequest(requestId);
+
+  // Create a new CoolerLoanRequest
+  const requestRecord: CoolerLoanRequest = new CoolerLoanRequest(getRequestRecordId(cooler._address, requestId));
+  requestRecord.createdBlock = event.block.number;
+  requestRecord.createdTimestamp = event.block.timestamp;
+  requestRecord.createdTransaction = event.transaction.hash;
+  requestRecord.cooler = cooler._address;
+  requestRecord.requestId = requestId;
+  requestRecord.borrower = cooler.owner();
+  requestRecord.collateralToken = cooler.collateral();
+  requestRecord.debtToken = cooler.debt();
+  requestRecord.amount = toDecimal(request.amount, debtDecimals);
+
+  // Interest rate is stored on the contract in terms of 1e18
+  // e.g. request.interest = 5e15 = 0.005
+  // We multiply by 100 to get the percentage, e.g. 0.5%
+  requestRecord.interestPercentage = toDecimal(request.interest, debtDecimals).times(BigDecimal.fromString("100"));
+
+  requestRecord.loanToCollateralRatio = toDecimal(request.loanToCollateral, debtDecimals);
+  requestRecord.durationSeconds = request.duration;
+  requestRecord.isRescinded = false;
+  requestRecord.save();
+
+  // Create an event record
+  const eventRecord: ClearLoanRequestEvent = new ClearLoanRequestEvent(getRequestRecordId(cooler._address, requestId));
+  eventRecord.blockNumber = event.block.number;
+  eventRecord.blockTimestamp = event.block.timestamp;
+  eventRecord.transactionHash = event.transaction.hash;
+  eventRecord.request = requestRecord.id;
+  eventRecord.save();
+}
+
+export function handleRescindRequest(event: RescindRequest): void {
+  // Access the Cooler
+  const cooler: Cooler = Cooler.bind(event.params.cooler);
+
+  // Get the request
+  const requestId = event.params.reqID;
+  const requestRecord: CoolerLoanRequest | null = getRequestRecord(cooler, requestId);
+  if (requestRecord == null) {
+    throw new Error("Request not found with record id: " + getRequestRecordId(cooler._address, requestId));
+  }
+
+  // Update the request record
+  requestRecord.isRescinded = true;
+  requestRecord.save();
+
+  // Create an event record
+  const eventRecord: RescindLoanRequestEvent = new RescindLoanRequestEvent(getRequestRecordId(cooler._address, requestId));
+  eventRecord.blockNumber = event.block.number;
+  eventRecord.blockTimestamp = event.block.timestamp;
+  eventRecord.transactionHash = event.transaction.hash;
+  eventRecord.request = requestRecord.id;
+  eventRecord.save();
+}
+
+// === Loan event handling ===
 
 export function handleClearRequest(event: ClearRequest): void {
   // Access the Cooler
@@ -100,8 +179,15 @@ export function handleClearRequest(event: ClearRequest): void {
   const loanId: BigInt = event.params.loanID; // TODO awaiting contract changes
   const loanData = cooler.getLoan(loanId);
 
+  // Get the request information
+  const requestId: BigInt = event.params.reqID;
+  const requestRecord: CoolerLoanRequest | null = getRequestRecord(cooler, requestId);
+  if (requestRecord == null) {
+    throw new Error("Request not found with record id: " + getLoanRecordId(cooler._address, requestId));
+  }
+
   // Create a new CoolerLoan
-  const loanRecord: CoolerLoan = populateLoan(cooler, loanId, loanData, event.block, event.transaction);
+  const loanRecord: CoolerLoan = populateLoan(cooler, requestRecord, loanId, loanData, event.block, event.transaction);
   loanRecord.save();
 
   // Create an event record
@@ -110,7 +196,7 @@ export function handleClearRequest(event: ClearRequest): void {
   eventRecord.blockTimestamp = event.block.timestamp;
   eventRecord.transactionHash = event.transaction.hash;
   eventRecord.loan = loanRecord.id;
-  eventRecord.requestId = event.params.reqID;
+  eventRecord.request = requestRecord.id;
   eventRecord.save();
 }
 

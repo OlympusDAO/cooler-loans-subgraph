@@ -34,6 +34,10 @@ dataSources:
         - name: gOHM
           file: ./abis/gOHM.json
       eventHandlers:
+        - event: RequestLoan(address,address,address,uint256)
+          handler: handleRequest
+        - event: RescindRequest(address,uint256)
+          handler: handleRescindRequest
         - event: ClearRequest(address,uint256)
           handler: handleClearRequest
         - event: DefaultLoan(address,uint256)

@@ -11,6 +11,227 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class CoolerLoanRequest extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CoolerLoanRequest entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type CoolerLoanRequest must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CoolerLoanRequest", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): CoolerLoanRequest | null {
+    return changetype<CoolerLoanRequest | null>(
+      store.get_in_block("CoolerLoanRequest", id)
+    );
+  }
+
+  static load(id: string): CoolerLoanRequest | null {
+    return changetype<CoolerLoanRequest | null>(
+      store.get("CoolerLoanRequest", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get createdBlock(): BigInt {
+    let value = this.get("createdBlock");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdBlock(value: BigInt) {
+    this.set("createdBlock", Value.fromBigInt(value));
+  }
+
+  get createdTimestamp(): BigInt {
+    let value = this.get("createdTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdTimestamp(value: BigInt) {
+    this.set("createdTimestamp", Value.fromBigInt(value));
+  }
+
+  get createdTransaction(): Bytes {
+    let value = this.get("createdTransaction");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set createdTransaction(value: Bytes) {
+    this.set("createdTransaction", Value.fromBytes(value));
+  }
+
+  get cooler(): Bytes {
+    let value = this.get("cooler");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set cooler(value: Bytes) {
+    this.set("cooler", Value.fromBytes(value));
+  }
+
+  get requestId(): BigInt {
+    let value = this.get("requestId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set requestId(value: BigInt) {
+    this.set("requestId", Value.fromBigInt(value));
+  }
+
+  get borrower(): Bytes {
+    let value = this.get("borrower");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set borrower(value: Bytes) {
+    this.set("borrower", Value.fromBytes(value));
+  }
+
+  get collateralToken(): Bytes {
+    let value = this.get("collateralToken");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set collateralToken(value: Bytes) {
+    this.set("collateralToken", Value.fromBytes(value));
+  }
+
+  get debtToken(): Bytes {
+    let value = this.get("debtToken");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set debtToken(value: Bytes) {
+    this.set("debtToken", Value.fromBytes(value));
+  }
+
+  get amount(): BigDecimal {
+    let value = this.get("amount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set amount(value: BigDecimal) {
+    this.set("amount", Value.fromBigDecimal(value));
+  }
+
+  get interestPercentage(): BigDecimal {
+    let value = this.get("interestPercentage");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set interestPercentage(value: BigDecimal) {
+    this.set("interestPercentage", Value.fromBigDecimal(value));
+  }
+
+  get loanToCollateralRatio(): BigDecimal {
+    let value = this.get("loanToCollateralRatio");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set loanToCollateralRatio(value: BigDecimal) {
+    this.set("loanToCollateralRatio", Value.fromBigDecimal(value));
+  }
+
+  get durationSeconds(): BigInt {
+    let value = this.get("durationSeconds");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set durationSeconds(value: BigInt) {
+    this.set("durationSeconds", Value.fromBigInt(value));
+  }
+
+  get isRescinded(): boolean {
+    let value = this.get("isRescinded");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set isRescinded(value: boolean) {
+    this.set("isRescinded", Value.fromBoolean(value));
+  }
+
+  get loan(): CoolerLoanLoader {
+    return new CoolerLoanLoader(
+      "CoolerLoanRequest",
+      this.get("id")!.toString(),
+      "loan"
+    );
+  }
+}
+
 export class CoolerLoan extends Entity {
   constructor(id: string) {
     super();
@@ -100,6 +321,19 @@ export class CoolerLoan extends Entity {
 
   set cooler(value: Bytes) {
     this.set("cooler", Value.fromBytes(value));
+  }
+
+  get request(): string {
+    let value = this.get("request");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set request(value: string) {
+    this.set("request", Value.fromString(value));
   }
 
   get loanId(): BigInt {
@@ -386,56 +620,17 @@ export class RequestLoanEvent extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get cooler(): Bytes {
-    let value = this.get("cooler");
+  get request(): string {
+    let value = this.get("request");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set cooler(value: Bytes) {
-    this.set("cooler", Value.fromBytes(value));
-  }
-
-  get collateralToken(): Bytes {
-    let value = this.get("collateralToken");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set collateralToken(value: Bytes) {
-    this.set("collateralToken", Value.fromBytes(value));
-  }
-
-  get debtToken(): Bytes {
-    let value = this.get("debtToken");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set debtToken(value: Bytes) {
-    this.set("debtToken", Value.fromBytes(value));
-  }
-
-  get requestId(): BigInt {
-    let value = this.get("requestId");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set requestId(value: BigInt) {
-    this.set("requestId", Value.fromBigInt(value));
+  set request(value: string) {
+    this.set("request", Value.fromString(value));
   }
 }
 
@@ -524,30 +719,17 @@ export class RescindLoanRequestEvent extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get cooler(): Bytes {
-    let value = this.get("cooler");
+  get request(): string {
+    let value = this.get("request");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set cooler(value: Bytes) {
-    this.set("cooler", Value.fromBytes(value));
-  }
-
-  get requestId(): BigInt {
-    let value = this.get("requestId");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set requestId(value: BigInt) {
-    this.set("requestId", Value.fromBigInt(value));
+  set request(value: string) {
+    this.set("request", Value.fromString(value));
   }
 }
 
@@ -636,17 +818,17 @@ export class ClearLoanRequestEvent extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get requestId(): BigInt {
-    let value = this.get("requestId");
+  get request(): string {
+    let value = this.get("request");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBigInt();
+      return value.toString();
     }
   }
 
-  set requestId(value: BigInt) {
-    this.set("requestId", Value.fromBigInt(value));
+  set request(value: string) {
+    this.set("request", Value.fromString(value));
   }
 
   get loan(): string {
@@ -1129,6 +1311,24 @@ export class RollLoanEvent extends Entity {
 
   set newExpiryTimestamp(value: BigInt) {
     this.set("newExpiryTimestamp", Value.fromBigInt(value));
+  }
+}
+
+export class CoolerLoanLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CoolerLoan[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CoolerLoan[]>(value);
   }
 }
 

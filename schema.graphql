@@ -49,6 +49,21 @@ type CoolerLoan @entity(immutable: true) {
   rolloverEvents: [RollLoanEvent!]! @derivedFrom(field: "loan")
 }
 
+type ClearinghouseSnapshot @entity {
+  id: String! # address-blockNumber
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  clearinghouse: Bytes! # address
+  # State information
+  isActive: Boolean!
+  nextRebalanceTimestamp: BigInt!
+  receivables: BigDecimal!
+  # Capacity
+  daiBalance: BigDecimal!
+  sDaiBalance: BigDecimal!
+  sDaiInDaiBalance: BigDecimal!
+}
+
 ### Events
 
 type RequestLoanEvent @entity(immutable: true) {

@@ -3,6 +3,33 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
+    name: Clearinghouse
+    network: goerli
+    source:
+      address: "0xA1081f6630EAD894E83BBC7eAB4C02C41b3fbc74"
+      abi: Clearinghouse
+      startBlock: 9571742
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ClearinghouseSnapshot
+      abis:
+        - name: Clearinghouse
+          file: ./abis/Clearinghouse.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC4626
+          file: ./abis/ERC4626.json
+      # TODO add event handlers for Clearinghouse after contract changes
+      eventHandlers:
+        - event: Deactivated()
+          handler: handleDeactivated
+        - event: Reactivated()
+          handler: handleReactivated
+      file: ./src/clearinghouse.ts
+  - kind: ethereum
     name: CoolerFactory
     network: goerli
     source:

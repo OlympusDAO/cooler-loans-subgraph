@@ -20,31 +20,14 @@ import {
   RescindLoanRequestEvent,
 } from "../generated/schema"
 import { oracles } from "@protofire/subgraph-devkit";
+import { toDecimal } from "./numberHelper"
 
-const DEFAULT_DECIMALS = 18;
 const OHM = "0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5";
 const GOHM = "0x0ab87046fBb341D058F17CBC4c1133F25a20a52f";
 
 // TODO handle addresses per data source dataSource.network()
 
 // === Helpers ===
-
-/**
- * Converts the given BigInt to a BigDecimal.
- *
- * If the `decimals` parameter is specified, that will be used instead of `DEFAULT_DECIMALS`.
- *
- * @param value
- * @param decimals
- * @returns
- */
-function toDecimal(value: BigInt, decimals: number = DEFAULT_DECIMALS): BigDecimal {
-  const precision = BigInt.fromI32(10)
-    .pow(<u8>decimals)
-    .toBigDecimal();
-
-  return value.divDecimal(precision);
-}
 
 function getLoanRecordId(cooler: Bytes, loanID: BigInt): string {
   return cooler.toHexString() + "-" + loanID.toString();

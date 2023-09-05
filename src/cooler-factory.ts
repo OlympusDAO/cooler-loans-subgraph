@@ -21,6 +21,7 @@ import {
 } from "../generated/schema"
 import { oracles } from "@protofire/subgraph-devkit";
 import { toDecimal } from "./numberHelper"
+import { getISO8601DateStringFromTimestamp } from "./dateHelper"
 
 const OHM = "0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5";
 const GOHM = "0x0ab87046fBb341D058F17CBC4c1133F25a20a52f";
@@ -121,6 +122,7 @@ export function handleRequest(event: RequestLoan): void {
 
   // Create an event record
   const eventRecord: ClearLoanRequestEvent = new ClearLoanRequestEvent(getRequestRecordId(cooler._address, requestId));
+  eventRecord.date = getISO8601DateStringFromTimestamp(event.block.timestamp);
   eventRecord.blockNumber = event.block.number;
   eventRecord.blockTimestamp = event.block.timestamp;
   eventRecord.transactionHash = event.transaction.hash;
@@ -145,6 +147,7 @@ export function handleRescindRequest(event: RescindRequest): void {
 
   // Create an event record
   const eventRecord: RescindLoanRequestEvent = new RescindLoanRequestEvent(getRequestRecordId(cooler._address, requestId));
+  eventRecord.date = getISO8601DateStringFromTimestamp(event.block.timestamp);
   eventRecord.blockNumber = event.block.number;
   eventRecord.blockTimestamp = event.block.timestamp;
   eventRecord.transactionHash = event.transaction.hash;
@@ -175,6 +178,7 @@ export function handleClearRequest(event: ClearRequest): void {
 
   // Create an event record
   const eventRecord: ClearLoanRequestEvent = new ClearLoanRequestEvent(getLoanRecordId(cooler._address, loanId));
+  eventRecord.date = getISO8601DateStringFromTimestamp(event.block.timestamp);
   eventRecord.blockNumber = event.block.number;
   eventRecord.blockTimestamp = event.block.timestamp;
   eventRecord.transactionHash = event.transaction.hash;
@@ -197,6 +201,7 @@ export function handleDefaultLoan(event: DefaultLoan): void {
 
   // Create an event record
   const eventRecord: ClaimDefaultedLoanEvent = new ClaimDefaultedLoanEvent(getLoanRecordId(cooler._address, loanId));
+  eventRecord.date = getISO8601DateStringFromTimestamp(event.block.timestamp);
   eventRecord.blockNumber = event.block.number;
   eventRecord.blockTimestamp = event.block.timestamp;
   eventRecord.transactionHash = event.transaction.hash;
@@ -233,6 +238,7 @@ export function handleRepayLoan(event: RepayLoan): void {
 
   // Create an event record
   const eventRecord: RepayLoanEvent = new RepayLoanEvent(getLoanRecordId(cooler._address, loanId) + "-" + event.block.number.toString());
+  eventRecord.date = getISO8601DateStringFromTimestamp(event.block.timestamp);
   eventRecord.blockNumber = event.block.number;
   eventRecord.blockTimestamp = event.block.timestamp;
   eventRecord.transactionHash = event.transaction.hash;
@@ -274,6 +280,7 @@ export function handleRollLoan(event: RollLoan): void {
 
   // Create the event record
   const eventRecord: RollLoanEvent = new RollLoanEvent(getLoanRecordId(cooler._address, loanId) + "-" + event.block.number.toString());
+  eventRecord.date = getISO8601DateStringFromTimestamp(event.block.timestamp);
   eventRecord.blockNumber = event.block.number;
   eventRecord.blockTimestamp = event.block.timestamp;
   eventRecord.transactionHash = event.transaction.hash;

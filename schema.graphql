@@ -51,6 +51,7 @@ type CoolerLoan @entity(immutable: true) {
 
 type ClearinghouseSnapshot @entity {
   id: String! # address-blockNumber
+  date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   clearinghouse: Bytes! # address
@@ -69,6 +70,7 @@ type ClearinghouseSnapshot @entity {
 type RequestLoanEvent @entity(immutable: true) {
   # Context
   id: String! # cooler-requestId
+  date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -78,6 +80,7 @@ type RequestLoanEvent @entity(immutable: true) {
 type RescindLoanRequestEvent @entity(immutable: true) {
   # Context
   id: String! # cooler-requestId
+  date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -87,6 +90,7 @@ type RescindLoanRequestEvent @entity(immutable: true) {
 type ClearLoanRequestEvent @entity(immutable: true) {
   # Context
   id: String! # cooler-requestId
+  date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -98,6 +102,7 @@ type ClearLoanRequestEvent @entity(immutable: true) {
 type ClaimDefaultedLoanEvent @entity(immutable: true) {
   # Context
   id: String! # cooler-loanId
+  date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -114,6 +119,7 @@ type ClaimDefaultedLoanEvent @entity(immutable: true) {
 type RepayLoanEvent @entity(immutable: true) {
   # Context
   id: String! # cooler-loanId-blockNumber
+  date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -132,6 +138,7 @@ type RepayLoanEvent @entity(immutable: true) {
 type RollLoanEvent @entity(immutable: true) {
   # Context
   id: String! # cooler-loanId-blockNumber
+  date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

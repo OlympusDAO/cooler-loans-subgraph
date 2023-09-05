@@ -4,6 +4,7 @@ import { Clearinghouse } from "../generated/Clearinghouse/Clearinghouse";
 import { ERC20 } from "../generated/Clearinghouse/ERC20";
 import { ERC4626 } from "../generated/Clearinghouse/ERC4626";
 import { toDecimal } from "./numberHelper";
+import { getISO8601DateStringFromTimestamp } from "./dateHelper";
 
 function getSnapshotRecordId(clearinghouse: Address, blockNumber: BigInt): string {
   return clearinghouse.toHexString() + "-" + blockNumber.toString();
@@ -16,6 +17,7 @@ function populateClearinghouseSnapshot(clearinghouse: Address, block: ethereum.B
     snapshotRecord = new ClearinghouseSnapshot(getSnapshotRecordId(clearinghouse, block.number));
   }
 
+  snapshotRecord.date = getISO8601DateStringFromTimestamp(block.timestamp);
   snapshotRecord.blockNumber = block.number;
   snapshotRecord.blockTimestamp = block.timestamp;
   snapshotRecord.clearinghouse = clearinghouse;

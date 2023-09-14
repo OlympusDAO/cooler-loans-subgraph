@@ -57,10 +57,14 @@ type ClearinghouseSnapshot @entity {
   nextRebalanceTimestamp: BigInt!
   interestReceivables: BigDecimal!
   principalReceivables: BigDecimal!
-  # Capacity
+  # Clearinghouse Capacity
   daiBalance: BigDecimal!
   sDaiBalance: BigDecimal!
   sDaiInDaiBalance: BigDecimal!
+  # Treasury Capacity
+  treasuryDaiBalance: BigDecimal!
+  treasurySDaiBalance: BigDecimal!
+  treasurySDaiInDaiBalance: BigDecimal!
   # Related records
   rebalanceEvents: [RebalanceEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
   defundEvents: [DefundEvent!]! @derivedFrom(field: "clearinghouseSnapshot")

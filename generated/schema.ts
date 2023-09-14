@@ -712,6 +712,45 @@ export class ClearinghouseSnapshot extends Entity {
     this.set("sDaiInDaiBalance", Value.fromBigDecimal(value));
   }
 
+  get treasuryDaiBalance(): BigDecimal {
+    let value = this.get("treasuryDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasuryDaiBalance(value: BigDecimal) {
+    this.set("treasuryDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiInDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiInDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiInDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiInDaiBalance", Value.fromBigDecimal(value));
+  }
+
   get rebalanceEvents(): RebalanceEventLoader {
     return new RebalanceEventLoader(
       "ClearinghouseSnapshot",

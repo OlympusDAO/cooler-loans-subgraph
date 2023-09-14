@@ -22,6 +22,8 @@ dataSources:
           file: ./abis/ERC20.json
         - name: ERC4626
           file: ./abis/ERC4626.json
+        - name: BophadesKernel
+          file: ./abis/BophadesKernel.json
       eventHandlers:
         - event: Rebalance(bool,uint256)
           handler: handleRebalance

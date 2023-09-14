@@ -5,6 +5,7 @@ import { ERC20 } from "../generated/Clearinghouse/ERC20";
 import { ERC4626 } from "../generated/Clearinghouse/ERC4626";
 import { toDecimal } from "./numberHelper";
 import { getISO8601DateStringFromTimestamp } from "./dateHelper";
+import { getTreasuryAddress } from "./bophades";
 
 function getSnapshotRecordId(clearinghouse: Address, event: ethereum.Event): string {
   return clearinghouse.toHexString() + "-" + event.block.number.toString() + "-" + event.logIndex.toString();
@@ -26,22 +27,30 @@ function populateClearinghouseSnapshot(clearinghouse: Address, event: ethereum.E
   const clearinghouseContract = Clearinghouse.bind(clearinghouse);
 
   const daiContract = ERC20.bind(clearinghouseContract.dai());
+  const daiDecimals = daiContract.decimals();
   const sDaiContract = ERC4626.bind(clearinghouseContract.sdai());
+  const sDaiDecimals = sDaiContract.decimals();
 
   // Get the state information
   snapshotRecord.isActive = clearinghouseContract.active();
   snapshotRecord.nextRebalanceTimestamp = clearinghouseContract.fundTime();
-  snapshotRecord.interestReceivables = toDecimal(clearinghouseContract.interestReceivables(), daiContract.decimals());
-  snapshotRecord.principalReceivables = toDecimal(clearinghouseContract.principalReceivables(), daiContract.decimals());
+  snapshotRecord.interestReceivables = toDecimal(clearinghouseContract.interestReceivables(), daiDecimals);
+  snapshotRecord.principalReceivables = toDecimal(clearinghouseContract.principalReceivables(), daiDecimals);
 
   // Get the funding capacity
-  snapshotRecord.daiBalance = toDecimal(daiContract.balanceOf(clearinghouse), daiContract.decimals());
+  snapshotRecord.daiBalance = toDecimal(daiContract.balanceOf(clearinghouse), daiDecimals);
 
   const sDaiBalance = sDaiContract.balanceOf(clearinghouse);
-  snapshotRecord.sDaiBalance = toDecimal(sDaiBalance, sDaiContract.decimals());
+  snapshotRecord.sDaiBalance = toDecimal(sDaiBalance, sDaiDecimals);
 
   // Record sDAI in terms of DAI
-  snapshotRecord.sDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(sDaiBalance), sDaiContract.decimals());
+  snapshotRecord.sDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(sDaiBalance), sDaiDecimals);
+
+  // Get the treasury capacity
+  const treasuryAddress = getTreasuryAddress();
+  snapshotRecord.treasuryDaiBalance = toDecimal(daiContract.balanceOf(treasuryAddress), daiDecimals);
+  snapshotRecord.treasurySDaiBalance = toDecimal(sDaiContract.balanceOf(treasuryAddress), sDaiDecimals);
+  snapshotRecord.treasurySDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(sDaiContract.balanceOf(treasuryAddress)), sDaiDecimals);
 
   return snapshotRecord;
 }

@@ -14,11 +14,13 @@ export class Cooler__claimDefaultedResult {
   value0: BigInt;
   value1: BigInt;
   value2: BigInt;
+  value3: BigInt;
 
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: BigInt) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
+    this.value3 = value3;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -26,6 +28,7 @@ export class Cooler__claimDefaultedResult {
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     return map;
   }
 
@@ -40,6 +43,10 @@ export class Cooler__claimDefaultedResult {
   getValue2(): BigInt {
     return this.value2;
   }
+
+  getValue3(): BigInt {
+    return this.value3;
+  }
 }
 
 export class Cooler__getLoanResultValue0Struct extends ethereum.Tuple {
@@ -49,11 +56,11 @@ export class Cooler__getLoanResultValue0Struct extends ethereum.Tuple {
     );
   }
 
-  get amount(): BigInt {
+  get principal(): BigInt {
     return this[1].toBigInt();
   }
 
-  get unclaimed(): BigInt {
+  get interestDue(): BigInt {
     return this[2].toBigInt();
   }
 
@@ -69,8 +76,8 @@ export class Cooler__getLoanResultValue0Struct extends ethereum.Tuple {
     return this[5].toAddress();
   }
 
-  get repayDirect(): boolean {
-    return this[6].toBoolean();
+  get recipient(): Address {
+    return this[6].toAddress();
   }
 
   get callback(): boolean {
@@ -98,6 +105,10 @@ export class Cooler__getLoanResultValue0RequestStruct extends ethereum.Tuple {
   get active(): boolean {
     return this[4].toBoolean();
   }
+
+  get requester(): Address {
+    return this[5].toAddress();
+  }
 }
 
 export class Cooler__getRequestResultValue0Struct extends ethereum.Tuple {
@@ -119,6 +130,10 @@ export class Cooler__getRequestResultValue0Struct extends ethereum.Tuple {
 
   get active(): boolean {
     return this[4].toBoolean();
+  }
+
+  get requester(): Address {
+    return this[5].toAddress();
   }
 }
 
@@ -142,6 +157,10 @@ export class Cooler__loansResultRequestStruct extends ethereum.Tuple {
   get active(): boolean {
     return this[4].toBoolean();
   }
+
+  get requester(): Address {
+    return this[5].toAddress();
+  }
 }
 
 export class Cooler__loansResult {
@@ -151,7 +170,7 @@ export class Cooler__loansResult {
   value3: BigInt;
   value4: BigInt;
   value5: Address;
-  value6: boolean;
+  value6: Address;
   value7: boolean;
 
   constructor(
@@ -161,7 +180,7 @@ export class Cooler__loansResult {
     value3: BigInt,
     value4: BigInt,
     value5: Address,
-    value6: boolean,
+    value6: Address,
     value7: boolean
   ) {
     this.value0 = value0;
@@ -182,7 +201,7 @@ export class Cooler__loansResult {
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     map.set("value5", ethereum.Value.fromAddress(this.value5));
-    map.set("value6", ethereum.Value.fromBoolean(this.value6));
+    map.set("value6", ethereum.Value.fromAddress(this.value6));
     map.set("value7", ethereum.Value.fromBoolean(this.value7));
     return map;
   }
@@ -191,11 +210,11 @@ export class Cooler__loansResult {
     return this.value0;
   }
 
-  getAmount(): BigInt {
+  getPrincipal(): BigInt {
     return this.value1;
   }
 
-  getUnclaimed(): BigInt {
+  getInterestDue(): BigInt {
     return this.value2;
   }
 
@@ -211,7 +230,7 @@ export class Cooler__loansResult {
     return this.value5;
   }
 
-  getRepayDirect(): boolean {
+  getRecipient(): Address {
     return this.value6;
   }
 
@@ -226,19 +245,22 @@ export class Cooler__requestsResult {
   value2: BigInt;
   value3: BigInt;
   value4: boolean;
+  value5: Address;
 
   constructor(
     value0: BigInt,
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: boolean
+    value4: boolean,
+    value5: Address
   ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
     this.value4 = value4;
+    this.value5 = value5;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -248,6 +270,7 @@ export class Cooler__requestsResult {
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromBoolean(this.value4));
+    map.set("value5", ethereum.Value.fromAddress(this.value5));
     return map;
   }
 
@@ -269,6 +292,10 @@ export class Cooler__requestsResult {
 
   getActive(): boolean {
     return this.value4;
+  }
+
+  getRequester(): Address {
+    return this.value5;
   }
 }
 
@@ -299,14 +326,15 @@ export class Cooler extends ethereum.SmartContract {
   claimDefaulted(loanID_: BigInt): Cooler__claimDefaultedResult {
     let result = super.call(
       "claimDefaulted",
-      "claimDefaulted(uint256):(uint256,uint256,uint256)",
+      "claimDefaulted(uint256):(uint256,uint256,uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(loanID_)]
     );
 
     return new Cooler__claimDefaultedResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
-      result[2].toBigInt()
+      result[2].toBigInt(),
+      result[3].toBigInt()
     );
   }
 
@@ -315,7 +343,7 @@ export class Cooler extends ethereum.SmartContract {
   ): ethereum.CallResult<Cooler__claimDefaultedResult> {
     let result = super.tryCall(
       "claimDefaulted",
-      "claimDefaulted(uint256):(uint256,uint256,uint256)",
+      "claimDefaulted(uint256):(uint256,uint256,uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(loanID_)]
     );
     if (result.reverted) {
@@ -326,22 +354,23 @@ export class Cooler extends ethereum.SmartContract {
       new Cooler__claimDefaultedResult(
         value[0].toBigInt(),
         value[1].toBigInt(),
-        value[2].toBigInt()
+        value[2].toBigInt(),
+        value[3].toBigInt()
       )
     );
   }
 
   clearRequest(
     reqID_: BigInt,
-    repayDirect_: boolean,
+    recipient_: Address,
     isCallback_: boolean
   ): BigInt {
     let result = super.call(
       "clearRequest",
-      "clearRequest(uint256,bool,bool):(uint256)",
+      "clearRequest(uint256,address,bool):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(reqID_),
-        ethereum.Value.fromBoolean(repayDirect_),
+        ethereum.Value.fromAddress(recipient_),
         ethereum.Value.fromBoolean(isCallback_)
       ]
     );
@@ -351,15 +380,15 @@ export class Cooler extends ethereum.SmartContract {
 
   try_clearRequest(
     reqID_: BigInt,
-    repayDirect_: boolean,
+    recipient_: Address,
     isCallback_: boolean
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "clearRequest",
-      "clearRequest(uint256,bool,bool):(uint256)",
+      "clearRequest(uint256,address,bool):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(reqID_),
-        ethereum.Value.fromBoolean(repayDirect_),
+        ethereum.Value.fromAddress(recipient_),
         ethereum.Value.fromBoolean(isCallback_)
       ]
     );
@@ -385,12 +414,12 @@ export class Cooler extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  collateralFor(amount_: BigInt, loanToCollateral_: BigInt): BigInt {
+  collateralFor(principal_: BigInt, loanToCollateral_: BigInt): BigInt {
     let result = super.call(
       "collateralFor",
       "collateralFor(uint256,uint256):(uint256)",
       [
-        ethereum.Value.fromUnsignedBigInt(amount_),
+        ethereum.Value.fromUnsignedBigInt(principal_),
         ethereum.Value.fromUnsignedBigInt(loanToCollateral_)
       ]
     );
@@ -399,14 +428,14 @@ export class Cooler extends ethereum.SmartContract {
   }
 
   try_collateralFor(
-    amount_: BigInt,
+    principal_: BigInt,
     loanToCollateral_: BigInt
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "collateralFor",
       "collateralFor(uint256,uint256):(uint256)",
       [
-        ethereum.Value.fromUnsignedBigInt(amount_),
+        ethereum.Value.fromUnsignedBigInt(principal_),
         ethereum.Value.fromUnsignedBigInt(loanToCollateral_)
       ]
     );
@@ -450,7 +479,7 @@ export class Cooler extends ethereum.SmartContract {
   getLoan(loanID_: BigInt): Cooler__getLoanResultValue0Struct {
     let result = super.call(
       "getLoan",
-      "getLoan(uint256):(((uint256,uint256,uint256,uint256,bool),uint256,uint256,uint256,uint256,address,bool,bool))",
+      "getLoan(uint256):(((uint256,uint256,uint256,uint256,bool,address),uint256,uint256,uint256,uint256,address,address,bool))",
       [ethereum.Value.fromUnsignedBigInt(loanID_)]
     );
 
@@ -462,7 +491,7 @@ export class Cooler extends ethereum.SmartContract {
   ): ethereum.CallResult<Cooler__getLoanResultValue0Struct> {
     let result = super.tryCall(
       "getLoan",
-      "getLoan(uint256):(((uint256,uint256,uint256,uint256,bool),uint256,uint256,uint256,uint256,address,bool,bool))",
+      "getLoan(uint256):(((uint256,uint256,uint256,uint256,bool,address),uint256,uint256,uint256,uint256,address,address,bool))",
       [ethereum.Value.fromUnsignedBigInt(loanID_)]
     );
     if (result.reverted) {
@@ -477,7 +506,7 @@ export class Cooler extends ethereum.SmartContract {
   getRequest(reqID_: BigInt): Cooler__getRequestResultValue0Struct {
     let result = super.call(
       "getRequest",
-      "getRequest(uint256):((uint256,uint256,uint256,uint256,bool))",
+      "getRequest(uint256):((uint256,uint256,uint256,uint256,bool,address))",
       [ethereum.Value.fromUnsignedBigInt(reqID_)]
     );
 
@@ -491,7 +520,7 @@ export class Cooler extends ethereum.SmartContract {
   ): ethereum.CallResult<Cooler__getRequestResultValue0Struct> {
     let result = super.tryCall(
       "getRequest",
-      "getRequest(uint256):((uint256,uint256,uint256,uint256,bool))",
+      "getRequest(uint256):((uint256,uint256,uint256,uint256,bool,address))",
       [ethereum.Value.fromUnsignedBigInt(reqID_)]
     );
     if (result.reverted) {
@@ -503,12 +532,31 @@ export class Cooler extends ethereum.SmartContract {
     );
   }
 
-  interestFor(amount_: BigInt, rate_: BigInt, duration_: BigInt): BigInt {
+  hasExpired(loanID_: BigInt): boolean {
+    let result = super.call("hasExpired", "hasExpired(uint256):(bool)", [
+      ethereum.Value.fromUnsignedBigInt(loanID_)
+    ]);
+
+    return result[0].toBoolean();
+  }
+
+  try_hasExpired(loanID_: BigInt): ethereum.CallResult<boolean> {
+    let result = super.tryCall("hasExpired", "hasExpired(uint256):(bool)", [
+      ethereum.Value.fromUnsignedBigInt(loanID_)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  interestFor(principal_: BigInt, rate_: BigInt, duration_: BigInt): BigInt {
     let result = super.call(
       "interestFor",
       "interestFor(uint256,uint256,uint256):(uint256)",
       [
-        ethereum.Value.fromUnsignedBigInt(amount_),
+        ethereum.Value.fromUnsignedBigInt(principal_),
         ethereum.Value.fromUnsignedBigInt(rate_),
         ethereum.Value.fromUnsignedBigInt(duration_)
       ]
@@ -518,7 +566,7 @@ export class Cooler extends ethereum.SmartContract {
   }
 
   try_interestFor(
-    amount_: BigInt,
+    principal_: BigInt,
     rate_: BigInt,
     duration_: BigInt
   ): ethereum.CallResult<BigInt> {
@@ -526,7 +574,7 @@ export class Cooler extends ethereum.SmartContract {
       "interestFor",
       "interestFor(uint256,uint256,uint256):(uint256)",
       [
-        ethereum.Value.fromUnsignedBigInt(amount_),
+        ethereum.Value.fromUnsignedBigInt(principal_),
         ethereum.Value.fromUnsignedBigInt(rate_),
         ethereum.Value.fromUnsignedBigInt(duration_)
       ]
@@ -557,29 +605,10 @@ export class Cooler extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  isDefaulted(loanID_: BigInt): boolean {
-    let result = super.call("isDefaulted", "isDefaulted(uint256):(bool)", [
-      ethereum.Value.fromUnsignedBigInt(loanID_)
-    ]);
-
-    return result[0].toBoolean();
-  }
-
-  try_isDefaulted(loanID_: BigInt): ethereum.CallResult<boolean> {
-    let result = super.tryCall("isDefaulted", "isDefaulted(uint256):(bool)", [
-      ethereum.Value.fromUnsignedBigInt(loanID_)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
   loans(param0: BigInt): Cooler__loansResult {
     let result = super.call(
       "loans",
-      "loans(uint256):((uint256,uint256,uint256,uint256,bool),uint256,uint256,uint256,uint256,address,bool,bool)",
+      "loans(uint256):((uint256,uint256,uint256,uint256,bool,address),uint256,uint256,uint256,uint256,address,address,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -591,7 +620,7 @@ export class Cooler extends ethereum.SmartContract {
         result[3].toBigInt(),
         result[4].toBigInt(),
         result[5].toAddress(),
-        result[6].toBoolean(),
+        result[6].toAddress(),
         result[7].toBoolean()
       )
     );
@@ -600,7 +629,7 @@ export class Cooler extends ethereum.SmartContract {
   try_loans(param0: BigInt): ethereum.CallResult<Cooler__loansResult> {
     let result = super.tryCall(
       "loans",
-      "loans(uint256):((uint256,uint256,uint256,uint256,bool),uint256,uint256,uint256,uint256,address,bool,bool)",
+      "loans(uint256):((uint256,uint256,uint256,uint256,bool,address),uint256,uint256,uint256,uint256,address,address,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -616,34 +645,11 @@ export class Cooler extends ethereum.SmartContract {
           value[3].toBigInt(),
           value[4].toBigInt(),
           value[5].toAddress(),
-          value[6].toBoolean(),
+          value[6].toAddress(),
           value[7].toBoolean()
         )
       )
     );
-  }
-
-  newCollateralFor(loanID_: BigInt): BigInt {
-    let result = super.call(
-      "newCollateralFor",
-      "newCollateralFor(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(loanID_)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_newCollateralFor(loanID_: BigInt): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "newCollateralFor",
-      "newCollateralFor(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(loanID_)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   owner(): Address {
@@ -661,26 +667,29 @@ export class Cooler extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  repayLoan(loanID_: BigInt, repaid_: BigInt): BigInt {
+  repayLoan(loanID_: BigInt, repayment_: BigInt): BigInt {
     let result = super.call(
       "repayLoan",
       "repayLoan(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(loanID_),
-        ethereum.Value.fromUnsignedBigInt(repaid_)
+        ethereum.Value.fromUnsignedBigInt(repayment_)
       ]
     );
 
     return result[0].toBigInt();
   }
 
-  try_repayLoan(loanID_: BigInt, repaid_: BigInt): ethereum.CallResult<BigInt> {
+  try_repayLoan(
+    loanID_: BigInt,
+    repayment_: BigInt
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "repayLoan",
       "repayLoan(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(loanID_),
-        ethereum.Value.fromUnsignedBigInt(repaid_)
+        ethereum.Value.fromUnsignedBigInt(repayment_)
       ]
     );
     if (result.reverted) {
@@ -736,7 +745,7 @@ export class Cooler extends ethereum.SmartContract {
   requests(param0: BigInt): Cooler__requestsResult {
     let result = super.call(
       "requests",
-      "requests(uint256):(uint256,uint256,uint256,uint256,bool)",
+      "requests(uint256):(uint256,uint256,uint256,uint256,bool,address)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -745,14 +754,15 @@ export class Cooler extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toBoolean()
+      result[4].toBoolean(),
+      result[5].toAddress()
     );
   }
 
   try_requests(param0: BigInt): ethereum.CallResult<Cooler__requestsResult> {
     let result = super.tryCall(
       "requests",
-      "requests(uint256):(uint256,uint256,uint256,uint256,bool)",
+      "requests(uint256):(uint256,uint256,uint256,uint256,bool,address)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -765,7 +775,8 @@ export class Cooler extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toBoolean()
+        value[4].toBoolean(),
+        value[5].toAddress()
       )
     );
   }
@@ -845,35 +856,9 @@ export class ClaimDefaultedCall__Outputs {
   get value2(): BigInt {
     return this._call.outputValues[2].value.toBigInt();
   }
-}
 
-export class ClaimRepaidCall extends ethereum.Call {
-  get inputs(): ClaimRepaidCall__Inputs {
-    return new ClaimRepaidCall__Inputs(this);
-  }
-
-  get outputs(): ClaimRepaidCall__Outputs {
-    return new ClaimRepaidCall__Outputs(this);
-  }
-}
-
-export class ClaimRepaidCall__Inputs {
-  _call: ClaimRepaidCall;
-
-  constructor(call: ClaimRepaidCall) {
-    this._call = call;
-  }
-
-  get loanID_(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class ClaimRepaidCall__Outputs {
-  _call: ClaimRepaidCall;
-
-  constructor(call: ClaimRepaidCall) {
-    this._call = call;
+  get value3(): BigInt {
+    return this._call.outputValues[3].value.toBigInt();
   }
 }
 
@@ -898,8 +883,8 @@ export class ClearRequestCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get repayDirect_(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
+  get recipient_(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 
   get isCallback_(): boolean {
@@ -949,20 +934,20 @@ export class DelegateVotingCall__Outputs {
   }
 }
 
-export class ProvideNewTermsForRollCall extends ethereum.Call {
-  get inputs(): ProvideNewTermsForRollCall__Inputs {
-    return new ProvideNewTermsForRollCall__Inputs(this);
+export class ExtendLoanTermsCall extends ethereum.Call {
+  get inputs(): ExtendLoanTermsCall__Inputs {
+    return new ExtendLoanTermsCall__Inputs(this);
   }
 
-  get outputs(): ProvideNewTermsForRollCall__Outputs {
-    return new ProvideNewTermsForRollCall__Outputs(this);
+  get outputs(): ExtendLoanTermsCall__Outputs {
+    return new ExtendLoanTermsCall__Outputs(this);
   }
 }
 
-export class ProvideNewTermsForRollCall__Inputs {
-  _call: ProvideNewTermsForRollCall;
+export class ExtendLoanTermsCall__Inputs {
+  _call: ExtendLoanTermsCall;
 
-  constructor(call: ProvideNewTermsForRollCall) {
+  constructor(call: ExtendLoanTermsCall) {
     this._call = call;
   }
 
@@ -970,23 +955,15 @@ export class ProvideNewTermsForRollCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get interest_(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get loanToCollateral_(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get duration_(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
+  get times_(): i32 {
+    return this._call.inputValues[1].value.toI32();
   }
 }
 
-export class ProvideNewTermsForRollCall__Outputs {
-  _call: ProvideNewTermsForRollCall;
+export class ExtendLoanTermsCall__Outputs {
+  _call: ExtendLoanTermsCall;
 
-  constructor(call: ProvideNewTermsForRollCall) {
+  constructor(call: ExtendLoanTermsCall) {
     this._call = call;
   }
 }
@@ -1012,7 +989,7 @@ export class RepayLoanCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get repaid_(): BigInt {
+  get repayment_(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
@@ -1105,50 +1082,20 @@ export class RescindRequestCall__Outputs {
   }
 }
 
-export class RollLoanCall extends ethereum.Call {
-  get inputs(): RollLoanCall__Inputs {
-    return new RollLoanCall__Inputs(this);
+export class SetRepaymentAddressCall extends ethereum.Call {
+  get inputs(): SetRepaymentAddressCall__Inputs {
+    return new SetRepaymentAddressCall__Inputs(this);
   }
 
-  get outputs(): RollLoanCall__Outputs {
-    return new RollLoanCall__Outputs(this);
-  }
-}
-
-export class RollLoanCall__Inputs {
-  _call: RollLoanCall;
-
-  constructor(call: RollLoanCall) {
-    this._call = call;
-  }
-
-  get loanID_(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get outputs(): SetRepaymentAddressCall__Outputs {
+    return new SetRepaymentAddressCall__Outputs(this);
   }
 }
 
-export class RollLoanCall__Outputs {
-  _call: RollLoanCall;
+export class SetRepaymentAddressCall__Inputs {
+  _call: SetRepaymentAddressCall;
 
-  constructor(call: RollLoanCall) {
-    this._call = call;
-  }
-}
-
-export class SetDirectRepayCall extends ethereum.Call {
-  get inputs(): SetDirectRepayCall__Inputs {
-    return new SetDirectRepayCall__Inputs(this);
-  }
-
-  get outputs(): SetDirectRepayCall__Outputs {
-    return new SetDirectRepayCall__Outputs(this);
-  }
-}
-
-export class SetDirectRepayCall__Inputs {
-  _call: SetDirectRepayCall;
-
-  constructor(call: SetDirectRepayCall) {
+  constructor(call: SetRepaymentAddressCall) {
     this._call = call;
   }
 
@@ -1156,15 +1103,15 @@ export class SetDirectRepayCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get direct_(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
+  get recipient_(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
-export class SetDirectRepayCall__Outputs {
-  _call: SetDirectRepayCall;
+export class SetRepaymentAddressCall__Outputs {
+  _call: SetRepaymentAddressCall;
 
-  constructor(call: SetDirectRepayCall) {
+  constructor(call: SetRepaymentAddressCall) {
     this._call = call;
   }
 }

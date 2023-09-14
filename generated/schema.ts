@@ -399,19 +399,6 @@ export class CoolerLoan extends Entity {
     this.set("lender", Value.fromBytes(value));
   }
 
-  get amount(): BigDecimal {
-    let value = this.get("amount");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set amount(value: BigDecimal) {
-    this.set("amount", Value.fromBigDecimal(value));
-  }
-
   get interest(): BigDecimal {
     let value = this.get("interest");
     if (!value || value.kind == ValueKind.NULL) {
@@ -438,19 +425,6 @@ export class CoolerLoan extends Entity {
     this.set("principal", Value.fromBigDecimal(value));
   }
 
-  get unclaimed(): BigDecimal {
-    let value = this.get("unclaimed");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set unclaimed(value: BigDecimal) {
-    this.set("unclaimed", Value.fromBigDecimal(value));
-  }
-
   get collateral(): BigDecimal {
     let value = this.get("collateral");
     if (!value || value.kind == ValueKind.NULL) {
@@ -475,19 +449,6 @@ export class CoolerLoan extends Entity {
 
   set expiryTimestamp(value: BigInt) {
     this.set("expiryTimestamp", Value.fromBigInt(value));
-  }
-
-  get repayDirect(): boolean {
-    let value = this.get("repayDirect");
-    if (!value || value.kind == ValueKind.NULL) {
-      return false;
-    } else {
-      return value.toBoolean();
-    }
-  }
-
-  set repayDirect(value: boolean) {
-    this.set("repayDirect", Value.fromBoolean(value));
   }
 
   get hasCallback(): boolean {
@@ -553,11 +514,11 @@ export class CoolerLoan extends Entity {
     );
   }
 
-  get rolloverEvents(): RollLoanEventLoader {
-    return new RollLoanEventLoader(
+  get extendEvents(): ExtendLoanEventLoader {
+    return new ExtendLoanEventLoader(
       "CoolerLoan",
       this.get("id")!.toString(),
-      "rolloverEvents"
+      "extendEvents"
     );
   }
 }
@@ -686,8 +647,8 @@ export class ClearinghouseSnapshot extends Entity {
     this.set("nextRebalanceTimestamp", Value.fromBigInt(value));
   }
 
-  get receivables(): BigDecimal {
-    let value = this.get("receivables");
+  get interestReceivables(): BigDecimal {
+    let value = this.get("interestReceivables");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -695,8 +656,21 @@ export class ClearinghouseSnapshot extends Entity {
     }
   }
 
-  set receivables(value: BigDecimal) {
-    this.set("receivables", Value.fromBigDecimal(value));
+  set interestReceivables(value: BigDecimal) {
+    this.set("interestReceivables", Value.fromBigDecimal(value));
+  }
+
+  get principalReceivables(): BigDecimal {
+    let value = this.get("principalReceivables");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set principalReceivables(value: BigDecimal) {
+    this.set("principalReceivables", Value.fromBigDecimal(value));
   }
 
   get daiBalance(): BigDecimal {
@@ -1183,32 +1157,6 @@ export class ClaimDefaultedLoanEvent extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get loan(): string {
-    let value = this.get("loan");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set loan(value: string) {
-    this.set("loan", Value.fromString(value));
-  }
-
-  get secondsSinceExpiry(): BigInt {
-    let value = this.get("secondsSinceExpiry");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set secondsSinceExpiry(value: BigInt) {
-    this.set("secondsSinceExpiry", Value.fromBigInt(value));
-  }
-
   get collateralQuantityClaimed(): BigDecimal {
     let value = this.get("collateralQuantityClaimed");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1248,17 +1196,30 @@ export class ClaimDefaultedLoanEvent extends Entity {
     this.set("collateralValueClaimed", Value.fromBigDecimal(value));
   }
 
-  get collateralIncome(): BigDecimal {
-    let value = this.get("collateralIncome");
+  get loan(): string {
+    let value = this.get("loan");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBigDecimal();
+      return value.toString();
     }
   }
 
-  set collateralIncome(value: BigDecimal) {
-    this.set("collateralIncome", Value.fromBigDecimal(value));
+  set loan(value: string) {
+    this.set("loan", Value.fromString(value));
+  }
+
+  get secondsSinceExpiry(): BigInt {
+    let value = this.get("secondsSinceExpiry");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set secondsSinceExpiry(value: BigInt) {
+    this.set("secondsSinceExpiry", Value.fromBigInt(value));
   }
 }
 
@@ -1355,6 +1316,19 @@ export class RepayLoanEvent extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
+  get amountPaid(): BigDecimal {
+    let value = this.get("amountPaid");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set amountPaid(value: BigDecimal) {
+    this.set("amountPaid", Value.fromBigDecimal(value));
+  }
+
   get loan(): string {
     let value = this.get("loan");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1381,8 +1355,8 @@ export class RepayLoanEvent extends Entity {
     this.set("secondsToExpiry", Value.fromBigInt(value));
   }
 
-  get loanPayable(): BigDecimal {
-    let value = this.get("loanPayable");
+  get principalPayable(): BigDecimal {
+    let value = this.get("principalPayable");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1390,8 +1364,21 @@ export class RepayLoanEvent extends Entity {
     }
   }
 
-  set loanPayable(value: BigDecimal) {
-    this.set("loanPayable", Value.fromBigDecimal(value));
+  set principalPayable(value: BigDecimal) {
+    this.set("principalPayable", Value.fromBigDecimal(value));
+  }
+
+  get interestPayable(): BigDecimal {
+    let value = this.get("interestPayable");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set interestPayable(value: BigDecimal) {
+    this.set("interestPayable", Value.fromBigDecimal(value));
   }
 
   get collateralDeposited(): BigDecimal {
@@ -1406,48 +1393,9 @@ export class RepayLoanEvent extends Entity {
   set collateralDeposited(value: BigDecimal) {
     this.set("collateralDeposited", Value.fromBigDecimal(value));
   }
-
-  get repaidUnclaimed(): BigDecimal {
-    let value = this.get("repaidUnclaimed");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set repaidUnclaimed(value: BigDecimal) {
-    this.set("repaidUnclaimed", Value.fromBigDecimal(value));
-  }
-
-  get amountPaid(): BigDecimal {
-    let value = this.get("amountPaid");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set amountPaid(value: BigDecimal) {
-    this.set("amountPaid", Value.fromBigDecimal(value));
-  }
-
-  get interestIncome(): BigDecimal {
-    let value = this.get("interestIncome");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set interestIncome(value: BigDecimal) {
-    this.set("interestIncome", Value.fromBigDecimal(value));
-  }
 }
 
-export class RollLoanEvent extends Entity {
+export class ExtendLoanEvent extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1455,24 +1403,24 @@ export class RollLoanEvent extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save RollLoanEvent entity without an ID");
+    assert(id != null, "Cannot save ExtendLoanEvent entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type RollLoanEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ExtendLoanEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("RollLoanEvent", id.toString(), this);
+      store.set("ExtendLoanEvent", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): RollLoanEvent | null {
-    return changetype<RollLoanEvent | null>(
-      store.get_in_block("RollLoanEvent", id)
+  static loadInBlock(id: string): ExtendLoanEvent | null {
+    return changetype<ExtendLoanEvent | null>(
+      store.get_in_block("ExtendLoanEvent", id)
     );
   }
 
-  static load(id: string): RollLoanEvent | null {
-    return changetype<RollLoanEvent | null>(store.get("RollLoanEvent", id));
+  static load(id: string): ExtendLoanEvent | null {
+    return changetype<ExtendLoanEvent | null>(store.get("ExtendLoanEvent", id));
   }
 
   get id(): string {
@@ -1540,6 +1488,19 @@ export class RollLoanEvent extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
+  get periods(): i32 {
+    let value = this.get("periods");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set periods(value: i32) {
+    this.set("periods", Value.fromI32(value));
+  }
+
   get loan(): string {
     let value = this.get("loan");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1553,34 +1514,8 @@ export class RollLoanEvent extends Entity {
     this.set("loan", Value.fromString(value));
   }
 
-  get newDebtQuantity(): BigDecimal {
-    let value = this.get("newDebtQuantity");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set newDebtQuantity(value: BigDecimal) {
-    this.set("newDebtQuantity", Value.fromBigDecimal(value));
-  }
-
-  get newCollateralQuantity(): BigDecimal {
-    let value = this.get("newCollateralQuantity");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigDecimal();
-    }
-  }
-
-  set newCollateralQuantity(value: BigDecimal) {
-    this.set("newCollateralQuantity", Value.fromBigDecimal(value));
-  }
-
-  get newExpiryTimestamp(): BigInt {
-    let value = this.get("newExpiryTimestamp");
+  get expiryTimestamp(): BigInt {
+    let value = this.get("expiryTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1588,8 +1523,21 @@ export class RollLoanEvent extends Entity {
     }
   }
 
-  set newExpiryTimestamp(value: BigInt) {
-    this.set("newExpiryTimestamp", Value.fromBigInt(value));
+  set expiryTimestamp(value: BigInt) {
+    this.set("expiryTimestamp", Value.fromBigInt(value));
+  }
+
+  get interestDue(): BigDecimal {
+    let value = this.get("interestDue");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set interestDue(value: BigDecimal) {
+    this.set("interestDue", Value.fromBigDecimal(value));
   }
 }
 
@@ -1701,7 +1649,7 @@ export class RepayLoanEventLoader extends Entity {
   }
 }
 
-export class RollLoanEventLoader extends Entity {
+export class ExtendLoanEventLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -1713,8 +1661,8 @@ export class RollLoanEventLoader extends Entity {
     this._field = field;
   }
 
-  load(): RollLoanEvent[] {
+  load(): ExtendLoanEvent[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<RollLoanEvent[]>(value);
+    return changetype<ExtendLoanEvent[]>(value);
   }
 }

@@ -32,13 +32,10 @@ type CoolerLoan @entity(immutable: true) {
   loanId: BigInt! # uint256
   borrower: Bytes! # address
   lender: Bytes! # address
-  amount: BigDecimal! # Total amount of debt, including interest
   interest: BigDecimal!
   principal: BigDecimal!
-  unclaimed: BigDecimal!
   collateral: BigDecimal!
   expiryTimestamp: BigInt!
-  repayDirect: Boolean!
   hasCallback: Boolean!
   collateralToken: Bytes! # address
   debtToken: Bytes! # address
@@ -46,7 +43,7 @@ type CoolerLoan @entity(immutable: true) {
   creationEvents: [ClearLoanRequestEvent!]! @derivedFrom(field: "loan")
   defaultedClaimEvents: [ClaimDefaultedLoanEvent!]! @derivedFrom(field: "loan")
   repaymentEvents: [RepayLoanEvent!]! @derivedFrom(field: "loan")
-  rolloverEvents: [RollLoanEvent!]! @derivedFrom(field: "loan")
+  extendEvents: [ExtendLoanEvent!]! @derivedFrom(field: "loan")
 }
 
 type ClearinghouseSnapshot @entity {
@@ -58,7 +55,8 @@ type ClearinghouseSnapshot @entity {
   # State information
   isActive: Boolean!
   nextRebalanceTimestamp: BigInt!
-  receivables: BigDecimal!
+  interestReceivables: BigDecimal!
+  principalReceivables: BigDecimal!
   # Capacity
   daiBalance: BigDecimal!
   sDaiBalance: BigDecimal!
@@ -96,6 +94,7 @@ type ClearLoanRequestEvent @entity(immutable: true) {
   transactionHash: Bytes!
   # Event information
   request: CoolerLoanRequest!
+  # Loan state
   loan: CoolerLoan!
 }
 
@@ -106,14 +105,13 @@ type ClaimDefaultedLoanEvent @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-  # Loan information
-  loan: CoolerLoan!
-  secondsSinceExpiry: BigInt!
   # Income
   collateralQuantityClaimed: BigDecimal!
   collateralPrice: BigDecimal!
   collateralValueClaimed: BigDecimal!
-  collateralIncome: BigDecimal!
+  # Loan state
+  loan: CoolerLoan!
+  secondsSinceExpiry: BigInt!
 }
 
 type RepayLoanEvent @entity(immutable: true) {
@@ -123,29 +121,27 @@ type RepayLoanEvent @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-  # Loan information
-  loan: CoolerLoan!
-  secondsToExpiry: BigInt!
-  loanPayable: BigDecimal!
-  collateralDeposited: BigDecimal!
-  repaidUnclaimed: BigDecimal!
   # Event information
   amountPaid: BigDecimal!
-  # Income
-  interestIncome: BigDecimal!
+  # Loan state
+  loan: CoolerLoan!
+  secondsToExpiry: BigInt!
+  principalPayable: BigDecimal!
+  interestPayable: BigDecimal!
+  collateralDeposited: BigDecimal!
 }
 
-type RollLoanEvent @entity(immutable: true) {
+type ExtendLoanEvent @entity(immutable: true) {
   # Context
   id: String! # cooler-loanId-blockNumber
   date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  # Event information
+  periods: Int! # Number of duration periods the loan has been extended for
   # Loan information
   loan: CoolerLoan!
-  # Event information
-  newDebtQuantity: BigDecimal!
-  newCollateralQuantity: BigDecimal!
-  newExpiryTimestamp: BigInt!
+  expiryTimestamp: BigInt!
+  interestDue: BigDecimal!
 }

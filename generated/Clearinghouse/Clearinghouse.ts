@@ -10,31 +10,100 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
-export class Deactivated extends ethereum.Event {
-  get params(): Deactivated__Params {
-    return new Deactivated__Params(this);
+export class Deactivate extends ethereum.Event {
+  get params(): Deactivate__Params {
+    return new Deactivate__Params(this);
   }
 }
 
-export class Deactivated__Params {
-  _event: Deactivated;
+export class Deactivate__Params {
+  _event: Deactivate;
 
-  constructor(event: Deactivated) {
+  constructor(event: Deactivate) {
     this._event = event;
   }
 }
 
-export class Reactivated extends ethereum.Event {
-  get params(): Reactivated__Params {
-    return new Reactivated__Params(this);
+export class Defund extends ethereum.Event {
+  get params(): Defund__Params {
+    return new Defund__Params(this);
   }
 }
 
-export class Reactivated__Params {
-  _event: Reactivated;
+export class Defund__Params {
+  _event: Defund;
 
-  constructor(event: Reactivated) {
+  constructor(event: Defund) {
     this._event = event;
+  }
+
+  get token(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class Reactivate extends ethereum.Event {
+  get params(): Reactivate__Params {
+    return new Reactivate__Params(this);
+  }
+}
+
+export class Reactivate__Params {
+  _event: Reactivate;
+
+  constructor(event: Reactivate) {
+    this._event = event;
+  }
+}
+
+export class Rebalance extends ethereum.Event {
+  get params(): Rebalance__Params {
+    return new Rebalance__Params(this);
+  }
+}
+
+export class Rebalance__Params {
+  _event: Rebalance;
+
+  constructor(event: Rebalance) {
+    this._event = event;
+  }
+
+  get defund(): boolean {
+    return this._event.parameters[0].value.toBoolean();
+  }
+
+  get daiAmount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class Clearinghouse__getLoanForCollateralResult {
+  value0: BigInt;
+  value1: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+
+  getValue0(): BigInt {
+    return this.value0;
+  }
+
+  getValue1(): BigInt {
+    return this.value1;
   }
 }
 
@@ -253,29 +322,6 @@ export class Clearinghouse extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  debtForCollateral(collateral_: BigInt): BigInt {
-    let result = super.call(
-      "debtForCollateral",
-      "debtForCollateral(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(collateral_)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_debtForCollateral(collateral_: BigInt): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "debtForCollateral",
-      "debtForCollateral(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(collateral_)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   factory(): Address {
     let result = super.call("factory", "factory():(address)", []);
 
@@ -306,14 +352,95 @@ export class Clearinghouse extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  gOHM(): Address {
-    let result = super.call("gOHM", "gOHM():(address)", []);
+  getCollateralForLoan(principal_: BigInt): BigInt {
+    let result = super.call(
+      "getCollateralForLoan",
+      "getCollateralForLoan(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(principal_)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getCollateralForLoan(principal_: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getCollateralForLoan",
+      "getCollateralForLoan(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(principal_)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getLoanForCollateral(
+    collateral_: BigInt
+  ): Clearinghouse__getLoanForCollateralResult {
+    let result = super.call(
+      "getLoanForCollateral",
+      "getLoanForCollateral(uint256):(uint256,uint256)",
+      [ethereum.Value.fromUnsignedBigInt(collateral_)]
+    );
+
+    return new Clearinghouse__getLoanForCollateralResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_getLoanForCollateral(
+    collateral_: BigInt
+  ): ethereum.CallResult<Clearinghouse__getLoanForCollateralResult> {
+    let result = super.tryCall(
+      "getLoanForCollateral",
+      "getLoanForCollateral(uint256):(uint256,uint256)",
+      [ethereum.Value.fromUnsignedBigInt(collateral_)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Clearinghouse__getLoanForCollateralResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
+  getTotalReceivables(): BigInt {
+    let result = super.call(
+      "getTotalReceivables",
+      "getTotalReceivables():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getTotalReceivables(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getTotalReceivables",
+      "getTotalReceivables():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  gohm(): Address {
+    let result = super.call("gohm", "gohm():(address)", []);
 
     return result[0].toAddress();
   }
 
-  try_gOHM(): ethereum.CallResult<Address> {
-    let result = super.tryCall("gOHM", "gOHM():(address)", []);
+  try_gohm(): ethereum.CallResult<Address> {
+    let result = super.tryCall("gohm", "gohm():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -321,21 +448,53 @@ export class Clearinghouse extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  interestFromDebt(debt_: BigInt): BigInt {
+  interestForLoan(principal_: BigInt, duration_: BigInt): BigInt {
     let result = super.call(
-      "interestFromDebt",
-      "interestFromDebt(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(debt_)]
+      "interestForLoan",
+      "interestForLoan(uint256,uint256):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(principal_),
+        ethereum.Value.fromUnsignedBigInt(duration_)
+      ]
     );
 
     return result[0].toBigInt();
   }
 
-  try_interestFromDebt(debt_: BigInt): ethereum.CallResult<BigInt> {
+  try_interestForLoan(
+    principal_: BigInt,
+    duration_: BigInt
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "interestFromDebt",
-      "interestFromDebt(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(debt_)]
+      "interestForLoan",
+      "interestForLoan(uint256,uint256):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(principal_),
+        ethereum.Value.fromUnsignedBigInt(duration_)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  interestReceivables(): BigInt {
+    let result = super.call(
+      "interestReceivables",
+      "interestReceivables():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_interestReceivables(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "interestReceivables",
+      "interestReceivables():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -429,6 +588,44 @@ export class Clearinghouse extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  ohm(): Address {
+    let result = super.call("ohm", "ohm():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_ohm(): ethereum.CallResult<Address> {
+    let result = super.tryCall("ohm", "ohm():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  principalReceivables(): BigInt {
+    let result = super.call(
+      "principalReceivables",
+      "principalReceivables():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_principalReceivables(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "principalReceivables",
+      "principalReceivables():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   rebalance(): boolean {
     let result = super.call("rebalance", "rebalance():(bool)", []);
 
@@ -442,21 +639,6 @@ export class Clearinghouse extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  receivables(): BigInt {
-    let result = super.call("receivables", "receivables():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_receivables(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("receivables", "receivables():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   requestPermissions(): Array<
@@ -540,24 +722,28 @@ export class ConstructorCall__Inputs {
     this._call = call;
   }
 
-  get gohm_(): Address {
+  get ohm_(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get staking_(): Address {
+  get gohm_(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get sdai_(): Address {
+  get staking_(): Address {
     return this._call.inputValues[2].value.toAddress();
   }
 
-  get coolerFactory_(): Address {
+  get sdai_(): Address {
     return this._call.inputValues[3].value.toAddress();
   }
 
-  get kernel_(): Address {
+  get coolerFactory_(): Address {
     return this._call.inputValues[4].value.toAddress();
+  }
+
+  get kernel_(): Address {
+    return this._call.inputValues[5].value.toAddress();
   }
 }
 
@@ -565,6 +751,32 @@ export class ConstructorCall__Outputs {
   _call: ConstructorCall;
 
   constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class BurnCall extends ethereum.Call {
+  get inputs(): BurnCall__Inputs {
+    return new BurnCall__Inputs(this);
+  }
+
+  get outputs(): BurnCall__Outputs {
+    return new BurnCall__Outputs(this);
+  }
+}
+
+export class BurnCall__Inputs {
+  _call: BurnCall;
+
+  constructor(call: BurnCall) {
+    this._call = call;
+  }
+}
+
+export class BurnCall__Outputs {
+  _call: BurnCall;
+
+  constructor(call: BurnCall) {
     this._call = call;
   }
 }
@@ -723,6 +935,44 @@ export class EmergencyShutdownCall__Outputs {
   }
 }
 
+export class ExtendLoanCall extends ethereum.Call {
+  get inputs(): ExtendLoanCall__Inputs {
+    return new ExtendLoanCall__Inputs(this);
+  }
+
+  get outputs(): ExtendLoanCall__Outputs {
+    return new ExtendLoanCall__Outputs(this);
+  }
+}
+
+export class ExtendLoanCall__Inputs {
+  _call: ExtendLoanCall;
+
+  constructor(call: ExtendLoanCall) {
+    this._call = call;
+  }
+
+  get cooler_(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get loanID_(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get times_(): i32 {
+    return this._call.inputValues[2].value.toI32();
+  }
+}
+
+export class ExtendLoanCall__Outputs {
+  _call: ExtendLoanCall;
+
+  constructor(call: ExtendLoanCall) {
+    this._call = call;
+  }
+}
+
 export class LendToCoolerCall extends ethereum.Call {
   get inputs(): LendToCoolerCall__Inputs {
     return new LendToCoolerCall__Inputs(this);
@@ -782,12 +1032,16 @@ export class OnDefaultCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get debt(): BigInt {
+  get principle(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get collateral(): BigInt {
+  get interest(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get collateral(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
@@ -820,8 +1074,12 @@ export class OnRepayCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get amount_(): BigInt {
+  get principlePaid_(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get interestPaid_(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
@@ -829,44 +1087,6 @@ export class OnRepayCall__Outputs {
   _call: OnRepayCall;
 
   constructor(call: OnRepayCall) {
-    this._call = call;
-  }
-}
-
-export class OnRollCall extends ethereum.Call {
-  get inputs(): OnRollCall__Inputs {
-    return new OnRollCall__Inputs(this);
-  }
-
-  get outputs(): OnRollCall__Outputs {
-    return new OnRollCall__Outputs(this);
-  }
-}
-
-export class OnRollCall__Inputs {
-  _call: OnRollCall;
-
-  constructor(call: OnRollCall) {
-    this._call = call;
-  }
-
-  get loanID_(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get newDebt(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get newCollateral(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class OnRollCall__Outputs {
-  _call: OnRollCall;
-
-  constructor(call: OnRollCall) {
     this._call = call;
   }
 }
@@ -924,40 +1144,6 @@ export class RebalanceCall__Outputs {
 
   get value0(): boolean {
     return this._call.outputValues[0].value.toBoolean();
-  }
-}
-
-export class RollLoanCall extends ethereum.Call {
-  get inputs(): RollLoanCall__Inputs {
-    return new RollLoanCall__Inputs(this);
-  }
-
-  get outputs(): RollLoanCall__Outputs {
-    return new RollLoanCall__Outputs(this);
-  }
-}
-
-export class RollLoanCall__Inputs {
-  _call: RollLoanCall;
-
-  constructor(call: RollLoanCall) {
-    this._call = call;
-  }
-
-  get cooler_(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get loanID_(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class RollLoanCall__Outputs {
-  _call: RollLoanCall;
-
-  constructor(call: RollLoanCall) {
-    this._call = call;
   }
 }
 

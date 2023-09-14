@@ -30,6 +30,10 @@ export class ClearRequest__Params {
   get reqID(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
+
+  get loanID(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
 }
 
 export class DefaultLoan extends ethereum.Event {
@@ -51,6 +55,36 @@ export class DefaultLoan__Params {
 
   get loanID(): BigInt {
     return this._event.parameters[1].value.toBigInt();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class ExtendLoan extends ethereum.Event {
+  get params(): ExtendLoan__Params {
+    return new ExtendLoan__Params(this);
+  }
+}
+
+export class ExtendLoan__Params {
+  _event: ExtendLoan;
+
+  constructor(event: ExtendLoan) {
+    this._event = event;
+  }
+
+  get cooler(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get loanID(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get times(): i32 {
+    return this._event.parameters[2].value.toI32();
   }
 }
 
@@ -128,28 +162,6 @@ export class RescindRequest__Params {
   }
 
   get reqID(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-}
-
-export class RollLoan extends ethereum.Event {
-  get params(): RollLoan__Params {
-    return new RollLoan__Params(this);
-  }
-}
-
-export class RollLoan__Params {
-  _event: RollLoan;
-
-  constructor(event: RollLoan) {
-    this._event = event;
-  }
-
-  get cooler(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get loanID(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 }
@@ -333,40 +345,198 @@ export class GenerateCoolerCall__Outputs {
   }
 }
 
-export class NewEventCall extends ethereum.Call {
-  get inputs(): NewEventCall__Inputs {
-    return new NewEventCall__Inputs(this);
+export class LogClearRequestCall extends ethereum.Call {
+  get inputs(): LogClearRequestCall__Inputs {
+    return new LogClearRequestCall__Inputs(this);
   }
 
-  get outputs(): NewEventCall__Outputs {
-    return new NewEventCall__Outputs(this);
+  get outputs(): LogClearRequestCall__Outputs {
+    return new LogClearRequestCall__Outputs(this);
   }
 }
 
-export class NewEventCall__Inputs {
-  _call: NewEventCall;
+export class LogClearRequestCall__Inputs {
+  _call: LogClearRequestCall;
 
-  constructor(call: NewEventCall) {
+  constructor(call: LogClearRequestCall) {
     this._call = call;
   }
 
-  get id_(): BigInt {
+  get reqID_(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get ev_(): i32 {
-    return this._call.inputValues[1].value.toI32();
-  }
-
-  get amount_(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+  get loanID_(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 }
 
-export class NewEventCall__Outputs {
-  _call: NewEventCall;
+export class LogClearRequestCall__Outputs {
+  _call: LogClearRequestCall;
 
-  constructor(call: NewEventCall) {
+  constructor(call: LogClearRequestCall) {
+    this._call = call;
+  }
+}
+
+export class LogDefaultLoanCall extends ethereum.Call {
+  get inputs(): LogDefaultLoanCall__Inputs {
+    return new LogDefaultLoanCall__Inputs(this);
+  }
+
+  get outputs(): LogDefaultLoanCall__Outputs {
+    return new LogDefaultLoanCall__Outputs(this);
+  }
+}
+
+export class LogDefaultLoanCall__Inputs {
+  _call: LogDefaultLoanCall;
+
+  constructor(call: LogDefaultLoanCall) {
+    this._call = call;
+  }
+
+  get loanID_(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get collateral_(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class LogDefaultLoanCall__Outputs {
+  _call: LogDefaultLoanCall;
+
+  constructor(call: LogDefaultLoanCall) {
+    this._call = call;
+  }
+}
+
+export class LogExtendLoanCall extends ethereum.Call {
+  get inputs(): LogExtendLoanCall__Inputs {
+    return new LogExtendLoanCall__Inputs(this);
+  }
+
+  get outputs(): LogExtendLoanCall__Outputs {
+    return new LogExtendLoanCall__Outputs(this);
+  }
+}
+
+export class LogExtendLoanCall__Inputs {
+  _call: LogExtendLoanCall;
+
+  constructor(call: LogExtendLoanCall) {
+    this._call = call;
+  }
+
+  get loanID_(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get times_(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+}
+
+export class LogExtendLoanCall__Outputs {
+  _call: LogExtendLoanCall;
+
+  constructor(call: LogExtendLoanCall) {
+    this._call = call;
+  }
+}
+
+export class LogRepayLoanCall extends ethereum.Call {
+  get inputs(): LogRepayLoanCall__Inputs {
+    return new LogRepayLoanCall__Inputs(this);
+  }
+
+  get outputs(): LogRepayLoanCall__Outputs {
+    return new LogRepayLoanCall__Outputs(this);
+  }
+}
+
+export class LogRepayLoanCall__Inputs {
+  _call: LogRepayLoanCall;
+
+  constructor(call: LogRepayLoanCall) {
+    this._call = call;
+  }
+
+  get loanID_(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get repayment_(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class LogRepayLoanCall__Outputs {
+  _call: LogRepayLoanCall;
+
+  constructor(call: LogRepayLoanCall) {
+    this._call = call;
+  }
+}
+
+export class LogRequestLoanCall extends ethereum.Call {
+  get inputs(): LogRequestLoanCall__Inputs {
+    return new LogRequestLoanCall__Inputs(this);
+  }
+
+  get outputs(): LogRequestLoanCall__Outputs {
+    return new LogRequestLoanCall__Outputs(this);
+  }
+}
+
+export class LogRequestLoanCall__Inputs {
+  _call: LogRequestLoanCall;
+
+  constructor(call: LogRequestLoanCall) {
+    this._call = call;
+  }
+
+  get reqID_(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class LogRequestLoanCall__Outputs {
+  _call: LogRequestLoanCall;
+
+  constructor(call: LogRequestLoanCall) {
+    this._call = call;
+  }
+}
+
+export class LogRescindRequestCall extends ethereum.Call {
+  get inputs(): LogRescindRequestCall__Inputs {
+    return new LogRescindRequestCall__Inputs(this);
+  }
+
+  get outputs(): LogRescindRequestCall__Outputs {
+    return new LogRescindRequestCall__Outputs(this);
+  }
+}
+
+export class LogRescindRequestCall__Inputs {
+  _call: LogRescindRequestCall;
+
+  constructor(call: LogRescindRequestCall) {
+    this._call = call;
+  }
+
+  get reqID_(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class LogRescindRequestCall__Outputs {
+  _call: LogRescindRequestCall;
+
+  constructor(call: LogRescindRequestCall) {
     this._call = call;
   }
 }

@@ -1,11 +1,12 @@
 {
   "goerli": {
     "Clearinghouse": {
-      "address": "0xA1081f6630EAD894E83BBC7eAB4C02C41b3fbc74",
-      "startBlock": 9571742
+      "address": "0x70fF4ceECe06175EC9D536DCD9264185cE7790Ce",
+      "startBlock": 9692230
     },
     "CoolerFactory": {
-      "address": "0x7279c46abda211a7c87b3b27845275cc0ee029ce"
+      "address": "0x1A69A901BbF061E248eB1f1479EFc6226cb82716",
+      "startBlock": 9692230
     }
   }
 }

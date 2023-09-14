@@ -31,7 +31,8 @@ function populateClearinghouseSnapshot(clearinghouse: Address, block: ethereum.B
   // Get the state information
   snapshotRecord.isActive = clearinghouseContract.active();
   snapshotRecord.nextRebalanceTimestamp = clearinghouseContract.fundTime();
-  snapshotRecord.receivables = toDecimal(clearinghouseContract.receivables(), daiContract.decimals());
+  snapshotRecord.interestReceivables = toDecimal(clearinghouseContract.interestReceivables(), daiContract.decimals());
+  snapshotRecord.principalReceivables = toDecimal(clearinghouseContract.principalReceivables(), daiContract.decimals());
 
   // Get the funding capacity
   snapshotRecord.daiBalance = toDecimal(daiContract.balanceOf(clearinghouse), daiContract.decimals());

@@ -6,9 +6,9 @@ dataSources:
     name: Clearinghouse
     network: goerli
     source:
-      address: "0xA1081f6630EAD894E83BBC7eAB4C02C41b3fbc74"
+      address: "0x70fF4ceECe06175EC9D536DCD9264185cE7790Ce"
       abi: Clearinghouse
-      startBlock: 9571742
+      startBlock: 9692230
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -22,20 +22,20 @@ dataSources:
           file: ./abis/ERC20.json
         - name: ERC4626
           file: ./abis/ERC4626.json
-      # TODO add event handlers for Clearinghouse after contract changes
       eventHandlers:
-        - event: Deactivated()
+        - event: Deactivate()
           handler: handleDeactivated
-        - event: Reactivated()
+        - event: Reactivate()
           handler: handleReactivated
+        # TODO defund, rebalance
       file: ./src/clearinghouse.ts
   - kind: ethereum
     name: CoolerFactory
     network: goerli
     source:
-      address: "0x7279c46abda211a7c87b3b27845275cc0ee029ce"
+      address: "0x1A69A901BbF061E248eB1f1479EFc6226cb82716"
       abi: CoolerFactory
-      startBlock: 9533843
+      startBlock: 9692230
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -48,7 +48,7 @@ dataSources:
         - ClearLoanRequestEvent
         - ClaimDefaultedLoanEvent
         - RepayLoanEvent
-        - RollLoanEvent
+        - ExtendLoanEvent
       abis:
         - name: CoolerFactory
           file: ./abis/CoolerFactory.json
@@ -61,16 +61,16 @@ dataSources:
         - name: gOHM
           file: ./abis/gOHM.json
       eventHandlers:
-        - event: RequestLoan(address,address,address,uint256)
+        - event: RequestLoan(indexed address,address,address,uint256)
           handler: handleRequest
-        - event: RescindRequest(address,uint256)
+        - event: RescindRequest(indexed address,uint256)
           handler: handleRescindRequest
-        - event: ClearRequest(address,uint256)
+        - event: ClearRequest(indexed address,uint256,uint256)
           handler: handleClearRequest
-        - event: DefaultLoan(address,uint256)
+        - event: DefaultLoan(indexed address,uint256,uint256)
           handler: handleDefaultLoan
-        - event: RepayLoan(address,uint256,uint256)
+        - event: RepayLoan(indexed address,uint256,uint256)
           handler: handleRepayLoan
-        - event: RollLoan(address,uint256)
-          handler: handleRollLoan
+        - event: ExtendLoan(indexed address,uint256,uint8)
+          handler: handleExtendLoan
       file: ./src/cooler-factory.ts

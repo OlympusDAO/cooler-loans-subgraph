@@ -23,11 +23,10 @@ dataSources:
         - name: ERC4626
           file: ./abis/ERC4626.json
       eventHandlers:
-        - event: Deactivate()
-          handler: handleDeactivated
-        - event: Reactivate()
-          handler: handleReactivated
-        # TODO defund, rebalance
+        - event: Rebalance(bool,uint256)
+          handler: handleRebalance
+        - event: Defund(address,uint256)
+          handler: handleDefund
       file: ./src/clearinghouse.ts
   - kind: ethereum
     name: CoolerFactory

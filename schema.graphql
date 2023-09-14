@@ -47,7 +47,7 @@ type CoolerLoan @entity(immutable: true) {
 }
 
 type ClearinghouseSnapshot @entity {
-  id: String! # address-blockNumber
+  id: String! # address-blockNumber-log
   date: String! # YYYY-MM-DD
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -63,7 +63,31 @@ type ClearinghouseSnapshot @entity {
   sDaiInDaiBalance: BigDecimal!
 }
 
-### Events
+### Clearinghouse Events
+
+type RebalanceEvent @entity(immutable: true) {
+  id: String! # clearinghouse-blockNumber
+  date: String! # YYYY-MM-DD
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  clearinghouse: Bytes! # address
+  # State information
+  amount: BigDecimal! # Amount of DAI in (positive)/out (negative) of the clearinghouse
+}
+
+type DefundEvent @entity(immutable: true) {
+  id: String! # clearinghouse-blockNumber
+  date: String! # YYYY-MM-DD
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  clearinghouse: Bytes! # address
+  # State information
+  amount: BigDecimal! # Amount of DAI out (negative) of the clearinghouse
+}
+
+### Loan Events
 
 type RequestLoanEvent @entity(immutable: true) {
   # Context

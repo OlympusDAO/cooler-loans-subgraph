@@ -1,15 +1,15 @@
 {
-  "name": "cooler-subgraph",
+  "name": "cooler-loans-subgraph",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ cooler-subgraph",
-    "create-local": "graph create --node http://localhost:8020/ cooler-subgraph",
-    "remove-local": "graph remove --node http://localhost:8020/ cooler-subgraph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cooler-subgraph",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ cooler-loans",
+    "create-local": "graph create --node http://localhost:8020/ cooler-loans",
+    "remove-local": "graph remove --node http://localhost:8020/ cooler-loans",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cooler-loans",
     "test": "graph test"
   },
   "keywords": [],

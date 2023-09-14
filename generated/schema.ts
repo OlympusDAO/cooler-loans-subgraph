@@ -711,6 +711,22 @@ export class ClearinghouseSnapshot extends Entity {
   set sDaiInDaiBalance(value: BigDecimal) {
     this.set("sDaiInDaiBalance", Value.fromBigDecimal(value));
   }
+
+  get rebalanceEvents(): RebalanceEventLoader {
+    return new RebalanceEventLoader(
+      "ClearinghouseSnapshot",
+      this.get("id")!.toString(),
+      "rebalanceEvents"
+    );
+  }
+
+  get defundEvents(): DefundEventLoader {
+    return new DefundEventLoader(
+      "ClearinghouseSnapshot",
+      this.get("id")!.toString(),
+      "defundEvents"
+    );
+  }
 }
 
 export class RebalanceEvent extends Entity {
@@ -817,6 +833,19 @@ export class RebalanceEvent extends Entity {
 
   set clearinghouse(value: Bytes) {
     this.set("clearinghouse", Value.fromBytes(value));
+  }
+
+  get clearinghouseSnapshot(): string {
+    let value = this.get("clearinghouseSnapshot");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set clearinghouseSnapshot(value: string) {
+    this.set("clearinghouseSnapshot", Value.fromString(value));
   }
 
   get amount(): BigDecimal {
@@ -937,6 +966,19 @@ export class DefundEvent extends Entity {
 
   set clearinghouse(value: Bytes) {
     this.set("clearinghouse", Value.fromBytes(value));
+  }
+
+  get clearinghouseSnapshot(): string {
+    let value = this.get("clearinghouseSnapshot");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set clearinghouseSnapshot(value: string) {
+    this.set("clearinghouseSnapshot", Value.fromString(value));
   }
 
   get amount(): BigDecimal {
@@ -1904,5 +1946,41 @@ export class ExtendLoanEventLoader extends Entity {
   load(): ExtendLoanEvent[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<ExtendLoanEvent[]>(value);
+  }
+}
+
+export class RebalanceEventLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): RebalanceEvent[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<RebalanceEvent[]>(value);
+  }
+}
+
+export class DefundEventLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): DefundEvent[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<DefundEvent[]>(value);
   }
 }

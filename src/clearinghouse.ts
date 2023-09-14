@@ -57,6 +57,10 @@ export function handleRebalance(event: Rebalance): void {
   const multiplier = new BigDecimal(isDefund ? BigInt.fromI32(-1) : BigInt.fromI32(1));
   const amount = toDecimal(event.params.daiAmount, capacityDecimals).times(multiplier);
 
+  // Take a snapshot
+  const snapshotRecord = populateClearinghouseSnapshot(clearinghouse, event);
+  snapshotRecord.save();
+
   // Record the event
   const eventRecord = new RebalanceEvent(clearinghouse.toHexString() + "-" + block.number.toString());
   eventRecord.date = getISO8601DateStringFromTimestamp(block.timestamp);
@@ -65,12 +69,8 @@ export function handleRebalance(event: Rebalance): void {
   eventRecord.transactionHash = event.transaction.hash;
   eventRecord.clearinghouse = clearinghouse;
   eventRecord.amount = amount;
+  eventRecord.clearinghouseSnapshot = snapshotRecord.id;
   eventRecord.save();
-
-  // Take a snapshot
-  const snapshotRecord = populateClearinghouseSnapshot(clearinghouse, event);
-
-  snapshotRecord.save();
 }
 
 export function handleDefund(event: Defund): void {
@@ -83,6 +83,10 @@ export function handleDefund(event: Defund): void {
   // Always negative
   const amount = toDecimal(event.params.amount, capacityDecimals).times(new BigDecimal(BigInt.fromI32(-1)));
 
+  // Take a snapshot
+  const snapshotRecord = populateClearinghouseSnapshot(clearinghouse, event);
+  snapshotRecord.save();
+
   // Record the event
   const eventRecord = new DefundEvent(clearinghouse.toHexString() + "-" + block.number.toString());
   eventRecord.date = getISO8601DateStringFromTimestamp(block.timestamp);
@@ -91,10 +95,6 @@ export function handleDefund(event: Defund): void {
   eventRecord.transactionHash = event.transaction.hash;
   eventRecord.clearinghouse = clearinghouse;
   eventRecord.amount = amount;
+  eventRecord.clearinghouseSnapshot = snapshotRecord.id;
   eventRecord.save();
-
-  // Take a snapshot
-  const snapshotRecord = populateClearinghouseSnapshot(clearinghouse, event);
-
-  snapshotRecord.save();
 }

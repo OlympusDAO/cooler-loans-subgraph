@@ -61,6 +61,9 @@ type ClearinghouseSnapshot @entity {
   daiBalance: BigDecimal!
   sDaiBalance: BigDecimal!
   sDaiInDaiBalance: BigDecimal!
+  # Related records
+  rebalanceEvents: [RebalanceEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
+  defundEvents: [DefundEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
 }
 
 ### Clearinghouse Events
@@ -72,6 +75,7 @@ type RebalanceEvent @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   clearinghouse: Bytes! # address
+  clearinghouseSnapshot: ClearinghouseSnapshot!
   # State information
   amount: BigDecimal! # Amount of DAI in (positive)/out (negative) of the clearinghouse
 }
@@ -83,6 +87,7 @@ type DefundEvent @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   clearinghouse: Bytes! # address
+  clearinghouseSnapshot: ClearinghouseSnapshot!
   # State information
   amount: BigDecimal! # Amount of DAI out (negative) of the clearinghouse
 }

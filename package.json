@@ -6,10 +6,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ cooler-loans",
-    "create-local": "graph create --node http://localhost:8020/ cooler-loans",
-    "remove-local": "graph remove --node http://localhost:8020/ cooler-loans",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cooler-loans",
+    "deploy": "graph deploy --studio --version-label=$(cat .subgraph-version | tr -d '[:space:]') cooler-loans",
+    "deploy:goerli": "graph deploy --studio --version-label=$(cat .subgraph-version | tr -d '[:space:]') cooler-loans-goerli",
     "test": "graph test"
   },
   "keywords": [],

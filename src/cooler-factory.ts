@@ -18,6 +18,7 @@ import {
   ExtendLoanEvent,
   CoolerLoanRequest,
   RescindLoanRequestEvent,
+  RequestLoanEvent,
 } from "../generated/schema"
 import { oracles } from "@protofire/subgraph-devkit";
 import { toDecimal } from "./numberHelper"
@@ -135,7 +136,7 @@ export function handleRequest(event: RequestLoan): void {
   requestRecord.save();
 
   // Create an event record
-  const eventRecord: ClearLoanRequestEvent = new ClearLoanRequestEvent(getRequestRecordId(cooler._address, requestId));
+  const eventRecord: RequestLoanEvent = new RequestLoanEvent(getRequestRecordId(cooler._address, requestId));
   eventRecord.date = getISO8601DateStringFromTimestamp(event.block.timestamp);
   eventRecord.blockNumber = event.block.number;
   eventRecord.blockTimestamp = event.block.timestamp;

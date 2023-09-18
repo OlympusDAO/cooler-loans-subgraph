@@ -175,6 +175,7 @@ type ExtendLoanEvent @entity(immutable: true) {
   periods: Int! # Number of duration periods the loan has been extended for
   # Loan information
   loan: CoolerLoan!
+  # The new expiry timestamp
   expiryTimestamp: BigInt!
   interestDue: BigDecimal!
 }

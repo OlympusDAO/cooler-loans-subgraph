@@ -26,6 +26,11 @@ function populateClearinghouseSnapshot(clearinghouse: Address, event: ethereum.E
   // Load the clearinghouse
   const clearinghouseContract = Clearinghouse.bind(clearinghouse);
 
+  // Configuration
+  snapshotRecord.coolerFactoryAddress = clearinghouseContract.factory();
+  snapshotRecord.collateralAddress = clearinghouseContract.gohm();
+  snapshotRecord.debtAddress = clearinghouseContract.dai();
+
   const daiContract = ERC20.bind(clearinghouseContract.dai());
   const daiDecimals = daiContract.decimals();
   const sDaiContract = ERC4626.bind(clearinghouseContract.sdai());

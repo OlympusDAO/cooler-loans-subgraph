@@ -621,6 +621,45 @@ export class ClearinghouseSnapshot extends Entity {
     this.set("clearinghouse", Value.fromBytes(value));
   }
 
+  get coolerFactoryAddress(): Bytes {
+    let value = this.get("coolerFactoryAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set coolerFactoryAddress(value: Bytes) {
+    this.set("coolerFactoryAddress", Value.fromBytes(value));
+  }
+
+  get collateralAddress(): Bytes {
+    let value = this.get("collateralAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set collateralAddress(value: Bytes) {
+    this.set("collateralAddress", Value.fromBytes(value));
+  }
+
+  get debtAddress(): Bytes {
+    let value = this.get("debtAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set debtAddress(value: Bytes) {
+    this.set("debtAddress", Value.fromBytes(value));
+  }
+
   get isActive(): boolean {
     let value = this.get("isActive");
     if (!value || value.kind == ValueKind.NULL) {

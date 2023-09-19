@@ -673,6 +673,71 @@ export class ClearinghouseSnapshot extends Entity {
     this.set("principalReceivables", Value.fromBigDecimal(value));
   }
 
+  get interestRate(): BigDecimal {
+    let value = this.get("interestRate");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set interestRate(value: BigDecimal) {
+    this.set("interestRate", Value.fromBigDecimal(value));
+  }
+
+  get duration(): BigInt {
+    let value = this.get("duration");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set duration(value: BigInt) {
+    this.set("duration", Value.fromBigInt(value));
+  }
+
+  get fundCadence(): BigInt {
+    let value = this.get("fundCadence");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set fundCadence(value: BigInt) {
+    this.set("fundCadence", Value.fromBigInt(value));
+  }
+
+  get fundAmount(): BigDecimal {
+    let value = this.get("fundAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set fundAmount(value: BigDecimal) {
+    this.set("fundAmount", Value.fromBigDecimal(value));
+  }
+
+  get loanToCollateral(): BigDecimal {
+    let value = this.get("loanToCollateral");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set loanToCollateral(value: BigDecimal) {
+    this.set("loanToCollateral", Value.fromBigDecimal(value));
+  }
+
   get daiBalance(): BigDecimal {
     let value = this.get("daiBalance");
     if (!value || value.kind == ValueKind.NULL) {

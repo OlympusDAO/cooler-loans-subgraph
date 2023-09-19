@@ -57,6 +57,12 @@ type ClearinghouseSnapshot @entity {
   nextRebalanceTimestamp: BigInt!
   interestReceivables: BigDecimal!
   principalReceivables: BigDecimal!
+  # Terms
+  interestRate: BigDecimal! # Annual interest rate. 0.1 = 10%
+  duration: BigInt! # Duration of loans in seconds
+  fundCadence: BigInt! # Frequency of rebalances in seconds
+  fundAmount: BigDecimal! # Amount of DAI required to be in the clearinghouse
+  loanToCollateral: BigDecimal! # Amount of the debt token per collateral token
   # Clearinghouse Capacity
   daiBalance: BigDecimal!
   sDaiBalance: BigDecimal!

@@ -37,6 +37,13 @@ function populateClearinghouseSnapshot(clearinghouse: Address, event: ethereum.E
   snapshotRecord.interestReceivables = toDecimal(clearinghouseContract.interestReceivables(), daiDecimals);
   snapshotRecord.principalReceivables = toDecimal(clearinghouseContract.principalReceivables(), daiDecimals);
 
+  // Set the terms
+  snapshotRecord.interestRate = toDecimal(clearinghouseContract.INTEREST_RATE(), 18); // e.g. 5e15/1e18 = 0.005 = 0.5%
+  snapshotRecord.duration = clearinghouseContract.DURATION();
+  snapshotRecord.fundCadence = clearinghouseContract.FUND_CADENCE();
+  snapshotRecord.fundAmount = toDecimal(clearinghouseContract.FUND_AMOUNT(), daiDecimals);
+  snapshotRecord.loanToCollateral = toDecimal(clearinghouseContract.LOAN_TO_COLLATERAL(), 18); // 3000e18/1e18 = 3000
+
   // Get the funding capacity
   snapshotRecord.daiBalance = toDecimal(daiContract.balanceOf(clearinghouse), daiDecimals);
 

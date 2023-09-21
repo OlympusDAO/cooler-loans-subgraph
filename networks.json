@@ -8,5 +8,15 @@
       "address": "0x1A69A901BbF061E248eB1f1479EFc6226cb82716",
       "startBlock": 9692230
     }
+  },
+  "mainnet": {
+    "Clearinghouse": {
+      "address": "0x9fB4D9F25cb6741AaE95a8D9E70826d701B5658F",
+      "startBlock": 18185634
+    },
+    "CoolerFactory": {
+      "address": "0xDE3e735d37A8498AD2F141F603A6d0F976A6F772",
+      "startBlock": 18185633
+    }
   }
 }

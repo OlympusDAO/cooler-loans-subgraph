@@ -11,12 +11,12 @@
   },
   {
     "inputs": [],
-    "name": "NoDefault",
+    "name": "NotCoolerCallback",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "NotCoolerCallback",
+    "name": "NotExpired",
     "type": "error"
   },
   {

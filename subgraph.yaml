@@ -6,9 +6,9 @@ dataSources:
     name: Clearinghouse
     network: mainnet
     source:
-      address: "0x9fB4D9F25cb6741AaE95a8D9E70826d701B5658F"
+      address: "0xd6a6e8d9e82534bd65821142fccd91ec9cf31880"
       abi: Clearinghouse
-      startBlock: 18185634
+      startBlock: 18185779
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

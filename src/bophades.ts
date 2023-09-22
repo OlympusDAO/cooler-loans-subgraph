@@ -1,5 +1,6 @@
 import { Address, ByteArray, Bytes, dataSource } from "@graphprotocol/graph-ts";
 import { BophadesKernel } from "../generated/Clearinghouse/BophadesKernel";
+import { TRSRY } from "../generated/Clearinghouse/TRSRY";
 
 const KERNEL_MAP = new Map<string, string>();
 KERNEL_MAP.set("mainnet", "0x2286d7f9639e8158FaD1169e76d1FbC38247f54b");
@@ -21,11 +22,15 @@ function getKernelAddress(): Address {
  * 
  * @returns 
  */
-export function getTreasuryAddress(): Address {
+function getTreasuryAddress(): Address {
   // Get the kernel
   const kernelAddress = getKernelAddress();
   const kernelContract = BophadesKernel.bind(kernelAddress);
 
   // Get the treasury address
   return kernelContract.getModuleForKeycode(Bytes.fromByteArray(ByteArray.fromUTF8("TRSRY")));
+}
+
+export function getTRSRY(): TRSRY {
+  return TRSRY.bind(getTreasuryAddress());
 }

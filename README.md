@@ -1,4 +1,4 @@
-# cooler-subgraph
+# Cooler Loans Subgraph
 
 ## Purpose
 

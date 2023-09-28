@@ -1,6 +1,6 @@
 import { Address, ByteArray, Bytes, dataSource } from "@graphprotocol/graph-ts";
-import { BophadesKernel } from "../generated/Clearinghouse/BophadesKernel";
-import { TRSRY } from "../generated/Clearinghouse/TRSRY";
+import { BophadesKernel } from "../generated/Clearinghouse_V1/BophadesKernel";
+import { TRSRY } from "../generated/Clearinghouse_V1/TRSRY";
 
 const KERNEL_MAP = new Map<string, string>();
 KERNEL_MAP.set("mainnet", "0x2286d7f9639e8158FaD1169e76d1FbC38247f54b");

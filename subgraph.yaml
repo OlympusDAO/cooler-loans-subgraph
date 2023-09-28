@@ -2,8 +2,10 @@ specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
+  ## Clearinghouse
+  # V1
   - kind: ethereum
-    name: Clearinghouse
+    name: Clearinghouse_V1
     network: mainnet
     source:
       address: "0xd6a6e8d9e82534bd65821142fccd91ec9cf31880"
@@ -32,13 +34,92 @@ dataSources:
         - event: Defund(address,uint256)
           handler: handleDefund
       file: ./src/clearinghouse.ts
+  # V1.1
   - kind: ethereum
-    name: CoolerFactory
+    name: ClearinghouseV1_1
+    network: mainnet
+    source:
+      address: "0xE6343ad0675C9b8D3f32679ae6aDbA0766A2ab4c"
+      abi: Clearinghouse
+      startBlock: 18234505
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ClearinghouseSnapshot
+      abis:
+        - name: Clearinghouse
+          file: ./abis/Clearinghouse.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC4626
+          file: ./abis/ERC4626.json
+        - name: BophadesKernel
+          file: ./abis/BophadesKernel.json
+        - name: TRSRY
+          file: ./abis/TRSRYv1.json
+      eventHandlers:
+        - event: Rebalance(bool,uint256)
+          handler: handleRebalance
+        - event: Defund(address,uint256)
+          handler: handleDefund
+      file: ./src/clearinghouse.ts
+  ## CoolerFactory
+  # V1
+  - kind: ethereum
+    name: CoolerFactory_V1
     network: mainnet
     source:
       address: "0xDE3e735d37A8498AD2F141F603A6d0F976A6F772"
       abi: CoolerFactory
       startBlock: 18185633
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CoolerLoan
+        # Event records
+        - RequestLoanEvent
+        - RescindLoanRequestEvent
+        - ClearLoanRequestEvent
+        - ClaimDefaultedLoanEvent
+        - RepayLoanEvent
+        - ExtendLoanEvent
+      abis:
+        - name: CoolerFactory
+          file: ./abis/CoolerFactory.json
+        - name: Cooler
+          file: ./abis/Cooler.json
+        - name: Clearinghouse
+          file: ./abis/Clearinghouse.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: gOHM
+          file: ./abis/gOHM.json
+      eventHandlers:
+        - event: RequestLoan(indexed address,address,address,uint256)
+          handler: handleRequest
+        - event: RescindRequest(indexed address,uint256)
+          handler: handleRescindRequest
+        - event: ClearRequest(indexed address,uint256,uint256)
+          handler: handleClearRequest
+        - event: DefaultLoan(indexed address,uint256,uint256)
+          handler: handleDefaultLoan
+        - event: RepayLoan(indexed address,uint256,uint256)
+          handler: handleRepayLoan
+        - event: ExtendLoan(indexed address,uint256,uint8)
+          handler: handleExtendLoan
+      file: ./src/cooler-factory.ts
+  # V1.1
+  - kind: ethereum
+    name: CoolerFactory_V1_1
+    network: mainnet
+    source:
+      address: "0x30Ce56e80aA96EbbA1E1a74bC5c0FEB5B0dB4216"
+      abi: CoolerFactory
+      startBlock: 18234504
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

@@ -1,8 +1,8 @@
 import { Address, BigDecimal, BigInt, ethereum } from "@graphprotocol/graph-ts";
 import { ClearinghouseSnapshot, DefundEvent, RebalanceEvent } from "../generated/schema";
-import { Clearinghouse, Defund, Rebalance } from "../generated/Clearinghouse/Clearinghouse";
-import { ERC20 } from "../generated/Clearinghouse/ERC20";
-import { ERC4626 } from "../generated/Clearinghouse/ERC4626";
+import { Clearinghouse, Defund, Rebalance } from "../generated/Clearinghouse_V1/Clearinghouse";
+import { ERC20 } from "../generated/Clearinghouse_V1/ERC20";
+import { ERC4626 } from "../generated/Clearinghouse_v1/ERC4626";
 import { toDecimal } from "./numberHelper";
 import { getISO8601DateStringFromTimestamp } from "./dateHelper";
 import { getTRSRY } from "./bophades";

@@ -6,10 +6,10 @@ import {
   RequestLoan,
   RescindRequest,
   ExtendLoan
-} from "../generated/CoolerFactory/CoolerFactory"
-import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory/Cooler"
-import { ERC20 } from "../generated/CoolerFactory/ERC20"
-import { gOHM } from "../generated/CoolerFactory/gOHM"
+} from "../generated/CoolerFactory_V1/CoolerFactory"
+import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory_V1/Cooler"
+import { ERC20 } from "../generated/CoolerFactory_V1/ERC20"
+import { gOHM } from "../generated/CoolerFactory_V1/gOHM"
 import {
   ClaimDefaultedLoanEvent,
   ClearLoanRequestEvent,

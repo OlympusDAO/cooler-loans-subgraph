@@ -129,8 +129,7 @@ export function handleRequest(event: RequestLoan): void {
 
   // Interest rate is stored on the contract in terms of 1e18
   // e.g. request.interest = 5e15 = 0.005
-  // We multiply by 100 to get the percentage, e.g. 0.5%
-  requestRecord.interestPercentage = toDecimal(request.interest, debtDecimals).times(BigDecimal.fromString("100"));
+  requestRecord.interestPercentage = toDecimal(request.interest, debtDecimals);
 
   requestRecord.loanToCollateralRatio = toDecimal(request.loanToCollateral, debtDecimals);
   requestRecord.durationSeconds = request.duration;

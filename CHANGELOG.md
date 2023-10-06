@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## 1.3.0 (2023-10-06)
+## 1.3.1 (2023-10-06)
 
 - Adds clearinghouse balances for event snapshots
+- Ensure the consistency of interest rates in the CoolerLoanRequest records
 
 ## 1.2.0 (2023-09-28)
 

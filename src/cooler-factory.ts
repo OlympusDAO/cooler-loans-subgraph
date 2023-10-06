@@ -10,6 +10,7 @@ import {
 import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory_V1/Cooler"
 import { ERC20 } from "../generated/CoolerFactory_V1/ERC20"
 import { gOHM } from "../generated/CoolerFactory_V1/gOHM"
+import { ERC4626 } from "../generated/CoolerFactory_V1/ERC4626"
 import {
   ClaimDefaultedLoanEvent,
   ClearLoanRequestEvent,
@@ -23,6 +24,7 @@ import {
 import { oracles } from "@protofire/subgraph-devkit";
 import { toDecimal } from "./numberHelper"
 import { getISO8601DateStringFromTimestamp } from "./dateHelper"
+import { Clearinghouse } from "../generated/CoolerFactory_V1/Clearinghouse"
 
 const OHM_MAP = new Map<string, string>();
 OHM_MAP.set("mainnet", "0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5");
@@ -202,6 +204,16 @@ export function handleClearRequest(event: ClearRequest): void {
   eventRecord.loan = loanRecord.id;
   eventRecord.request = requestRecord.id;
 
+  // Clearinghouse state
+  const lenderAddress = Address.fromBytes(loanData.lender);
+  const clearinghouseContract: Clearinghouse = Clearinghouse.bind(lenderAddress);
+  const sDaiContract = ERC4626.bind(clearinghouseContract.sdai());
+  const sDaiDecimals = sDaiContract.decimals();
+
+  const sDaiBalance: BigInt = sDaiContract.balanceOf(lenderAddress);
+  eventRecord.clearinghouseSDaiBalance = toDecimal(sDaiBalance, sDaiDecimals);
+  eventRecord.clearinghouseSDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(sDaiBalance), sDaiDecimals);
+
   eventRecord.save();
 }
 
@@ -272,6 +284,16 @@ export function handleRepayLoan(event: RepayLoan): void {
   eventRecord.interestPayable = toDecimal(loanData.interestDue, debtDecimals);
   eventRecord.collateralDeposited = toDecimal(loanData.collateral, ERC20.bind(cooler.collateral()).decimals());
 
+  // Clearinghouse state
+  const lenderAddress = Address.fromBytes(loanData.lender);
+  const clearinghouseContract: Clearinghouse = Clearinghouse.bind(lenderAddress);
+  const sDaiContract = ERC4626.bind(clearinghouseContract.sdai());
+  const sDaiDecimals = sDaiContract.decimals();
+
+  const sDaiBalance: BigInt = sDaiContract.balanceOf(lenderAddress);
+  eventRecord.clearinghouseSDaiBalance = toDecimal(sDaiBalance, sDaiDecimals);
+  eventRecord.clearinghouseSDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(sDaiBalance), sDaiDecimals);
+
   eventRecord.save();
 }
 
@@ -301,6 +323,16 @@ export function handleExtendLoan(event: ExtendLoan): void {
   eventRecord.loan = loanRecord.id;
   eventRecord.expiryTimestamp = loanData.expiry;
   eventRecord.interestDue = toDecimal(loanData.interestDue, ERC20.bind(cooler.debt()).decimals());
+
+  // Clearinghouse state
+  const lenderAddress = Address.fromBytes(loanData.lender);
+  const clearinghouseContract: Clearinghouse = Clearinghouse.bind(lenderAddress);
+  const sDaiContract = ERC4626.bind(clearinghouseContract.sdai());
+  const sDaiDecimals = sDaiContract.decimals();
+
+  const sDaiBalance: BigInt = sDaiContract.balanceOf(lenderAddress);
+  eventRecord.clearinghouseSDaiBalance = toDecimal(sDaiBalance, sDaiDecimals);
+  eventRecord.clearinghouseSDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(sDaiBalance), sDaiDecimals);
 
   eventRecord.save();
 }

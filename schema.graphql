@@ -139,6 +139,9 @@ type ClearLoanRequestEvent @entity(immutable: true) {
   request: CoolerLoanRequest!
   # Loan state
   loan: CoolerLoan!
+  # Clearinghouse state
+  clearinghouseSDaiBalance: BigDecimal!
+  clearinghouseSDaiInDaiBalance: BigDecimal!
 }
 
 type ClaimDefaultedLoanEvent @entity(immutable: true) {
@@ -172,6 +175,9 @@ type RepayLoanEvent @entity(immutable: true) {
   principalPayable: BigDecimal!
   interestPayable: BigDecimal!
   collateralDeposited: BigDecimal!
+  # Clearinghouse state
+  clearinghouseSDaiBalance: BigDecimal!
+  clearinghouseSDaiInDaiBalance: BigDecimal!
 }
 
 type ExtendLoanEvent @entity(immutable: true) {
@@ -188,4 +194,7 @@ type ExtendLoanEvent @entity(immutable: true) {
   # The new expiry timestamp
   expiryTimestamp: BigInt!
   interestDue: BigDecimal!
+  # Clearinghouse state
+  clearinghouseSDaiBalance: BigDecimal!
+  clearinghouseSDaiInDaiBalance: BigDecimal!
 }

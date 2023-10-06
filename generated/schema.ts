@@ -1482,6 +1482,32 @@ export class ClearLoanRequestEvent extends Entity {
   set loan(value: string) {
     this.set("loan", Value.fromString(value));
   }
+
+  get clearinghouseSDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseSDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseSDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseSDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get clearinghouseSDaiInDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseSDaiInDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseSDaiInDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseSDaiInDaiBalance", Value.fromBigDecimal(value));
+  }
 }
 
 export class ClaimDefaultedLoanEvent extends Entity {
@@ -1818,6 +1844,32 @@ export class RepayLoanEvent extends Entity {
   set collateralDeposited(value: BigDecimal) {
     this.set("collateralDeposited", Value.fromBigDecimal(value));
   }
+
+  get clearinghouseSDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseSDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseSDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseSDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get clearinghouseSDaiInDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseSDaiInDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseSDaiInDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseSDaiInDaiBalance", Value.fromBigDecimal(value));
+  }
 }
 
 export class ExtendLoanEvent extends Entity {
@@ -1963,6 +2015,32 @@ export class ExtendLoanEvent extends Entity {
 
   set interestDue(value: BigDecimal) {
     this.set("interestDue", Value.fromBigDecimal(value));
+  }
+
+  get clearinghouseSDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseSDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseSDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseSDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get clearinghouseSDaiInDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseSDaiInDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseSDaiInDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseSDaiInDaiBalance", Value.fromBigDecimal(value));
   }
 }
 

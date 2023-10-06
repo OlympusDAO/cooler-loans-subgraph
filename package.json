@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "codegen": "graph codegen",
+    "codegen": "rm -rf generated && graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --studio --version-label=$(cat .subgraph-version | tr -d '[:space:]') cooler-loans",
     "deploy:goerli": "graph deploy --studio --version-label=$(cat .subgraph-version | tr -d '[:space:]') cooler-loans-goerli",

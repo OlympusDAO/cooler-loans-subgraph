@@ -10,7 +10,6 @@ import {
 import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory_V1/Cooler"
 import { ERC20 } from "../generated/CoolerFactory_V1/ERC20"
 import { gOHM } from "../generated/CoolerFactory_V1/gOHM"
-import { ERC4626 } from "../generated/CoolerFactory_V1/ERC4626"
 import {
   ClaimDefaultedLoanEvent,
   ClearLoanRequestEvent,
@@ -24,8 +23,7 @@ import {
 import { oracles } from "@protofire/subgraph-devkit";
 import { toDecimal } from "./numberHelper"
 import { getISO8601DateStringFromTimestamp } from "./dateHelper"
-import { Clearinghouse } from "../generated/CoolerFactory_V1/Clearinghouse"
-import { getTRSRY } from "./bophades"
+import { getClearinghouseBalances, getTreasuryBalances } from "./daiBalances"
 
 const OHM_MAP = new Map<string, string>();
 OHM_MAP.set("mainnet", "0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5");
@@ -103,47 +101,6 @@ function getRequestRecordId(cooler: Bytes, requestId: BigInt): string {
 
 function getRequestRecord(cooler: Cooler, requestId: BigInt): CoolerLoanRequest | null {
   return CoolerLoanRequest.load(getRequestRecordId(cooler._address, requestId));
-}
-
-function getClearinghouseBalances(clearinghouseAddress: Address): BigDecimal[] {
-  const clearinghouseContract = Clearinghouse.bind(clearinghouseAddress);
-
-  const daiContract = ERC20.bind(clearinghouseContract.dai());
-  const daiDecimals = daiContract.decimals();
-  const sDaiContract = ERC4626.bind(clearinghouseContract.sdai());
-  const sDaiDecimals = sDaiContract.decimals();
-
-  const daiBalance: BigDecimal = toDecimal(daiContract.balanceOf(clearinghouseAddress), daiDecimals);
-  const sDaiBalanceInt = sDaiContract.balanceOf(clearinghouseAddress);
-  const sDaiBalance: BigDecimal = toDecimal(sDaiBalanceInt, sDaiDecimals);
-  const sDaiInDaiBalance: BigDecimal = toDecimal(sDaiContract.previewRedeem(sDaiBalanceInt), sDaiDecimals);
-
-  return [daiBalance, sDaiBalance, sDaiInDaiBalance];
-}
-
-function getTreasuryBalances(clearinghouseAddress: Address): BigDecimal[] {
-  const clearinghouseContract = Clearinghouse.bind(clearinghouseAddress);
-
-  const daiContract = ERC20.bind(clearinghouseContract.dai());
-  const daiDecimals = daiContract.decimals();
-  const sDaiContract = ERC4626.bind(clearinghouseContract.sdai());
-  const sDaiDecimals = sDaiContract.decimals();
-
-  // Calling getReserveBalance returns the raw balance of the token, plus the debt.
-  // This is important, as DAI deposited in the DSR is recorded as a debt.
-  // However, for each, we need to subtract the clearinghouse debt, otherwise it will be double-counted.
-  const treasuryContract = getTRSRY();
-  const treasuryDaiBalanceTotal = toDecimal(treasuryContract.getReserveBalance(clearinghouseContract.dai()), daiDecimals);
-  const clearinghouseDaiDebt = toDecimal(treasuryContract.reserveDebt(clearinghouseContract.dai(), clearinghouseAddress), daiDecimals);
-  const treasuryDaiBalance = treasuryDaiBalanceTotal.minus(clearinghouseDaiDebt);
-
-  const treasurySDaiBalanceInt: BigInt = treasuryContract.getReserveBalance(clearinghouseContract.sdai());
-  const clearinghouseSDaiDebtInt: BigInt = treasuryContract.reserveDebt(clearinghouseContract.sdai(), clearinghouseAddress);
-  const treasurySDaiBalanceMinusClearinghouse = treasurySDaiBalanceInt.minus(clearinghouseSDaiDebtInt);
-  const treasurySDaiBalance = toDecimal(treasurySDaiBalanceMinusClearinghouse, sDaiDecimals);
-  const treasurySDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(treasurySDaiBalanceMinusClearinghouse), sDaiDecimals);
-
-  return [treasuryDaiBalance, treasurySDaiBalance, treasurySDaiInDaiBalance];
 }
 
 // === Request handling ===

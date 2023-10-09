@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4.0 (2023-10-09)
+
+- Add treasury balances for event snapshots
+
 ## 1.3.1 (2023-10-06)
 
 - Adds clearinghouse balances for event snapshots

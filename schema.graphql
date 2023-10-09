@@ -139,9 +139,14 @@ type ClearLoanRequestEvent @entity(immutable: true) {
   request: CoolerLoanRequest!
   # Loan state
   loan: CoolerLoan!
-  # Clearinghouse state
+  # Clearinghouse Capacity
+  clearinghouseDaiBalance: BigDecimal!
   clearinghouseSDaiBalance: BigDecimal!
   clearinghouseSDaiInDaiBalance: BigDecimal!
+  # Treasury Capacity
+  treasuryDaiBalance: BigDecimal!
+  treasurySDaiBalance: BigDecimal!
+  treasurySDaiInDaiBalance: BigDecimal!
 }
 
 type ClaimDefaultedLoanEvent @entity(immutable: true) {
@@ -175,9 +180,14 @@ type RepayLoanEvent @entity(immutable: true) {
   principalPayable: BigDecimal!
   interestPayable: BigDecimal!
   collateralDeposited: BigDecimal!
-  # Clearinghouse state
+  # Clearinghouse Capacity
+  clearinghouseDaiBalance: BigDecimal!
   clearinghouseSDaiBalance: BigDecimal!
   clearinghouseSDaiInDaiBalance: BigDecimal!
+  # Treasury Capacity
+  treasuryDaiBalance: BigDecimal!
+  treasurySDaiBalance: BigDecimal!
+  treasurySDaiInDaiBalance: BigDecimal!
 }
 
 type ExtendLoanEvent @entity(immutable: true) {
@@ -194,7 +204,12 @@ type ExtendLoanEvent @entity(immutable: true) {
   # The new expiry timestamp
   expiryTimestamp: BigInt!
   interestDue: BigDecimal!
-  # Clearinghouse state
+  # Clearinghouse Capacity
+  clearinghouseDaiBalance: BigDecimal!
   clearinghouseSDaiBalance: BigDecimal!
   clearinghouseSDaiInDaiBalance: BigDecimal!
+  # Treasury Capacity
+  treasuryDaiBalance: BigDecimal!
+  treasurySDaiBalance: BigDecimal!
+  treasurySDaiInDaiBalance: BigDecimal!
 }

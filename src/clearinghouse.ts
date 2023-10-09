@@ -5,7 +5,7 @@ import { ERC20 } from "../generated/Clearinghouse_V1/ERC20";
 import { ERC4626 } from "../generated/Clearinghouse_v1/ERC4626";
 import { toDecimal } from "./numberHelper";
 import { getISO8601DateStringFromTimestamp } from "./dateHelper";
-import { getTRSRY } from "./bophades";
+import { getClearinghouseBalances, getTreasuryBalances } from "./daiBalances";
 
 function getSnapshotRecordId(clearinghouse: Address, event: ethereum.Event): string {
   return clearinghouse.toHexString() + "-" + event.block.number.toString() + "-" + event.logIndex.toString();
@@ -58,20 +58,17 @@ function populateClearinghouseSnapshot(clearinghouseAddress: Address, event: eth
   // Record sDAI in terms of DAI
   snapshotRecord.sDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(sDaiBalance), sDaiDecimals);
 
-  // Get the treasury capacity
-  // Calling getReserveBalance returns the raw balance of the token, plus the debt.
-  // This is important, as DAI deposited in the DSR is recorded as a debt.
-  // However, for each, we need to subtract the clearinghouse debt, otherwise it will be double-counted.
-  const treasuryContract = getTRSRY();
-  const treasuryDaiBalance = toDecimal(treasuryContract.getReserveBalance(clearinghouseContract.dai()), daiDecimals);
-  const clearinghouseDaiDebt = toDecimal(treasuryContract.reserveDebt(clearinghouseContract.dai(), clearinghouseAddress), daiDecimals);
-  snapshotRecord.treasuryDaiBalance = treasuryDaiBalance.minus(clearinghouseDaiDebt);
+  // Clearinghouse state
+  const clearinghouseBalances = getClearinghouseBalances(clearinghouseAddress);
+  snapshotRecord.daiBalance = clearinghouseBalances[0];
+  snapshotRecord.sDaiBalance = clearinghouseBalances[1];
+  snapshotRecord.sDaiInDaiBalance = clearinghouseBalances[2];
 
-  const treasurySDaiBalance: BigInt = treasuryContract.getReserveBalance(clearinghouseContract.sdai());
-  const clearinghouseSDaiDebt: BigInt = treasuryContract.reserveDebt(clearinghouseContract.sdai(), clearinghouseAddress);
-  const treasurySDaiBalanceMinusClearinghouse = treasurySDaiBalance.minus(clearinghouseSDaiDebt);
-  snapshotRecord.treasurySDaiBalance = toDecimal(treasurySDaiBalanceMinusClearinghouse, sDaiDecimals);
-  snapshotRecord.treasurySDaiInDaiBalance = toDecimal(sDaiContract.previewRedeem(treasurySDaiBalanceMinusClearinghouse), sDaiDecimals);
+  // Treasury state
+  const treasuryBalances = getTreasuryBalances(clearinghouseAddress);
+  snapshotRecord.treasuryDaiBalance = treasuryBalances[0];
+  snapshotRecord.treasurySDaiBalance = treasuryBalances[1];
+  snapshotRecord.treasurySDaiInDaiBalance = treasuryBalances[2];
 
   return snapshotRecord;
 }

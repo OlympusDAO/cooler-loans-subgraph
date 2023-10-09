@@ -1483,6 +1483,19 @@ export class ClearLoanRequestEvent extends Entity {
     this.set("loan", Value.fromString(value));
   }
 
+  get clearinghouseDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseDaiBalance", Value.fromBigDecimal(value));
+  }
+
   get clearinghouseSDaiBalance(): BigDecimal {
     let value = this.get("clearinghouseSDaiBalance");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1507,6 +1520,45 @@ export class ClearLoanRequestEvent extends Entity {
 
   set clearinghouseSDaiInDaiBalance(value: BigDecimal) {
     this.set("clearinghouseSDaiInDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasuryDaiBalance(): BigDecimal {
+    let value = this.get("treasuryDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasuryDaiBalance(value: BigDecimal) {
+    this.set("treasuryDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiInDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiInDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiInDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiInDaiBalance", Value.fromBigDecimal(value));
   }
 }
 
@@ -1845,6 +1897,19 @@ export class RepayLoanEvent extends Entity {
     this.set("collateralDeposited", Value.fromBigDecimal(value));
   }
 
+  get clearinghouseDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseDaiBalance", Value.fromBigDecimal(value));
+  }
+
   get clearinghouseSDaiBalance(): BigDecimal {
     let value = this.get("clearinghouseSDaiBalance");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1869,6 +1934,45 @@ export class RepayLoanEvent extends Entity {
 
   set clearinghouseSDaiInDaiBalance(value: BigDecimal) {
     this.set("clearinghouseSDaiInDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasuryDaiBalance(): BigDecimal {
+    let value = this.get("treasuryDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasuryDaiBalance(value: BigDecimal) {
+    this.set("treasuryDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiInDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiInDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiInDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiInDaiBalance", Value.fromBigDecimal(value));
   }
 }
 
@@ -2017,6 +2121,19 @@ export class ExtendLoanEvent extends Entity {
     this.set("interestDue", Value.fromBigDecimal(value));
   }
 
+  get clearinghouseDaiBalance(): BigDecimal {
+    let value = this.get("clearinghouseDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set clearinghouseDaiBalance(value: BigDecimal) {
+    this.set("clearinghouseDaiBalance", Value.fromBigDecimal(value));
+  }
+
   get clearinghouseSDaiBalance(): BigDecimal {
     let value = this.get("clearinghouseSDaiBalance");
     if (!value || value.kind == ValueKind.NULL) {
@@ -2041,6 +2158,45 @@ export class ExtendLoanEvent extends Entity {
 
   set clearinghouseSDaiInDaiBalance(value: BigDecimal) {
     this.set("clearinghouseSDaiInDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasuryDaiBalance(): BigDecimal {
+    let value = this.get("treasuryDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasuryDaiBalance(value: BigDecimal) {
+    this.set("treasuryDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiBalance", Value.fromBigDecimal(value));
+  }
+
+  get treasurySDaiInDaiBalance(): BigDecimal {
+    let value = this.get("treasurySDaiInDaiBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set treasurySDaiInDaiBalance(value: BigDecimal) {
+    this.set("treasurySDaiInDaiBalance", Value.fromBigDecimal(value));
   }
 }
 

@@ -100,6 +100,10 @@ dataSources:
           file: ./abis/gOHM.json
         - name: ERC4626
           file: ./abis/ERC4626.json
+        - name: BophadesKernel
+          file: ./abis/BophadesKernel.json
+        - name: TRSRY
+          file: ./abis/TRSRYv1.json
       eventHandlers:
         - event: RequestLoan(indexed address,address,address,uint256)
           handler: handleRequest
@@ -148,6 +152,10 @@ dataSources:
           file: ./abis/gOHM.json
         - name: ERC4626
           file: ./abis/ERC4626.json
+        - name: BophadesKernel
+          file: ./abis/BophadesKernel.json
+        - name: TRSRY
+          file: ./abis/TRSRYv1.json
       eventHandlers:
         - event: RequestLoan(indexed address,address,address,uint256)
           handler: handleRequest

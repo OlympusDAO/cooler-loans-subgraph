@@ -15,8 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@graphprotocol/graph-cli": "0.56.0",
-    "@graphprotocol/graph-ts": "0.30.0",
-    "@protofire/subgraph-devkit": "^2.4.1"
+    "@graphprotocol/graph-ts": "0.30.0"
   },
   "devDependencies": {
     "@types/node": "^18",

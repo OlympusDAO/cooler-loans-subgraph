@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class ActionExecuted extends ethereum.Event {
@@ -71,7 +71,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.call(
       "activePolicies",
       "activePolicies(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
 
     return result[0].toAddress();
@@ -81,7 +81,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.tryCall(
       "activePolicies",
       "activePolicies(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -92,7 +92,7 @@ export class BophadesKernel extends ethereum.SmartContract {
 
   allKeycodes(param0: BigInt): Bytes {
     let result = super.call("allKeycodes", "allKeycodes(uint256):(bytes5)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
+      ethereum.Value.fromUnsignedBigInt(param0),
     ]);
 
     return result[0].toBytes();
@@ -100,7 +100,7 @@ export class BophadesKernel extends ethereum.SmartContract {
 
   try_allKeycodes(param0: BigInt): ethereum.CallResult<Bytes> {
     let result = super.tryCall("allKeycodes", "allKeycodes(uint256):(bytes5)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
+      ethereum.Value.fromUnsignedBigInt(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -130,8 +130,8 @@ export class BophadesKernel extends ethereum.SmartContract {
       "getDependentIndex(bytes5,address):(uint256)",
       [
         ethereum.Value.fromFixedBytes(param0),
-        ethereum.Value.fromAddress(param1)
-      ]
+        ethereum.Value.fromAddress(param1),
+      ],
     );
 
     return result[0].toBigInt();
@@ -139,15 +139,15 @@ export class BophadesKernel extends ethereum.SmartContract {
 
   try_getDependentIndex(
     param0: Bytes,
-    param1: Address
+    param1: Address,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getDependentIndex",
       "getDependentIndex(bytes5,address):(uint256)",
       [
         ethereum.Value.fromFixedBytes(param0),
-        ethereum.Value.fromAddress(param1)
-      ]
+        ethereum.Value.fromAddress(param1),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -160,7 +160,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.call(
       "getKeycodeForModule",
       "getKeycodeForModule(address):(bytes5)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
 
     return result[0].toBytes();
@@ -170,7 +170,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.tryCall(
       "getKeycodeForModule",
       "getKeycodeForModule(address):(bytes5)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -183,7 +183,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.call(
       "getModuleForKeycode",
       "getModuleForKeycode(bytes5):(address)",
-      [ethereum.Value.fromFixedBytes(param0)]
+      [ethereum.Value.fromFixedBytes(param0)],
     );
 
     return result[0].toAddress();
@@ -193,7 +193,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.tryCall(
       "getModuleForKeycode",
       "getModuleForKeycode(bytes5):(address)",
-      [ethereum.Value.fromFixedBytes(param0)]
+      [ethereum.Value.fromFixedBytes(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -206,7 +206,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.call(
       "getPolicyIndex",
       "getPolicyIndex(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
 
     return result[0].toBigInt();
@@ -216,7 +216,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.tryCall(
       "getPolicyIndex",
       "getPolicyIndex(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -229,7 +229,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.call(
       "isPolicyActive",
       "isPolicyActive(address):(bool)",
-      [ethereum.Value.fromAddress(policy_)]
+      [ethereum.Value.fromAddress(policy_)],
     );
 
     return result[0].toBoolean();
@@ -239,7 +239,7 @@ export class BophadesKernel extends ethereum.SmartContract {
     let result = super.tryCall(
       "isPolicyActive",
       "isPolicyActive(address):(bool)",
-      [ethereum.Value.fromAddress(policy_)]
+      [ethereum.Value.fromAddress(policy_)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -254,8 +254,8 @@ export class BophadesKernel extends ethereum.SmartContract {
       "moduleDependents(bytes5,uint256):(address)",
       [
         ethereum.Value.fromFixedBytes(param0),
-        ethereum.Value.fromUnsignedBigInt(param1)
-      ]
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
     );
 
     return result[0].toAddress();
@@ -263,15 +263,15 @@ export class BophadesKernel extends ethereum.SmartContract {
 
   try_moduleDependents(
     param0: Bytes,
-    param1: BigInt
+    param1: BigInt,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "moduleDependents",
       "moduleDependents(bytes5,uint256):(address)",
       [
         ethereum.Value.fromFixedBytes(param0),
-        ethereum.Value.fromUnsignedBigInt(param1)
-      ]
+        ethereum.Value.fromUnsignedBigInt(param1),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -287,8 +287,8 @@ export class BophadesKernel extends ethereum.SmartContract {
       [
         ethereum.Value.fromFixedBytes(param0),
         ethereum.Value.fromAddress(param1),
-        ethereum.Value.fromFixedBytes(param2)
-      ]
+        ethereum.Value.fromFixedBytes(param2),
+      ],
     );
 
     return result[0].toBoolean();
@@ -297,7 +297,7 @@ export class BophadesKernel extends ethereum.SmartContract {
   try_modulePermissions(
     param0: Bytes,
     param1: Address,
-    param2: Bytes
+    param2: Bytes,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "modulePermissions",
@@ -305,8 +305,8 @@ export class BophadesKernel extends ethereum.SmartContract {
       [
         ethereum.Value.fromFixedBytes(param0),
         ethereum.Value.fromAddress(param1),
-        ethereum.Value.fromFixedBytes(param2)
-      ]
+        ethereum.Value.fromFixedBytes(param2),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class Approval extends ethereum.Event {
@@ -135,7 +135,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "DOMAIN_SEPARATOR",
       "DOMAIN_SEPARATOR():(bytes32)",
-      []
+      [],
     );
 
     return result[0].toBytes();
@@ -145,7 +145,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "DOMAIN_SEPARATOR",
       "DOMAIN_SEPARATOR():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -158,7 +158,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "PERMIT_TYPEHASH",
       "PERMIT_TYPEHASH():(bytes32)",
-      []
+      [],
     );
 
     return result[0].toBytes();
@@ -168,7 +168,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "PERMIT_TYPEHASH",
       "PERMIT_TYPEHASH():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -181,7 +181,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "allowance",
       "allowance(address,address):(uint256)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)],
     );
 
     return result[0].toBigInt();
@@ -191,7 +191,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "allowance",
       "allowance(address,address):(uint256)",
-      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -203,7 +203,7 @@ export class ERC4626 extends ethereum.SmartContract {
   approve(spender: Address, value: BigInt): boolean {
     let result = super.call("approve", "approve(address,uint256):(bool)", [
       ethereum.Value.fromAddress(spender),
-      ethereum.Value.fromUnsignedBigInt(value)
+      ethereum.Value.fromUnsignedBigInt(value),
     ]);
 
     return result[0].toBoolean();
@@ -212,7 +212,7 @@ export class ERC4626 extends ethereum.SmartContract {
   try_approve(spender: Address, value: BigInt): ethereum.CallResult<boolean> {
     let result = super.tryCall("approve", "approve(address,uint256):(bool)", [
       ethereum.Value.fromAddress(spender),
-      ethereum.Value.fromUnsignedBigInt(value)
+      ethereum.Value.fromUnsignedBigInt(value),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -238,7 +238,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   balanceOf(param0: Address): BigInt {
     let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
 
     return result[0].toBigInt();
@@ -246,7 +246,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   try_balanceOf(param0: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -259,7 +259,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "convertToAssets",
       "convertToAssets(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(shares)]
+      [ethereum.Value.fromUnsignedBigInt(shares)],
     );
 
     return result[0].toBigInt();
@@ -269,7 +269,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "convertToAssets",
       "convertToAssets(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(shares)]
+      [ethereum.Value.fromUnsignedBigInt(shares)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -282,7 +282,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "convertToShares",
       "convertToShares(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(assets)]
+      [ethereum.Value.fromUnsignedBigInt(assets)],
     );
 
     return result[0].toBigInt();
@@ -292,7 +292,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "convertToShares",
       "convertToShares(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(assets)]
+      [ethereum.Value.fromUnsignedBigInt(assets)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -352,8 +352,8 @@ export class ERC4626 extends ethereum.SmartContract {
       "decreaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(subtractedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(subtractedValue),
+      ],
     );
 
     return result[0].toBoolean();
@@ -361,15 +361,15 @@ export class ERC4626 extends ethereum.SmartContract {
 
   try_decreaseAllowance(
     spender: Address,
-    subtractedValue: BigInt
+    subtractedValue: BigInt,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "decreaseAllowance",
       "decreaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(subtractedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(subtractedValue),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -382,7 +382,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "deploymentChainId",
       "deploymentChainId():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -392,7 +392,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "deploymentChainId",
       "deploymentChainId():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -404,7 +404,7 @@ export class ERC4626 extends ethereum.SmartContract {
   deposit(assets: BigInt, receiver: Address): BigInt {
     let result = super.call("deposit", "deposit(uint256,address):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(assets),
-      ethereum.Value.fromAddress(receiver)
+      ethereum.Value.fromAddress(receiver),
     ]);
 
     return result[0].toBigInt();
@@ -416,8 +416,8 @@ export class ERC4626 extends ethereum.SmartContract {
       "deposit(uint256,address):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(assets),
-        ethereum.Value.fromAddress(receiver)
-      ]
+        ethereum.Value.fromAddress(receiver),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -432,8 +432,8 @@ export class ERC4626 extends ethereum.SmartContract {
       "increaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(addedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(addedValue),
+      ],
     );
 
     return result[0].toBoolean();
@@ -441,15 +441,15 @@ export class ERC4626 extends ethereum.SmartContract {
 
   try_increaseAllowance(
     spender: Address,
-    addedValue: BigInt
+    addedValue: BigInt,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "increaseAllowance",
       "increaseAllowance(address,uint256):(bool)",
       [
         ethereum.Value.fromAddress(spender),
-        ethereum.Value.fromUnsignedBigInt(addedValue)
-      ]
+        ethereum.Value.fromUnsignedBigInt(addedValue),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -460,7 +460,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   maxDeposit(param0: Address): BigInt {
     let result = super.call("maxDeposit", "maxDeposit(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
 
     return result[0].toBigInt();
@@ -468,7 +468,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   try_maxDeposit(param0: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("maxDeposit", "maxDeposit(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -479,7 +479,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   maxMint(param0: Address): BigInt {
     let result = super.call("maxMint", "maxMint(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
 
     return result[0].toBigInt();
@@ -487,7 +487,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   try_maxMint(param0: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("maxMint", "maxMint(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -498,7 +498,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   maxRedeem(owner: Address): BigInt {
     let result = super.call("maxRedeem", "maxRedeem(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
+      ethereum.Value.fromAddress(owner),
     ]);
 
     return result[0].toBigInt();
@@ -506,7 +506,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   try_maxRedeem(owner: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("maxRedeem", "maxRedeem(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
+      ethereum.Value.fromAddress(owner),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -517,7 +517,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   maxWithdraw(owner: Address): BigInt {
     let result = super.call("maxWithdraw", "maxWithdraw(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
+      ethereum.Value.fromAddress(owner),
     ]);
 
     return result[0].toBigInt();
@@ -527,7 +527,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "maxWithdraw",
       "maxWithdraw(address):(uint256)",
-      [ethereum.Value.fromAddress(owner)]
+      [ethereum.Value.fromAddress(owner)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -539,7 +539,7 @@ export class ERC4626 extends ethereum.SmartContract {
   mint(shares: BigInt, receiver: Address): BigInt {
     let result = super.call("mint", "mint(uint256,address):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(shares),
-      ethereum.Value.fromAddress(receiver)
+      ethereum.Value.fromAddress(receiver),
     ]);
 
     return result[0].toBigInt();
@@ -548,7 +548,7 @@ export class ERC4626 extends ethereum.SmartContract {
   try_mint(shares: BigInt, receiver: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("mint", "mint(uint256,address):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(shares),
-      ethereum.Value.fromAddress(receiver)
+      ethereum.Value.fromAddress(receiver),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -574,7 +574,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   nonces(param0: Address): BigInt {
     let result = super.call("nonces", "nonces(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
 
     return result[0].toBigInt();
@@ -582,7 +582,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   try_nonces(param0: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("nonces", "nonces(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -610,7 +610,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "previewDeposit",
       "previewDeposit(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(assets)]
+      [ethereum.Value.fromUnsignedBigInt(assets)],
     );
 
     return result[0].toBigInt();
@@ -620,7 +620,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "previewDeposit",
       "previewDeposit(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(assets)]
+      [ethereum.Value.fromUnsignedBigInt(assets)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -631,7 +631,7 @@ export class ERC4626 extends ethereum.SmartContract {
 
   previewMint(shares: BigInt): BigInt {
     let result = super.call("previewMint", "previewMint(uint256):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(shares)
+      ethereum.Value.fromUnsignedBigInt(shares),
     ]);
 
     return result[0].toBigInt();
@@ -641,7 +641,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "previewMint",
       "previewMint(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(shares)]
+      [ethereum.Value.fromUnsignedBigInt(shares)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -654,7 +654,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "previewRedeem",
       "previewRedeem(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(shares)]
+      [ethereum.Value.fromUnsignedBigInt(shares)],
     );
 
     return result[0].toBigInt();
@@ -664,7 +664,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "previewRedeem",
       "previewRedeem(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(shares)]
+      [ethereum.Value.fromUnsignedBigInt(shares)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -677,7 +677,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.call(
       "previewWithdraw",
       "previewWithdraw(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(assets)]
+      [ethereum.Value.fromUnsignedBigInt(assets)],
     );
 
     return result[0].toBigInt();
@@ -687,7 +687,7 @@ export class ERC4626 extends ethereum.SmartContract {
     let result = super.tryCall(
       "previewWithdraw",
       "previewWithdraw(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(assets)]
+      [ethereum.Value.fromUnsignedBigInt(assets)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -703,8 +703,8 @@ export class ERC4626 extends ethereum.SmartContract {
       [
         ethereum.Value.fromUnsignedBigInt(shares),
         ethereum.Value.fromAddress(receiver),
-        ethereum.Value.fromAddress(owner)
-      ]
+        ethereum.Value.fromAddress(owner),
+      ],
     );
 
     return result[0].toBigInt();
@@ -713,7 +713,7 @@ export class ERC4626 extends ethereum.SmartContract {
   try_redeem(
     shares: BigInt,
     receiver: Address,
-    owner: Address
+    owner: Address,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "redeem",
@@ -721,8 +721,8 @@ export class ERC4626 extends ethereum.SmartContract {
       [
         ethereum.Value.fromUnsignedBigInt(shares),
         ethereum.Value.fromAddress(receiver),
-        ethereum.Value.fromAddress(owner)
-      ]
+        ethereum.Value.fromAddress(owner),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -779,7 +779,7 @@ export class ERC4626 extends ethereum.SmartContract {
   transfer(to: Address, value: BigInt): boolean {
     let result = super.call("transfer", "transfer(address,uint256):(bool)", [
       ethereum.Value.fromAddress(to),
-      ethereum.Value.fromUnsignedBigInt(value)
+      ethereum.Value.fromUnsignedBigInt(value),
     ]);
 
     return result[0].toBoolean();
@@ -788,7 +788,7 @@ export class ERC4626 extends ethereum.SmartContract {
   try_transfer(to: Address, value: BigInt): ethereum.CallResult<boolean> {
     let result = super.tryCall("transfer", "transfer(address,uint256):(bool)", [
       ethereum.Value.fromAddress(to),
-      ethereum.Value.fromUnsignedBigInt(value)
+      ethereum.Value.fromUnsignedBigInt(value),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -804,8 +804,8 @@ export class ERC4626 extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromAddress(to),
-        ethereum.Value.fromUnsignedBigInt(value)
-      ]
+        ethereum.Value.fromUnsignedBigInt(value),
+      ],
     );
 
     return result[0].toBoolean();
@@ -814,7 +814,7 @@ export class ERC4626 extends ethereum.SmartContract {
   try_transferFrom(
     from: Address,
     to: Address,
-    value: BigInt
+    value: BigInt,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "transferFrom",
@@ -822,8 +822,8 @@ export class ERC4626 extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(from),
         ethereum.Value.fromAddress(to),
-        ethereum.Value.fromUnsignedBigInt(value)
-      ]
+        ethereum.Value.fromUnsignedBigInt(value),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -869,8 +869,8 @@ export class ERC4626 extends ethereum.SmartContract {
       [
         ethereum.Value.fromUnsignedBigInt(assets),
         ethereum.Value.fromAddress(receiver),
-        ethereum.Value.fromAddress(owner)
-      ]
+        ethereum.Value.fromAddress(owner),
+      ],
     );
 
     return result[0].toBigInt();
@@ -879,7 +879,7 @@ export class ERC4626 extends ethereum.SmartContract {
   try_withdraw(
     assets: BigInt,
     receiver: Address,
-    owner: Address
+    owner: Address,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "withdraw",
@@ -887,8 +887,8 @@ export class ERC4626 extends ethereum.SmartContract {
       [
         ethereum.Value.fromUnsignedBigInt(assets),
         ethereum.Value.fromAddress(receiver),
-        ethereum.Value.fromAddress(owner)
-      ]
+        ethereum.Value.fromAddress(owner),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

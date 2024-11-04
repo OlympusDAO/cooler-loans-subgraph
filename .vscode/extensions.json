@@ -4,6 +4,7 @@
     "davidanson.vscode-markdownlint",
     "gruntfuggly.todo-tree",
     "redhat.vscode-yaml",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "mquandalle.graphql"
   ]
 }

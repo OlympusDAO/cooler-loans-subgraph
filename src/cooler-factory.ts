@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, Bytes, dataSource, ethereum } from "@graphprotocol/graph-ts"
+import { BigDecimal, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts"
 import {
   ClearRequest,
   DefaultLoan,
@@ -21,8 +21,8 @@ import {
 } from "../generated/schema"
 import { toDecimal } from "./numberHelper"
 import { getISO8601DateStringFromTimestamp } from "./dateHelper"
-import { getClearinghouseBalances, getTreasuryBalances } from "./daiBalances"
 import { getGOhmPrice } from "./price"
+import { getOrCreateClearinghouse, populateClearinghouseSnapshot } from "./clearinghouse"
 
 // === Helpers ===
 
@@ -35,8 +35,8 @@ function getLoanRecord(cooler: Bytes, loanID: BigInt): CoolerLoan | null {
 }
 
 function populateLoan(cooler: Cooler, request: CoolerLoanRequest, loanId: BigInt, loanData: Cooler__getLoanResultValue0Struct, block: ethereum.Block, transaction: ethereum.Transaction): CoolerLoan {
-  const debtDecimals = ERC20.bind(cooler.debt()).decimals();
-  const collateralDecimals = ERC20.bind(cooler.collateral()).decimals();
+  // Get the Clearinghouse
+  const clearinghouseRecord = getOrCreateClearinghouse(loanData.lender);
 
   const loanRecord: CoolerLoan = new CoolerLoan(getLoanRecordId(cooler._address, loanId));
   loanRecord.createdBlock = block.number;
@@ -46,14 +46,12 @@ function populateLoan(cooler: Cooler, request: CoolerLoanRequest, loanId: BigInt
   loanRecord.cooler = cooler._address;
   loanRecord.request = request.id;
   loanRecord.borrower = cooler.owner();
-  loanRecord.interest = toDecimal(loanData.interestDue, debtDecimals);
-  loanRecord.principal = toDecimal(loanData.principal, debtDecimals);
-  loanRecord.collateral = toDecimal(loanData.collateral, collateralDecimals);
+  loanRecord.interest = toDecimal(loanData.interestDue, clearinghouseRecord.reserveTokenDecimals);
+  loanRecord.principal = toDecimal(loanData.principal, clearinghouseRecord.reserveTokenDecimals);
+  loanRecord.collateral = toDecimal(loanData.collateral, clearinghouseRecord.collateralTokenDecimals);
   loanRecord.expiryTimestamp = loanData.expiry;
-  loanRecord.lender = loanData.lender;
+  loanRecord.clearinghouse = clearinghouseRecord.id;
   loanRecord.hasCallback = loanData.callback;
-  loanRecord.collateralToken = cooler.collateral();
-  loanRecord.debtToken = cooler.debt();
 
   return loanRecord;
 }
@@ -165,19 +163,10 @@ export function handleClearRequest(event: ClearRequest): void {
   eventRecord.loan = loanRecord.id;
   eventRecord.request = requestRecord.id;
 
-  const lenderAddress = Address.fromBytes(loanData.lender);
-
-  // Clearinghouse state
-  const clearinghouseBalances = getClearinghouseBalances(lenderAddress);
-  eventRecord.clearinghouseDaiBalance = clearinghouseBalances[0];
-  eventRecord.clearinghouseSDaiBalance = clearinghouseBalances[1];
-  eventRecord.clearinghouseSDaiInDaiBalance = clearinghouseBalances[2];
-
-  // Treasury state
-  const treasuryBalances = getTreasuryBalances(lenderAddress);
-  eventRecord.treasuryDaiBalance = treasuryBalances[0];
-  eventRecord.treasurySDaiBalance = treasuryBalances[1];
-  eventRecord.treasurySDaiInDaiBalance = treasuryBalances[2];
+  // Clearinghouse snapshot
+  const clearinghouseSnapshot = populateClearinghouseSnapshot(loanData.lender, event);
+  clearinghouseSnapshot.save();
+  eventRecord.clearinghouseSnapshot = clearinghouseSnapshot.id;
 
   eventRecord.save();
 }
@@ -214,6 +203,11 @@ export function handleDefaultLoan(event: DefaultLoan): void {
   eventRecord.loan = loanRecord.id;
   eventRecord.secondsSinceExpiry = event.block.timestamp.minus(loanData.expiry);
 
+  // Clearinghouse snapshot
+  const clearinghouseSnapshot = populateClearinghouseSnapshot(loanData.lender, event);
+  clearinghouseSnapshot.save();
+  eventRecord.clearinghouseSnapshot = clearinghouseSnapshot.id;
+
   eventRecord.save();
 }
 
@@ -249,19 +243,10 @@ export function handleRepayLoan(event: RepayLoan): void {
   eventRecord.interestPayable = toDecimal(loanData.interestDue, debtDecimals);
   eventRecord.collateralDeposited = toDecimal(loanData.collateral, ERC20.bind(cooler.collateral()).decimals());
 
-  const lenderAddress = Address.fromBytes(loanData.lender);
-
-  // Clearinghouse state
-  const clearinghouseBalances = getClearinghouseBalances(lenderAddress);
-  eventRecord.clearinghouseDaiBalance = clearinghouseBalances[0];
-  eventRecord.clearinghouseSDaiBalance = clearinghouseBalances[1];
-  eventRecord.clearinghouseSDaiInDaiBalance = clearinghouseBalances[2];
-
-  // Treasury state
-  const treasuryBalances = getTreasuryBalances(lenderAddress);
-  eventRecord.treasuryDaiBalance = treasuryBalances[0];
-  eventRecord.treasurySDaiBalance = treasuryBalances[1];
-  eventRecord.treasurySDaiInDaiBalance = treasuryBalances[2];
+  // Clearinghouse snapshot
+  const clearinghouseSnapshot = populateClearinghouseSnapshot(loanData.lender, event);
+  clearinghouseSnapshot.save();
+  eventRecord.clearinghouseSnapshot = clearinghouseSnapshot.id;
 
   eventRecord.save();
 }
@@ -293,19 +278,10 @@ export function handleExtendLoan(event: ExtendLoan): void {
   eventRecord.expiryTimestamp = loanData.expiry;
   eventRecord.interestDue = toDecimal(loanData.interestDue, ERC20.bind(cooler.debt()).decimals());
 
-  const lenderAddress = Address.fromBytes(loanData.lender);
-
-  // Clearinghouse state
-  const clearinghouseBalances = getClearinghouseBalances(lenderAddress);
-  eventRecord.clearinghouseDaiBalance = clearinghouseBalances[0];
-  eventRecord.clearinghouseSDaiBalance = clearinghouseBalances[1];
-  eventRecord.clearinghouseSDaiInDaiBalance = clearinghouseBalances[2];
-
-  // Treasury state
-  const treasuryBalances = getTreasuryBalances(lenderAddress);
-  eventRecord.treasuryDaiBalance = treasuryBalances[0];
-  eventRecord.treasurySDaiBalance = treasuryBalances[1];
-  eventRecord.treasurySDaiInDaiBalance = treasuryBalances[2];
+  // Clearinghouse snapshot
+  const clearinghouseSnapshot = populateClearinghouseSnapshot(loanData.lender, event);
+  clearinghouseSnapshot.save();
+  eventRecord.clearinghouseSnapshot = clearinghouseSnapshot.id;
 
   eventRecord.save();
 }

@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class ClearRequest extends ethereum.Event {
@@ -175,7 +175,7 @@ export class CoolerFactory extends ethereum.SmartContract {
     let result = super.call(
       "coolerImplementation",
       "coolerImplementation():(address)",
-      []
+      [],
     );
 
     return result[0].toAddress();
@@ -185,7 +185,7 @@ export class CoolerFactory extends ethereum.SmartContract {
     let result = super.tryCall(
       "coolerImplementation",
       "coolerImplementation():(address)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -201,8 +201,8 @@ export class CoolerFactory extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(param1),
-        ethereum.Value.fromUnsignedBigInt(param2)
-      ]
+        ethereum.Value.fromUnsignedBigInt(param2),
+      ],
     );
 
     return result[0].toAddress();
@@ -211,7 +211,7 @@ export class CoolerFactory extends ethereum.SmartContract {
   try_coolersFor(
     param0: Address,
     param1: Address,
-    param2: BigInt
+    param2: BigInt,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "coolersFor",
@@ -219,8 +219,8 @@ export class CoolerFactory extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(param0),
         ethereum.Value.fromAddress(param1),
-        ethereum.Value.fromUnsignedBigInt(param2)
-      ]
+        ethereum.Value.fromUnsignedBigInt(param2),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -231,7 +231,7 @@ export class CoolerFactory extends ethereum.SmartContract {
 
   created(param0: Address): boolean {
     let result = super.call("created", "created(address):(bool)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
 
     return result[0].toBoolean();
@@ -239,7 +239,7 @@ export class CoolerFactory extends ethereum.SmartContract {
 
   try_created(param0: Address): ethereum.CallResult<boolean> {
     let result = super.tryCall("created", "created(address):(bool)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -254,8 +254,8 @@ export class CoolerFactory extends ethereum.SmartContract {
       "generateCooler(address,address):(address)",
       [
         ethereum.Value.fromAddress(collateral_),
-        ethereum.Value.fromAddress(debt_)
-      ]
+        ethereum.Value.fromAddress(debt_),
+      ],
     );
 
     return result[0].toAddress();
@@ -263,15 +263,15 @@ export class CoolerFactory extends ethereum.SmartContract {
 
   try_generateCooler(
     collateral_: Address,
-    debt_: Address
+    debt_: Address,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "generateCooler",
       "generateCooler(address,address):(address)",
       [
         ethereum.Value.fromAddress(collateral_),
-        ethereum.Value.fromAddress(debt_)
-      ]
+        ethereum.Value.fromAddress(debt_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

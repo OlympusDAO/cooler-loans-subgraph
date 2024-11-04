@@ -51,6 +51,8 @@ dataSources:
       abis:
         - name: Clearinghouse
           file: ./abis/Clearinghouse.json
+        - name: Clearinghouse_V1_2 # TODO remove
+          file: ./abis/Clearinghouse_v1-2.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC4626
@@ -65,6 +67,7 @@ dataSources:
         - event: Defund(address,uint256)
           handler: handleDefund
       file: ./src/clearinghouse.ts
+  # TODO Clearinghouse V1.2
   ## CoolerFactory
   # V1
   - kind: ethereum

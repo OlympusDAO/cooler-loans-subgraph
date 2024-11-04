@@ -104,6 +104,8 @@ dataSources:
           file: ./abis/BophadesKernel.json
         - name: TRSRY
           file: ./abis/TRSRYv1.json
+        - name: ChainlinkPriceFeed
+          file: ./abis/ChainlinkPriceFeed.json
       eventHandlers:
         - event: RequestLoan(indexed address,address,address,uint256)
           handler: handleRequest
@@ -156,6 +158,8 @@ dataSources:
           file: ./abis/BophadesKernel.json
         - name: TRSRY
           file: ./abis/TRSRYv1.json
+        - name: ChainlinkPriceFeed
+          file: ./abis/ChainlinkPriceFeed.json
       eventHandlers:
         - event: RequestLoan(indexed address,address,address,uint256)
           handler: handleRequest

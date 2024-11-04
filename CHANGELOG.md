@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.0 (2024-03-28)
+
+- Fixes issue with OHM price resolution
+
 ## 1.4.0 (2023-10-09)
 
 - Add treasury balances for event snapshots

@@ -107,6 +107,32 @@ export class Clearinghouse extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get createdBlock(): BigInt {
+    let value = this.get("createdBlock");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdBlock(value: BigInt) {
+    this.set("createdBlock", Value.fromBigInt(value));
+  }
+
+  get createdTimestamp(): BigInt {
+    let value = this.get("createdTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdTimestamp(value: BigInt) {
+    this.set("createdTimestamp", Value.fromBigInt(value));
+  }
+
   get address(): Bytes {
     let value = this.get("address");
     if (!value || value.kind == ValueKind.NULL) {

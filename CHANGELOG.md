@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2.0.0 (2024-11-20)
+## 2.0.1 (2024-11-26)
 
 - Adds support for Clearinghouse v1.2
 - Adds Clearinghouse entity type, to reduce redundant data

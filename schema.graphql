@@ -15,6 +15,14 @@ type Clearinghouse @entity(immutable: true) {
   """
   id: String!
   """
+  Block number at the time of the creation of the record.
+  """
+  createdBlock: BigInt!
+  """
+  Timestamp at the time of the creation of the record.
+  """
+  createdTimestamp: BigInt!
+  """
   Address of the Clearinghouse.
   """
   address: Bytes!

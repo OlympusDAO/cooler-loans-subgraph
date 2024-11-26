@@ -36,7 +36,7 @@ function getLoanRecord(cooler: Bytes, loanID: BigInt): CoolerLoan | null {
 
 function populateLoan(cooler: Cooler, request: CoolerLoanRequest, loanId: BigInt, loanData: Cooler__getLoanResultValue0Struct, block: ethereum.Block, transaction: ethereum.Transaction): CoolerLoan {
   // Get the Clearinghouse
-  const clearinghouseRecord = getOrCreateClearinghouse(loanData.lender);
+  const clearinghouseRecord = getOrCreateClearinghouse(loanData.lender, block);
 
   const loanRecord: CoolerLoan = new CoolerLoan(getLoanRecordId(cooler._address, loanId));
   loanRecord.createdBlock = block.number;

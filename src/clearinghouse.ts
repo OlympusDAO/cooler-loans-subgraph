@@ -55,7 +55,7 @@ function getClearinghouseTokens(clearinghouseAddress: Address): Address[] {
   return [clearinghouseContract.gohm(), clearinghouseContract.reserve(), clearinghouseContract.sReserve()];
 }
 
-export function getOrCreateClearinghouse(clearinghouseAddress: Address): Clearinghouse {
+export function getOrCreateClearinghouse(clearinghouseAddress: Address, block: ethereum.Block): Clearinghouse {
   let clearinghouse = Clearinghouse.load(clearinghouseAddress.toHexString());
   if (clearinghouse == null) {
     // Load the Clearinghouse contract
@@ -78,6 +78,8 @@ export function getOrCreateClearinghouse(clearinghouseAddress: Address): Clearin
 
     // Create the record
     clearinghouse = new Clearinghouse(clearinghouseAddress.toHexString());
+    clearinghouse.createdBlock = block.number;
+    clearinghouse.createdTimestamp = block.timestamp;
     clearinghouse.version = getClearinghouseVersion(clearinghouseAddress);
     clearinghouse.singleton = getOrCreateClearinghouseSingleton().id;
     clearinghouse.address = clearinghouseAddress;
@@ -145,7 +147,7 @@ function getTreasuryBalances(clearinghouse: Clearinghouse): BigDecimal[] {
 
 export function populateClearinghouseSnapshot(clearinghouseAddress: Address, event: ethereum.Event): ClearinghouseSnapshot {
   // Grab the Clearinghouse record
-  const clearinghouseRecord = getOrCreateClearinghouse(clearinghouseAddress);
+  const clearinghouseRecord = getOrCreateClearinghouse(clearinghouseAddress, event.block);
 
   // There may be multiple snapshots created in a single block (e.g. multiple events), so we check if a snapshot has already been created for this block
   let snapshotRecord = ClearinghouseSnapshot.load(getSnapshotRecordId(clearinghouseAddress, event));
@@ -190,7 +192,7 @@ export function populateClearinghouseSnapshot(clearinghouseAddress: Address, eve
 
 export function handleRebalance(event: Rebalance): void {
   const block = event.block;
-  const clearinghouseRecord = getOrCreateClearinghouse(event.address);
+  const clearinghouseRecord = getOrCreateClearinghouse(event.address, block);
 
   const isDefund = event.params.defund;
   const multiplier = new BigDecimal(isDefund ? BigInt.fromI32(-1) : BigInt.fromI32(1));
@@ -214,7 +216,7 @@ export function handleRebalance(event: Rebalance): void {
 
 export function handleDefund(event: Defund): void {
   const block = event.block;
-  const clearinghouseRecord = getOrCreateClearinghouse(event.address);
+  const clearinghouseRecord = getOrCreateClearinghouse(event.address, block);
 
   // Always negative
   const amount = toDecimal(event.params.amount, clearinghouseRecord.reserveTokenDecimals).times(new BigDecimal(BigInt.fromI32(-1)));

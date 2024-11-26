@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.0.0 (2024-11-20)
+
+- Adds support for Clearinghouse v1.2
+- Adds Clearinghouse entity type, to reduce redundant data
+- Shifts treasury and clearinghouse balances to the ClearinghouseSnapshot records
+- Creates ClearinghouseSnapshot records for each loan event
+- Abstracts out the collateral, reserve, and sReserve tokens (previously hardcoded for gOHM, DAI and sDAI)
+
 ## 1.5.0 (2024-03-28)
 
 - Fixes issue with OHM price resolution

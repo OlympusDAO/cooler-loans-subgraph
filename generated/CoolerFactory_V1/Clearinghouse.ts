@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class Deactivate extends ethereum.Event {
@@ -177,7 +177,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "INTEREST_RATE",
       "INTEREST_RATE():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -190,7 +190,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.call(
       "LOAN_TO_COLLATERAL",
       "LOAN_TO_COLLATERAL():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -200,7 +200,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "LOAN_TO_COLLATERAL",
       "LOAN_TO_COLLATERAL():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -288,7 +288,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.call(
       "configureDependencies",
       "configureDependencies():(bytes5[])",
-      []
+      [],
     );
 
     return result[0].toBytesArray();
@@ -298,7 +298,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "configureDependencies",
       "configureDependencies():(bytes5[])",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -356,7 +356,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.call(
       "getCollateralForLoan",
       "getCollateralForLoan(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(principal_)]
+      [ethereum.Value.fromUnsignedBigInt(principal_)],
     );
 
     return result[0].toBigInt();
@@ -366,7 +366,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "getCollateralForLoan",
       "getCollateralForLoan(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(principal_)]
+      [ethereum.Value.fromUnsignedBigInt(principal_)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -376,27 +376,27 @@ export class Clearinghouse extends ethereum.SmartContract {
   }
 
   getLoanForCollateral(
-    collateral_: BigInt
+    collateral_: BigInt,
   ): Clearinghouse__getLoanForCollateralResult {
     let result = super.call(
       "getLoanForCollateral",
       "getLoanForCollateral(uint256):(uint256,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(collateral_)]
+      [ethereum.Value.fromUnsignedBigInt(collateral_)],
     );
 
     return new Clearinghouse__getLoanForCollateralResult(
       result[0].toBigInt(),
-      result[1].toBigInt()
+      result[1].toBigInt(),
     );
   }
 
   try_getLoanForCollateral(
-    collateral_: BigInt
+    collateral_: BigInt,
   ): ethereum.CallResult<Clearinghouse__getLoanForCollateralResult> {
     let result = super.tryCall(
       "getLoanForCollateral",
       "getLoanForCollateral(uint256):(uint256,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(collateral_)]
+      [ethereum.Value.fromUnsignedBigInt(collateral_)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -405,8 +405,8 @@ export class Clearinghouse extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new Clearinghouse__getLoanForCollateralResult(
         value[0].toBigInt(),
-        value[1].toBigInt()
-      )
+        value[1].toBigInt(),
+      ),
     );
   }
 
@@ -414,7 +414,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.call(
       "getTotalReceivables",
       "getTotalReceivables():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -424,7 +424,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "getTotalReceivables",
       "getTotalReceivables():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -454,8 +454,8 @@ export class Clearinghouse extends ethereum.SmartContract {
       "interestForLoan(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(principal_),
-        ethereum.Value.fromUnsignedBigInt(duration_)
-      ]
+        ethereum.Value.fromUnsignedBigInt(duration_),
+      ],
     );
 
     return result[0].toBigInt();
@@ -463,15 +463,15 @@ export class Clearinghouse extends ethereum.SmartContract {
 
   try_interestForLoan(
     principal_: BigInt,
-    duration_: BigInt
+    duration_: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "interestForLoan",
       "interestForLoan(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(principal_),
-        ethereum.Value.fromUnsignedBigInt(duration_)
-      ]
+        ethereum.Value.fromUnsignedBigInt(duration_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -484,7 +484,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.call(
       "interestReceivables",
       "interestReceivables():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -494,7 +494,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "interestReceivables",
       "interestReceivables():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -522,7 +522,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.call(
       "isCoolerCallback",
       "isCoolerCallback():(bool)",
-      []
+      [],
     );
 
     return result[0].toBoolean();
@@ -532,7 +532,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "isCoolerCallback",
       "isCoolerCallback():(bool)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -562,8 +562,8 @@ export class Clearinghouse extends ethereum.SmartContract {
       "lendToCooler(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(cooler_),
-        ethereum.Value.fromUnsignedBigInt(amount_)
-      ]
+        ethereum.Value.fromUnsignedBigInt(amount_),
+      ],
     );
 
     return result[0].toBigInt();
@@ -571,15 +571,15 @@ export class Clearinghouse extends ethereum.SmartContract {
 
   try_lendToCooler(
     cooler_: Address,
-    amount_: BigInt
+    amount_: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "lendToCooler",
       "lendToCooler(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(cooler_),
-        ethereum.Value.fromUnsignedBigInt(amount_)
-      ]
+        ethereum.Value.fromUnsignedBigInt(amount_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -607,7 +607,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.call(
       "principalReceivables",
       "principalReceivables():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -617,7 +617,7 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "principalReceivables",
       "principalReceivables():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -641,18 +641,14 @@ export class Clearinghouse extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  requestPermissions(): Array<
-    Clearinghouse__requestPermissionsResultRequestsStruct
-  > {
+  requestPermissions(): Array<Clearinghouse__requestPermissionsResultRequestsStruct> {
     let result = super.call(
       "requestPermissions",
       "requestPermissions():((bytes5,bytes4)[])",
-      []
+      [],
     );
 
-    return result[0].toTupleArray<
-      Clearinghouse__requestPermissionsResultRequestsStruct
-    >();
+    return result[0].toTupleArray<Clearinghouse__requestPermissionsResultRequestsStruct>();
   }
 
   try_requestPermissions(): ethereum.CallResult<
@@ -661,16 +657,14 @@ export class Clearinghouse extends ethereum.SmartContract {
     let result = super.tryCall(
       "requestPermissions",
       "requestPermissions():((bytes5,bytes4)[])",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      value[0].toTupleArray<
-        Clearinghouse__requestPermissionsResultRequestsStruct
-      >()
+      value[0].toTupleArray<Clearinghouse__requestPermissionsResultRequestsStruct>(),
     );
   }
 

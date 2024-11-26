@@ -1,18 +1,145 @@
+type ClearinghouseSingleton @entity {
+  """
+  Record ID.
+  """
+  id: String!
+  # Related records
+  clearinghouses: [Clearinghouse!]! @derivedFrom(field: "singleton")
+}
+
+type Clearinghouse @entity(immutable: true) {
+  """
+  Record ID.
+
+  In the format of `address`.
+  """
+  id: String!
+  """
+  Address of the Clearinghouse.
+  """
+  address: Bytes!
+  """
+  Version of the Clearinghouse.
+  """
+  version: String!
+  """
+  ClearinghouseSingleton allows all Clearinghouses to be linked to the same record.
+  """
+  singleton: ClearinghouseSingleton!
+  """
+  Address of the CoolerFactory.
+  """
+  coolerFactoryAddress: Bytes!
+  """
+  Address of the collateral token.
+  """
+  collateralToken: Bytes!
+  """
+  Number of decimals of the collateral token.
+  """
+  collateralTokenDecimals: Int!
+  """
+  Address of the reserve (and debt) token.
+  """
+  reserveToken: Bytes!
+  """
+  Number of decimals of the reserve token.
+  """
+  reserveTokenDecimals: Int!
+  """
+  Address of the sReserve token.
+  """
+  sReserveToken: Bytes!
+  """
+  Number of decimals of the sReserve token.
+  """
+  sReserveTokenDecimals: Int!
+  """
+  Annual interest rate.
+
+  In the format of 0.1 = 10%.
+  """
+  interestRate: BigDecimal!
+  """
+  Duration of loans in seconds.
+  """
+  duration: BigInt!
+  """
+  Frequency of rebalances in seconds.
+  """
+  fundCadence: BigInt!
+  """
+  Amount of reserves required to be in the Clearinghouse.
+  """
+  fundAmount: BigDecimal!
+  """
+  Ratio of the quantity of debt token to 1 collateral token, e.g. 3000 reserve/gOHM
+  """
+  loanToCollateral: BigDecimal!
+  # Related records
+  loans: [CoolerLoan!]! @derivedFrom(field: "clearinghouse")
+  snapshots: [ClearinghouseSnapshot!]! @derivedFrom(field: "clearinghouse")
+}
+
 # Mirrors the Request struct in Cooler.sol
 type CoolerLoanRequest @entity {
-  id: String! # cooler-requestId
+  """
+  Record ID.
+
+  In the format of `cooler-requestId`.
+  """
+  id: String!
+  """
+  Block number at the time of the request.
+  """
   createdBlock: BigInt!
+  """
+  Timestamp at the time of the request.
+  """
   createdTimestamp: BigInt!
+  """
+  Transaction hash of the request.
+  """
   createdTransaction: Bytes!
-  cooler: Bytes! # address
-  requestId: BigInt! # uint256
-  borrower: Bytes! # address
-  collateralToken: Bytes! # address
-  debtToken: Bytes! # address
-  amount: BigDecimal! # amount to be borrowed
-  interestPercentage: BigDecimal! # annualized percentage to be paid as interest. Represented as a decimal, e.g. 0.1 = 10%
-  loanToCollateralRatio: BigDecimal! # ratio of the quantity of debt token to 1 collateral token, e.g. 3000 DAI/gOHM
-  durationSeconds: BigInt! # duration of loan in seconds
+  """
+  Address of the Cooler.
+  """
+  cooler: Bytes!
+  """
+  Request id.
+  """
+  requestId: BigInt!
+  """
+  Address of the borrower.
+  """
+  borrower: Bytes!
+  """
+  Address of the collateral token.
+  """
+  collateralToken: Bytes!
+  """
+  Address of the debt token.
+  """
+  debtToken: Bytes!
+  """
+  Amount to be borrowed.
+  """
+  amount: BigDecimal!
+  """
+  Annualized percentage to be paid as interest. Represented as a decimal, e.g. 0.1 = 10%
+  """
+  interestPercentage: BigDecimal!
+  """
+  Ratio of the quantity of debt token to 1 collateral token, e.g. 3000 DAI/gOHM
+  """
+  loanToCollateralRatio: BigDecimal!
+  """
+  Duration of the loan in seconds.
+  """
+  durationSeconds: BigInt!
+  """
+  Whether the request has been rescinded.
+  """
   isRescinded: Boolean!
   # Related records
   requestEvents: [RequestLoanEvent!]! @derivedFrom(field: "request")
@@ -23,22 +150,66 @@ type CoolerLoanRequest @entity {
 
 # Mirrors the Loan struct in Cooler.sol
 type CoolerLoan @entity(immutable: true) {
-  id: String! # cooler-loanId
+  """
+  Record ID.
+
+  In the format of `cooler-loanId`.
+  """
+  id: String!
+  """
+  Block number at the time of the loan.
+  """
   createdBlock: BigInt!
+  """
+  Timestamp at the time of the loan.
+  """
   createdTimestamp: BigInt!
+  """
+  Transaction hash of the loan.
+  """
   createdTransaction: Bytes!
-  cooler: Bytes! # address
-  request: CoolerLoanRequest! # request that created this loan
-  loanId: BigInt! # uint256
-  borrower: Bytes! # address
-  lender: Bytes! # address
+  """
+  Address of the Cooler.
+  """
+  cooler: Bytes!
+  """
+  Request that created this loan.
+  """
+  request: CoolerLoanRequest!
+  """
+  Loan ID.
+
+  The ID is unique to the Cooler.
+  """
+  loanId: BigInt!
+  """
+  Address of the borrower.
+  """
+  borrower: Bytes!
+  """
+  The Clearinghouse that created the loan.
+  """
+  clearinghouse: Clearinghouse!
+  """
+  Interest to be paid.
+  """
   interest: BigDecimal!
+  """
+  Principal to be paid.
+  """
   principal: BigDecimal!
+  """
+  Collateral held.
+  """
   collateral: BigDecimal!
+  """
+  Expiry timestamp.
+  """
   expiryTimestamp: BigInt!
+  """
+  Whether the loan has a callback.
+  """
   hasCallback: Boolean!
-  collateralToken: Bytes! # address
-  debtToken: Bytes! # address
   # Related records
   creationEvents: [ClearLoanRequestEvent!]! @derivedFrom(field: "loan")
   defaultedClaimEvents: [ClaimDefaultedLoanEvent!]! @derivedFrom(field: "loan")
@@ -47,169 +218,405 @@ type CoolerLoan @entity(immutable: true) {
 }
 
 type ClearinghouseSnapshot @entity {
-  id: String! # address-blockNumber-log
-  date: String! # YYYY-MM-DD
+  """
+  The id of the snapshot.
+
+  In the format of `address-blockNumber-logIndex`.
+  """
+  id: String!
+  """
+  Snapshot date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
-  clearinghouse: Bytes! # address
-  # Configuration
-  coolerFactoryAddress: Bytes!
-  collateralAddress: Bytes!
-  debtAddress: Bytes!
-  # State information
+  """
+  Transaction hash of the event.
+  """
+  transactionHash: Bytes!
+  """
+  The Clearinghouse that the snapshot is for.
+  """
+  clearinghouse: Clearinghouse!
+  """
+  Whether the Clearinghouse is active.
+  """
   isActive: Boolean!
+  """
+  Timestamp of the next rebalance.
+  """
   nextRebalanceTimestamp: BigInt!
+  """
+  Total interest receivables.
+  """
   interestReceivables: BigDecimal!
+  """
+  Total principal receivables.
+  """
   principalReceivables: BigDecimal!
-  # Terms
-  interestRate: BigDecimal! # Annual interest rate. 0.1 = 10%
-  duration: BigInt! # Duration of loans in seconds
-  fundCadence: BigInt! # Frequency of rebalances in seconds
-  fundAmount: BigDecimal! # Amount of DAI required to be in the clearinghouse
-  loanToCollateral: BigDecimal! # Amount of the debt token per collateral token
-  # Clearinghouse Capacity
-  daiBalance: BigDecimal!
-  sDaiBalance: BigDecimal!
-  sDaiInDaiBalance: BigDecimal!
-  # Treasury Capacity
-  treasuryDaiBalance: BigDecimal!
-  treasurySDaiBalance: BigDecimal!
-  treasurySDaiInDaiBalance: BigDecimal!
+  """
+  Address of the reserve token.
+  """
+  reserveToken: Bytes!
+  """
+  Address of the sReserve token.
+  """
+  sReserveToken: Bytes!
+  """
+  Reserve balance of the clearinghouse.
+  """
+  reserveBalance: BigDecimal!
+  """
+  sReserve balance of the clearinghouse.
+  """
+  sReserveBalance: BigDecimal!
+  """
+  sReserve balance of the clearinghouse, in terms of reserve tokens.
+  """
+  sReserveInReserveBalance: BigDecimal!
+  """
+  Reserve balance of the treasury.
+  """
+  treasuryReserveBalance: BigDecimal!
+  """
+  sReserve balance of the treasury.
+  """
+  treasurySReserveBalance: BigDecimal!
+  """
+  sReserve balance of the treasury, in terms of reserve tokens.
+  """
+  treasurySReserveInReserveBalance: BigDecimal!
   # Related records
   rebalanceEvents: [RebalanceEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
   defundEvents: [DefundEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
+  creationEvents: [ClearLoanRequestEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
+  defaultedClaimEvents: [ClaimDefaultedLoanEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
+  repaymentEvents: [RepayLoanEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
+  extendEvents: [ExtendLoanEvent!]! @derivedFrom(field: "clearinghouseSnapshot")
 }
 
 ### Clearinghouse Events
 
 type RebalanceEvent @entity(immutable: true) {
-  id: String! # clearinghouse-blockNumber
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `clearinghouse-blockNumber`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
-  clearinghouse: Bytes! # address
+  """
+  The Clearinghouse that the snapshot is for.
+  """
+  clearinghouse: Clearinghouse!
+  """
+  Snapshot of the Clearinghouse at the time of the event.
+  """
   clearinghouseSnapshot: ClearinghouseSnapshot!
-  # State information
-  amount: BigDecimal! # Amount of DAI in (positive)/out (negative) of the clearinghouse
+  """
+  Amount of reserve tokens in (positive)/out (negative) of the Clearinghouse.
+  """
+  amount: BigDecimal!
 }
 
 type DefundEvent @entity(immutable: true) {
-  id: String! # clearinghouse-blockNumber
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `clearinghouse-blockNumber`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
-  clearinghouse: Bytes! # address
+  """
+  Address of the Clearinghouse.
+  """
+  clearinghouse: Clearinghouse!
+  """
+  Snapshot of the Clearinghouse at the time of the event.
+  """
   clearinghouseSnapshot: ClearinghouseSnapshot!
-  # State information
-  amount: BigDecimal! # Amount of DAI out (negative) of the clearinghouse
+  """
+  Amount of reserve tokens in (positive)/out (negative) of the Clearinghouse.
+  """
+  amount: BigDecimal!
 }
 
 ### Loan Events
 
 type RequestLoanEvent @entity(immutable: true) {
-  # Context
-  id: String! # cooler-requestId
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `cooler-requestId`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
+  """
+  Request that created the loan.
+  """
   request: CoolerLoanRequest!
 }
 
 type RescindLoanRequestEvent @entity(immutable: true) {
-  # Context
-  id: String! # cooler-requestId
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `cooler-requestId`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
+  """
+  Request that was rescinded.
+  """
   request: CoolerLoanRequest!
 }
 
 type ClearLoanRequestEvent @entity(immutable: true) {
-  # Context
-  id: String! # cooler-requestId
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `cooler-requestId`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
-  # Event information
+  """
+  Request that created the loan.
+  """
   request: CoolerLoanRequest!
-  # Loan state
+  """
+  The loan that was created.
+  """
   loan: CoolerLoan!
-  # Clearinghouse Capacity
-  clearinghouseDaiBalance: BigDecimal!
-  clearinghouseSDaiBalance: BigDecimal!
-  clearinghouseSDaiInDaiBalance: BigDecimal!
-  # Treasury Capacity
-  treasuryDaiBalance: BigDecimal!
-  treasurySDaiBalance: BigDecimal!
-  treasurySDaiInDaiBalance: BigDecimal!
+  """
+  Snapshot of the Clearinghouse at the time of the event.
+  """
+  clearinghouseSnapshot: ClearinghouseSnapshot!
 }
 
 type ClaimDefaultedLoanEvent @entity(immutable: true) {
-  # Context
-  id: String! # cooler-loanId
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `cooler-loanId`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
-  # Income
+  """
+  Collateral quantity claimed.
+  """
   collateralQuantityClaimed: BigDecimal!
+  """
+  Price of the collateral token at the time of the event.
+  """
   collateralPrice: BigDecimal!
+  """
+  Value of the collateral claimed.
+  """
   collateralValueClaimed: BigDecimal!
-  # Loan state
+  """
+  Loan that was defaulted.
+  """
   loan: CoolerLoan!
+  """
+  Seconds since the loan expired.
+  """
   secondsSinceExpiry: BigInt!
+  """
+  Snapshot of the Clearinghouse at the time of the event.
+  """
+  clearinghouseSnapshot: ClearinghouseSnapshot!
 }
 
 type RepayLoanEvent @entity(immutable: true) {
-  # Context
-  id: String! # cooler-loanId-blockNumber
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `cooler-loanId`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
-  # Event information
+  """
+  Amount paid.
+  """
   amountPaid: BigDecimal!
-  # Loan state
+  """
+  Loan that was repaid.
+  """
   loan: CoolerLoan!
+  """
+  Seconds to expiry.
+  """
   secondsToExpiry: BigInt!
+  """
+  Principal payable after the repayment.
+  """
   principalPayable: BigDecimal!
+  """
+  Interest payable after the repayment.
+  """
   interestPayable: BigDecimal!
+  """
+  Collateral deposited after the repayment.
+  """
   collateralDeposited: BigDecimal!
-  # Clearinghouse Capacity
-  clearinghouseDaiBalance: BigDecimal!
-  clearinghouseSDaiBalance: BigDecimal!
-  clearinghouseSDaiInDaiBalance: BigDecimal!
-  # Treasury Capacity
-  treasuryDaiBalance: BigDecimal!
-  treasurySDaiBalance: BigDecimal!
-  treasurySDaiInDaiBalance: BigDecimal!
+  """
+  Snapshot of the Clearinghouse at the time of the event.
+  """
+  clearinghouseSnapshot: ClearinghouseSnapshot!
 }
 
 type ExtendLoanEvent @entity(immutable: true) {
-  # Context
-  id: String! # cooler-loanId-blockNumber
-  date: String! # YYYY-MM-DD
+  """
+  Record ID.
+
+  In the format of `cooler-loanId`.
+  """
+  id: String!
+  """
+  Event date in YYYY-MM-DD format.
+  """
+  date: String!
+  """
+  Block number at the time of the event.
+  """
   blockNumber: BigInt!
+  """
+  Block timestamp at the time of the event.
+  """
   blockTimestamp: BigInt!
+  """
+  Transaction hash of the event.
+  """
   transactionHash: Bytes!
-  # Event information
-  periods: Int! # Number of duration periods the loan has been extended for
-  # Loan information
+  """
+  Number of duration periods the loan has been extended for.
+  """
+  periods: Int!
+  """
+  Loan that was extended.
+  """
   loan: CoolerLoan!
-  # The new expiry timestamp
+  """
+  The new expiry timestamp.
+  """
   expiryTimestamp: BigInt!
+  """
+  Amount of interest due after the extension.
+  """
   interestDue: BigDecimal!
-  # Clearinghouse Capacity
-  clearinghouseDaiBalance: BigDecimal!
-  clearinghouseSDaiBalance: BigDecimal!
-  clearinghouseSDaiInDaiBalance: BigDecimal!
-  # Treasury Capacity
-  treasuryDaiBalance: BigDecimal!
-  treasurySDaiBalance: BigDecimal!
-  treasurySDaiInDaiBalance: BigDecimal!
+  """
+  Snapshot of the Clearinghouse at the time of the event.
+  """
+  clearinghouseSnapshot: ClearinghouseSnapshot!
 }

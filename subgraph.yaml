@@ -20,6 +20,8 @@ dataSources:
       abis:
         - name: Clearinghouse
           file: ./abis/Clearinghouse.json
+        - name: Clearinghouse_V1_2
+          file: ./abis/Clearinghouse_v1-2.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC4626
@@ -51,6 +53,41 @@ dataSources:
       abis:
         - name: Clearinghouse
           file: ./abis/Clearinghouse.json
+        - name: Clearinghouse_V1_2
+          file: ./abis/Clearinghouse_v1-2.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC4626
+          file: ./abis/ERC4626.json
+        - name: BophadesKernel
+          file: ./abis/BophadesKernel.json
+        - name: TRSRY
+          file: ./abis/TRSRYv1.json
+      eventHandlers:
+        - event: Rebalance(bool,uint256)
+          handler: handleRebalance
+        - event: Defund(address,uint256)
+          handler: handleDefund
+      file: ./src/clearinghouse.ts
+  # V1.2
+  - kind: ethereum
+    name: ClearinghouseV1_2
+    network: mainnet
+    source:
+      address: "0x1e094fE00E13Fd06D64EeA4FB3cD912893606fE0"
+      abi: Clearinghouse_V1_2
+      startBlock: 21216656 # Deployment
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ClearinghouseSnapshot
+      abis:
+        - name: Clearinghouse
+          file: ./abis/Clearinghouse.json
+        - name: Clearinghouse_V1_2
+          file: ./abis/Clearinghouse_v1-2.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC4626

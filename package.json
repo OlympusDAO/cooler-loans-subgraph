@@ -8,14 +8,17 @@
     "build": "graph build",
     "deploy": "graph deploy --studio --version-label=$(cat .subgraph-version | tr -d '[:space:]') cooler-loans",
     "deploy:goerli": "graph deploy --studio --version-label=$(cat .subgraph-version | tr -d '[:space:]') cooler-loans-goerli",
-    "test": "graph test"
+    "test": "graph test",
+    "create-local": "graph create --node http://localhost:8020/ cooler-loans",
+    "remove-local": "graph remove --node http://localhost:8020/ cooler-loans",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cooler-loans"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.87.0",
-    "@graphprotocol/graph-ts": "^0.35.0"
+    "@graphprotocol/graph-cli": "^0.94.0",
+    "@graphprotocol/graph-ts": "^0.37.0"
   },
   "devDependencies": {
     "@types/node": "^18",
@@ -23,5 +26,6 @@
     "matchstick-as": "0.5.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

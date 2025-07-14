@@ -1,4 +1,4 @@
-type ClearinghouseSingleton @entity {
+type ClearinghouseSingleton @entity(immutable: true) {
   """
   Record ID.
   """
@@ -90,7 +90,7 @@ type Clearinghouse @entity(immutable: true) {
 }
 
 # Mirrors the Request struct in Cooler.sol
-type CoolerLoanRequest @entity {
+type CoolerLoanRequest @entity(immutable: false) {
   """
   Record ID.
 
@@ -157,7 +157,7 @@ type CoolerLoanRequest @entity {
 }
 
 # Mirrors the Loan struct in Cooler.sol
-type CoolerLoan @entity {
+type CoolerLoan @entity(immutable: false) {
   """
   Record ID.
 
@@ -617,7 +617,7 @@ type ExtendLoanEvent @entity(timeseries: true) {
   interestDue: BigDecimal!
 }
 
-type BorrowerStats @entity {
+type BorrowerStats @entity(immutable: false) {
   """
   Record ID.
   In the format of `borrower`.
@@ -689,7 +689,7 @@ type BorrowerStats @entity {
 """
 Tracks cumulative stats for a clearinghouse
 """
-type ClearinghouseCumulativeStats @entity {
+type ClearinghouseCumulativeStats @entity(immutable: false) {
   """
   Record ID - the clearinghouse address
   """
@@ -881,3 +881,214 @@ type ClearinghouseSnapshotStats
   # Count of snapshots in period
   snapshotCount: Int! @aggregate(fn: "count")
 }
+
+# =====================
+# MonoCooler v2 Entities
+# =====================
+
+type MonoCoolerAccount @entity(immutable: false) {
+  id: ID!
+  address: Bytes!
+  collateral: BigInt!
+  debt: BigInt!
+  interestAccumulatorRay: BigInt!
+  ltv: BigInt!
+  healthFactor: BigInt!
+  updatedAt: BigInt!
+  # Snapshots
+  snapshots: [MonoCoolerAccountSnapshot!]! @derivedFrom(field: "account")
+  # Activity feed
+  activities: [MonoCoolerActivity!]! @derivedFrom(field: "account")
+}
+
+type MonoCoolerGlobalState @entity(immutable: false) {
+  id: ID!
+  totalCollateral: BigInt!
+  totalDebt: BigInt!
+  interestAccumulatorRay: BigInt!
+  interestRateWad: BigInt!
+  ltvOracle: Bytes!
+  liquidationPaused: Boolean!
+  borrowsPaused: Boolean!
+  treasuryBorrower: Bytes!
+  updatedAt: BigInt!
+  # Snapshots
+  snapshots: [MonoCoolerGlobalSnapshot!]! @derivedFrom(field: "globalState")
+  # LTV Oracle changes
+  ltvOracleChanges: [MonoCoolerLtvOracleChange!]! @derivedFrom(field: "globalState")
+}
+
+type MonoCoolerAccountSnapshot @entity(timeseries: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  account: MonoCoolerAccount!
+  collateral: BigInt!
+  debt: BigInt!
+  ltv: BigInt!
+  healthFactor: BigInt!
+  # Oracle LTV values at time of snapshot
+  maxOriginationLtv: BigInt!
+  liquidationLtv: BigInt!
+}
+
+type MonoCoolerGlobalSnapshot @entity(timeseries: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  globalState: MonoCoolerGlobalState!
+  totalCollateral: BigInt!
+  totalDebt: BigInt!
+  interestRateWad: BigInt!
+  # Oracle LTV values at time of snapshot
+  maxOriginationLtv: BigInt!
+  liquidationLtv: BigInt!
+}
+
+type MonoCoolerActivity @entity(immutable: true) {
+  id: ID!
+  type: String!
+  account: MonoCoolerAccount!
+  amount: BigInt!
+  collateral: BigInt
+  debt: BigInt
+  ltv: BigInt
+  # LTV values at time of activity
+  maxOriginationLtv: BigInt
+  liquidationLtv: BigInt
+  txHash: Bytes!
+  timestamp: BigInt!
+  # Event-specific data
+  liquidationIncentive: BigInt
+  collateralSeized: BigInt
+  debtWiped: BigInt
+}
+
+"""
+Tracks changes to the LTV Oracle over time
+"""
+type MonoCoolerLtvOracleChange @entity(immutable: true) {
+  id: ID!
+  globalState: MonoCoolerGlobalState!
+  oldOracle: Bytes!
+  newOracle: Bytes!
+  oldMaxOriginationLtv: BigInt!
+  oldLiquidationLtv: BigInt!
+  newMaxOriginationLtv: BigInt!
+  newLiquidationLtv: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+"""
+Tracks LTV at time of loan origination
+"""
+type MonoCoolerLoanOrigination @entity(timeseries: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  account: MonoCoolerAccount!
+  borrowAmount: BigInt!
+  resultingLtv: BigInt!
+  maxOriginationLtv: BigInt!
+  liquidationLtv: BigInt!
+  collateralAtTime: BigInt!
+  debtAtTime: BigInt!
+  healthFactor: BigInt!
+  utilizationRatio: BigInt! # resultingLtv * 1e18 / maxOriginationLtv
+  txHash: Bytes!
+}
+
+"""
+Tracks LTV at time of liquidation
+"""
+type MonoCoolerLiquidation @entity(timeseries: true) {
+  id: Int8!
+  timestamp: Timestamp!
+  account: MonoCoolerAccount!
+  liquidator: Bytes!
+  collateralSeized: BigInt!
+  debtWiped: BigInt!
+  incentiveReceived: BigInt!
+  ltvAtLiquidation: BigInt!
+  maxOriginationLtv: BigInt!
+  liquidationLtv: BigInt!
+  excessLtv: BigInt! # ltvAtLiquidation - liquidationLtv
+  healthFactorAtLiquidation: BigInt!
+  txHash: Bytes!
+}
+
+"""
+Aggregated LTV statistics over time
+"""
+type MonoCoolerLtvStats @aggregation(intervals: ["hour", "day"], source: "MonoCoolerAccountSnapshot") {
+  id: Int8!
+  timestamp: Timestamp!
+  minLtv: BigInt! @aggregate(fn: "min", arg: "ltv")
+  maxLtv: BigInt! @aggregate(fn: "max", arg: "ltv")
+  
+  # Oracle LTV values (in USDS per gOHM, WAD format)
+  maxOriginationLtv: BigInt! @aggregate(fn: "last", arg: "maxOriginationLtv")
+  liquidationLtv: BigInt! @aggregate(fn: "last", arg: "liquidationLtv")
+  minHealthFactor: BigInt! @aggregate(fn: "min", arg: "healthFactor")
+  
+  # Active account metrics
+  activeAccounts: Int! @aggregate(fn: "count")
+}
+
+"""
+Aggregated origination statistics
+"""
+type MonoCoolerOriginationStats @aggregation(intervals: ["hour", "day"], source: "MonoCoolerLoanOrigination") {
+  id: Int8!
+  timestamp: Timestamp!
+  
+  # Origination counts
+  originationCount: Int! @aggregate(fn: "count")
+  
+  # Borrow amounts (WAD format)
+  totalBorrowAmount: BigInt! @aggregate(fn: "sum", arg: "borrowAmount")
+  maxBorrowAmount: BigInt! @aggregate(fn: "max", arg: "borrowAmount")
+  maxOriginationLtv: BigInt! @aggregate(fn: "max", arg: "resultingLtv")
+  maxUtilization: BigInt! @aggregate(fn: "max", arg: "utilizationRatio")
+}
+
+"""
+Aggregated liquidation statistics
+"""
+type MonoCoolerLiquidationStats @aggregation(intervals: ["hour", "day"], source: "MonoCoolerLiquidation") {
+  id: Int8!
+  timestamp: Timestamp!
+  
+  # Liquidation counts
+  liquidationCount: Int! @aggregate(fn: "count")
+  
+  totalCollateralSeized: BigInt! @aggregate(fn: "sum", arg: "collateralSeized")
+  totalDebtWiped: BigInt! @aggregate(fn: "sum", arg: "debtWiped")
+  totalIncentives: BigInt! @aggregate(fn: "sum", arg: "incentiveReceived")
+  maxLiquidationLtv: BigInt! @aggregate(fn: "max", arg: "ltvAtLiquidation")
+  maxExcessLtv: BigInt! @aggregate(fn: "max", arg: "excessLtv")
+  minHealthFactorAtLiquidation: BigInt! @aggregate(fn: "min", arg: "healthFactorAtLiquidation")
+}
+
+"""
+Aggregated global state statistics
+"""
+type MonoCoolerGlobalStats @aggregation(intervals: ["hour", "day"], source: "MonoCoolerGlobalSnapshot") {
+  id: Int8!
+  timestamp: Timestamp!
+  
+  # Global state metrics (using last values as these are point-in-time snapshots)
+  totalCollateral: BigInt! @aggregate(fn: "last", arg: "totalCollateral")
+  totalDebt: BigInt! @aggregate(fn: "last", arg: "totalDebt")
+  interestRateWad: BigInt! @aggregate(fn: "last", arg: "interestRateWad")
+  
+  # Oracle LTV values
+  maxOriginationLtv: BigInt! @aggregate(fn: "last", arg: "maxOriginationLtv")
+  liquidationLtv: BigInt! @aggregate(fn: "last", arg: "liquidationLtv")
+  
+  # Count of snapshots in period
+  snapshotCount: Int! @aggregate(fn: "count")
+}
+
+# =====================
+# End MonoCooler v2 Entities
+# =====================

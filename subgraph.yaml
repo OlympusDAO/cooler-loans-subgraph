@@ -185,6 +185,8 @@ dataSources:
           file: ./abis/Cooler.json
         - name: Clearinghouse
           file: ./abis/Clearinghouse.json
+        - name: Clearinghouse_V1_2
+          file: ./abis/Clearinghouse_v1-2.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: gOHM
@@ -211,3 +213,46 @@ dataSources:
         - event: ExtendLoan(indexed address,uint256,uint8)
           handler: handleExtendLoan
       file: ./src/cooler-factory.ts
+  # MonoCooler
+  - kind: ethereum/contract
+    name: MonoCooler
+    network: mainnet
+    source:
+      address: "0xdb591Ea2e5Db886dA872654D58f6cc584b68e7cC" 
+      abi: MonoCooler
+      startBlock: 22423121
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MonoCoolerAccount
+        - MonoCoolerGlobalState
+        - MonoCoolerAccountSnapshot
+        - MonoCoolerGlobalSnapshot
+        - MonoCoolerActivity
+      abis:
+        - name: MonoCooler
+          file: ./abis/MonoCooler.json 
+      eventHandlers:
+        - event: CollateralAdded(indexed address,indexed address,uint128)
+          handler: handleCollateralAdded
+        - event: CollateralWithdrawn(indexed address,indexed address,indexed address,uint128)
+          handler: handleCollateralWithdrawn
+        - event: Borrow(indexed address,indexed address,indexed address,uint128)
+          handler: handleBorrow
+        - event: Repay(indexed address,indexed address,uint128)
+          handler: handleRepay
+        - event: Liquidated(indexed address,indexed address,uint128,uint128,uint128)
+          handler: handleLiquidated
+        - event: InterestRateSet(uint96)
+          handler: handleInterestRateSet
+        - event: LtvOracleSet(indexed address)
+          handler: handleLtvOracleSet
+        - event: LiquidationsPausedSet(bool)
+          handler: handleLiquidationsPausedSet
+        - event: BorrowPausedSet(bool)
+          handler: handleBorrowPausedSet
+        - event: TreasuryBorrowerSet(indexed address)
+          handler: handleTreasuryBorrowerSet
+      file: ./src/monocooler.ts

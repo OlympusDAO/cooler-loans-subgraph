@@ -9,6 +9,7 @@ import {
   Bytes,
   BigInt,
   BigDecimal,
+  Int8,
 } from "@graphprotocol/graph-ts";
 
 export class ClearinghouseSingleton extends Entity {
@@ -845,9 +846,9 @@ export class CoolerLoan extends Entity {
 }
 
 export class ClearinghouseSnapshot extends Entity {
-  constructor(id: string) {
+  constructor(id: Int8) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromI64(id));
   }
 
   save(): void {
@@ -858,22 +859,22 @@ export class ClearinghouseSnapshot extends Entity {
     );
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type ClearinghouseSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.INT8,
+        `Entities of type ClearinghouseSnapshot must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("ClearinghouseSnapshot", id.toString(), this);
+      store.set("ClearinghouseSnapshot", id.toI64().toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ClearinghouseSnapshot | null {
+  static loadInBlock(id: Int8): ClearinghouseSnapshot | null {
     return changetype<ClearinghouseSnapshot | null>(
-      store.get_in_block("ClearinghouseSnapshot", id),
+      store.get_in_block("ClearinghouseSnapshot", id.toString()),
     );
   }
 
-  static load(id: string): ClearinghouseSnapshot | null {
+  static load(id: Int8): ClearinghouseSnapshot | null {
     return changetype<ClearinghouseSnapshot | null>(
-      store.get("ClearinghouseSnapshot", id),
+      store.get("ClearinghouseSnapshot", id.toString()),
     );
   }
 
@@ -1712,9 +1713,9 @@ export class ClearLoanRequestEvent extends Entity {
 }
 
 export class ClaimDefaultedLoanEvent extends Entity {
-  constructor(id: string) {
+  constructor(id: Int8) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromI64(id));
   }
 
   save(): void {
@@ -1725,22 +1726,22 @@ export class ClaimDefaultedLoanEvent extends Entity {
     );
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type ClaimDefaultedLoanEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.INT8,
+        `Entities of type ClaimDefaultedLoanEvent must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("ClaimDefaultedLoanEvent", id.toString(), this);
+      store.set("ClaimDefaultedLoanEvent", id.toI64().toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ClaimDefaultedLoanEvent | null {
+  static loadInBlock(id: Int8): ClaimDefaultedLoanEvent | null {
     return changetype<ClaimDefaultedLoanEvent | null>(
-      store.get_in_block("ClaimDefaultedLoanEvent", id),
+      store.get_in_block("ClaimDefaultedLoanEvent", id.toString()),
     );
   }
 
-  static load(id: string): ClaimDefaultedLoanEvent | null {
+  static load(id: Int8): ClaimDefaultedLoanEvent | null {
     return changetype<ClaimDefaultedLoanEvent | null>(
-      store.get("ClaimDefaultedLoanEvent", id),
+      store.get("ClaimDefaultedLoanEvent", id.toString()),
     );
   }
 
@@ -1902,9 +1903,9 @@ export class ClaimDefaultedLoanEvent extends Entity {
 }
 
 export class RepayLoanEvent extends Entity {
-  constructor(id: string) {
+  constructor(id: Int8) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromI64(id));
   }
 
   save(): void {
@@ -1912,21 +1913,23 @@ export class RepayLoanEvent extends Entity {
     assert(id != null, "Cannot save RepayLoanEvent entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type RepayLoanEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.INT8,
+        `Entities of type RepayLoanEvent must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("RepayLoanEvent", id.toString(), this);
+      store.set("RepayLoanEvent", id.toI64().toString(), this);
     }
   }
 
-  static loadInBlock(id: string): RepayLoanEvent | null {
+  static loadInBlock(id: Int8): RepayLoanEvent | null {
     return changetype<RepayLoanEvent | null>(
-      store.get_in_block("RepayLoanEvent", id),
+      store.get_in_block("RepayLoanEvent", id.toString()),
     );
   }
 
-  static load(id: string): RepayLoanEvent | null {
-    return changetype<RepayLoanEvent | null>(store.get("RepayLoanEvent", id));
+  static load(id: Int8): RepayLoanEvent | null {
+    return changetype<RepayLoanEvent | null>(
+      store.get("RepayLoanEvent", id.toString()),
+    );
   }
 
   get id(): i64 {
@@ -2074,9 +2077,9 @@ export class RepayLoanEvent extends Entity {
 }
 
 export class ExtendLoanEvent extends Entity {
-  constructor(id: string) {
+  constructor(id: Int8) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromI64(id));
   }
 
   save(): void {
@@ -2084,21 +2087,23 @@ export class ExtendLoanEvent extends Entity {
     assert(id != null, "Cannot save ExtendLoanEvent entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type ExtendLoanEvent must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.INT8,
+        `Entities of type ExtendLoanEvent must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("ExtendLoanEvent", id.toString(), this);
+      store.set("ExtendLoanEvent", id.toI64().toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ExtendLoanEvent | null {
+  static loadInBlock(id: Int8): ExtendLoanEvent | null {
     return changetype<ExtendLoanEvent | null>(
-      store.get_in_block("ExtendLoanEvent", id),
+      store.get_in_block("ExtendLoanEvent", id.toString()),
     );
   }
 
-  static load(id: string): ExtendLoanEvent | null {
-    return changetype<ExtendLoanEvent | null>(store.get("ExtendLoanEvent", id));
+  static load(id: Int8): ExtendLoanEvent | null {
+    return changetype<ExtendLoanEvent | null>(
+      store.get("ExtendLoanEvent", id.toString()),
+    );
   }
 
   get id(): i64 {
@@ -2667,6 +2672,1441 @@ export class ClearinghouseCumulativeStats extends Entity {
   }
 }
 
+export class MonoCoolerAccount extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save MonoCoolerAccount entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type MonoCoolerAccount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerAccount", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): MonoCoolerAccount | null {
+    return changetype<MonoCoolerAccount | null>(
+      store.get_in_block("MonoCoolerAccount", id),
+    );
+  }
+
+  static load(id: string): MonoCoolerAccount | null {
+    return changetype<MonoCoolerAccount | null>(
+      store.get("MonoCoolerAccount", id),
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): Bytes {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set address(value: Bytes) {
+    this.set("address", Value.fromBytes(value));
+  }
+
+  get collateral(): BigInt {
+    let value = this.get("collateral");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set collateral(value: BigInt) {
+    this.set("collateral", Value.fromBigInt(value));
+  }
+
+  get debt(): BigInt {
+    let value = this.get("debt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set debt(value: BigInt) {
+    this.set("debt", Value.fromBigInt(value));
+  }
+
+  get interestAccumulatorRay(): BigInt {
+    let value = this.get("interestAccumulatorRay");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set interestAccumulatorRay(value: BigInt) {
+    this.set("interestAccumulatorRay", Value.fromBigInt(value));
+  }
+
+  get ltv(): BigInt {
+    let value = this.get("ltv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ltv(value: BigInt) {
+    this.set("ltv", Value.fromBigInt(value));
+  }
+
+  get healthFactor(): BigInt {
+    let value = this.get("healthFactor");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set healthFactor(value: BigInt) {
+    this.set("healthFactor", Value.fromBigInt(value));
+  }
+
+  get updatedAt(): BigInt {
+    let value = this.get("updatedAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set updatedAt(value: BigInt) {
+    this.set("updatedAt", Value.fromBigInt(value));
+  }
+
+  get snapshots(): MonoCoolerAccountSnapshotLoader {
+    return new MonoCoolerAccountSnapshotLoader(
+      "MonoCoolerAccount",
+      this.get("id")!.toString(),
+      "snapshots",
+    );
+  }
+
+  get activities(): MonoCoolerActivityLoader {
+    return new MonoCoolerActivityLoader(
+      "MonoCoolerAccount",
+      this.get("id")!.toString(),
+      "activities",
+    );
+  }
+}
+
+export class MonoCoolerGlobalState extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save MonoCoolerGlobalState entity without an ID",
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type MonoCoolerGlobalState must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerGlobalState", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): MonoCoolerGlobalState | null {
+    return changetype<MonoCoolerGlobalState | null>(
+      store.get_in_block("MonoCoolerGlobalState", id),
+    );
+  }
+
+  static load(id: string): MonoCoolerGlobalState | null {
+    return changetype<MonoCoolerGlobalState | null>(
+      store.get("MonoCoolerGlobalState", id),
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get totalCollateral(): BigInt {
+    let value = this.get("totalCollateral");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalCollateral(value: BigInt) {
+    this.set("totalCollateral", Value.fromBigInt(value));
+  }
+
+  get totalDebt(): BigInt {
+    let value = this.get("totalDebt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalDebt(value: BigInt) {
+    this.set("totalDebt", Value.fromBigInt(value));
+  }
+
+  get interestAccumulatorRay(): BigInt {
+    let value = this.get("interestAccumulatorRay");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set interestAccumulatorRay(value: BigInt) {
+    this.set("interestAccumulatorRay", Value.fromBigInt(value));
+  }
+
+  get interestRateWad(): BigInt {
+    let value = this.get("interestRateWad");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set interestRateWad(value: BigInt) {
+    this.set("interestRateWad", Value.fromBigInt(value));
+  }
+
+  get ltvOracle(): Bytes {
+    let value = this.get("ltvOracle");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set ltvOracle(value: Bytes) {
+    this.set("ltvOracle", Value.fromBytes(value));
+  }
+
+  get liquidationPaused(): boolean {
+    let value = this.get("liquidationPaused");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set liquidationPaused(value: boolean) {
+    this.set("liquidationPaused", Value.fromBoolean(value));
+  }
+
+  get borrowsPaused(): boolean {
+    let value = this.get("borrowsPaused");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set borrowsPaused(value: boolean) {
+    this.set("borrowsPaused", Value.fromBoolean(value));
+  }
+
+  get treasuryBorrower(): Bytes {
+    let value = this.get("treasuryBorrower");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set treasuryBorrower(value: Bytes) {
+    this.set("treasuryBorrower", Value.fromBytes(value));
+  }
+
+  get updatedAt(): BigInt {
+    let value = this.get("updatedAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set updatedAt(value: BigInt) {
+    this.set("updatedAt", Value.fromBigInt(value));
+  }
+
+  get snapshots(): MonoCoolerGlobalSnapshotLoader {
+    return new MonoCoolerGlobalSnapshotLoader(
+      "MonoCoolerGlobalState",
+      this.get("id")!.toString(),
+      "snapshots",
+    );
+  }
+
+  get ltvOracleChanges(): MonoCoolerLtvOracleChangeLoader {
+    return new MonoCoolerLtvOracleChangeLoader(
+      "MonoCoolerGlobalState",
+      this.get("id")!.toString(),
+      "ltvOracleChanges",
+    );
+  }
+}
+
+export class MonoCoolerAccountSnapshot extends Entity {
+  constructor(id: Int8) {
+    super();
+    this.set("id", Value.fromI64(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save MonoCoolerAccountSnapshot entity without an ID",
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.INT8,
+        `Entities of type MonoCoolerAccountSnapshot must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerAccountSnapshot", id.toI64().toString(), this);
+    }
+  }
+
+  static loadInBlock(id: Int8): MonoCoolerAccountSnapshot | null {
+    return changetype<MonoCoolerAccountSnapshot | null>(
+      store.get_in_block("MonoCoolerAccountSnapshot", id.toString()),
+    );
+  }
+
+  static load(id: Int8): MonoCoolerAccountSnapshot | null {
+    return changetype<MonoCoolerAccountSnapshot | null>(
+      store.get("MonoCoolerAccountSnapshot", id.toString()),
+    );
+  }
+
+  get id(): i64 {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI64();
+    }
+  }
+
+  set id(value: i64) {
+    this.set("id", Value.fromI64(value));
+  }
+
+  get timestamp(): i64 {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toTimestamp();
+    }
+  }
+
+  set timestamp(value: i64) {
+    this.set("timestamp", Value.fromTimestamp(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get collateral(): BigInt {
+    let value = this.get("collateral");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set collateral(value: BigInt) {
+    this.set("collateral", Value.fromBigInt(value));
+  }
+
+  get debt(): BigInt {
+    let value = this.get("debt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set debt(value: BigInt) {
+    this.set("debt", Value.fromBigInt(value));
+  }
+
+  get ltv(): BigInt {
+    let value = this.get("ltv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ltv(value: BigInt) {
+    this.set("ltv", Value.fromBigInt(value));
+  }
+
+  get healthFactor(): BigInt {
+    let value = this.get("healthFactor");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set healthFactor(value: BigInt) {
+    this.set("healthFactor", Value.fromBigInt(value));
+  }
+
+  get maxOriginationLtv(): BigInt {
+    let value = this.get("maxOriginationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxOriginationLtv(value: BigInt) {
+    this.set("maxOriginationLtv", Value.fromBigInt(value));
+  }
+
+  get liquidationLtv(): BigInt {
+    let value = this.get("liquidationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set liquidationLtv(value: BigInt) {
+    this.set("liquidationLtv", Value.fromBigInt(value));
+  }
+}
+
+export class MonoCoolerGlobalSnapshot extends Entity {
+  constructor(id: Int8) {
+    super();
+    this.set("id", Value.fromI64(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save MonoCoolerGlobalSnapshot entity without an ID",
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.INT8,
+        `Entities of type MonoCoolerGlobalSnapshot must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerGlobalSnapshot", id.toI64().toString(), this);
+    }
+  }
+
+  static loadInBlock(id: Int8): MonoCoolerGlobalSnapshot | null {
+    return changetype<MonoCoolerGlobalSnapshot | null>(
+      store.get_in_block("MonoCoolerGlobalSnapshot", id.toString()),
+    );
+  }
+
+  static load(id: Int8): MonoCoolerGlobalSnapshot | null {
+    return changetype<MonoCoolerGlobalSnapshot | null>(
+      store.get("MonoCoolerGlobalSnapshot", id.toString()),
+    );
+  }
+
+  get id(): i64 {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI64();
+    }
+  }
+
+  set id(value: i64) {
+    this.set("id", Value.fromI64(value));
+  }
+
+  get timestamp(): i64 {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toTimestamp();
+    }
+  }
+
+  set timestamp(value: i64) {
+    this.set("timestamp", Value.fromTimestamp(value));
+  }
+
+  get globalState(): string {
+    let value = this.get("globalState");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set globalState(value: string) {
+    this.set("globalState", Value.fromString(value));
+  }
+
+  get totalCollateral(): BigInt {
+    let value = this.get("totalCollateral");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalCollateral(value: BigInt) {
+    this.set("totalCollateral", Value.fromBigInt(value));
+  }
+
+  get totalDebt(): BigInt {
+    let value = this.get("totalDebt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalDebt(value: BigInt) {
+    this.set("totalDebt", Value.fromBigInt(value));
+  }
+
+  get interestRateWad(): BigInt {
+    let value = this.get("interestRateWad");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set interestRateWad(value: BigInt) {
+    this.set("interestRateWad", Value.fromBigInt(value));
+  }
+
+  get maxOriginationLtv(): BigInt {
+    let value = this.get("maxOriginationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxOriginationLtv(value: BigInt) {
+    this.set("maxOriginationLtv", Value.fromBigInt(value));
+  }
+
+  get liquidationLtv(): BigInt {
+    let value = this.get("liquidationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set liquidationLtv(value: BigInt) {
+    this.set("liquidationLtv", Value.fromBigInt(value));
+  }
+}
+
+export class MonoCoolerActivity extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save MonoCoolerActivity entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type MonoCoolerActivity must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerActivity", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): MonoCoolerActivity | null {
+    return changetype<MonoCoolerActivity | null>(
+      store.get_in_block("MonoCoolerActivity", id),
+    );
+  }
+
+  static load(id: string): MonoCoolerActivity | null {
+    return changetype<MonoCoolerActivity | null>(
+      store.get("MonoCoolerActivity", id),
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get type(): string {
+    let value = this.get("type");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set type(value: string) {
+    this.set("type", Value.fromString(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
+  get collateral(): BigInt | null {
+    let value = this.get("collateral");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set collateral(value: BigInt | null) {
+    if (!value) {
+      this.unset("collateral");
+    } else {
+      this.set("collateral", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get debt(): BigInt | null {
+    let value = this.get("debt");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set debt(value: BigInt | null) {
+    if (!value) {
+      this.unset("debt");
+    } else {
+      this.set("debt", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get ltv(): BigInt | null {
+    let value = this.get("ltv");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ltv(value: BigInt | null) {
+    if (!value) {
+      this.unset("ltv");
+    } else {
+      this.set("ltv", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get maxOriginationLtv(): BigInt | null {
+    let value = this.get("maxOriginationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxOriginationLtv(value: BigInt | null) {
+    if (!value) {
+      this.unset("maxOriginationLtv");
+    } else {
+      this.set("maxOriginationLtv", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get liquidationLtv(): BigInt | null {
+    let value = this.get("liquidationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set liquidationLtv(value: BigInt | null) {
+    if (!value) {
+      this.unset("liquidationLtv");
+    } else {
+      this.set("liquidationLtv", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get txHash(): Bytes {
+    let value = this.get("txHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set txHash(value: Bytes) {
+    this.set("txHash", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get liquidationIncentive(): BigInt | null {
+    let value = this.get("liquidationIncentive");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set liquidationIncentive(value: BigInt | null) {
+    if (!value) {
+      this.unset("liquidationIncentive");
+    } else {
+      this.set("liquidationIncentive", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get collateralSeized(): BigInt | null {
+    let value = this.get("collateralSeized");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set collateralSeized(value: BigInt | null) {
+    if (!value) {
+      this.unset("collateralSeized");
+    } else {
+      this.set("collateralSeized", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get debtWiped(): BigInt | null {
+    let value = this.get("debtWiped");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set debtWiped(value: BigInt | null) {
+    if (!value) {
+      this.unset("debtWiped");
+    } else {
+      this.set("debtWiped", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
+export class MonoCoolerLtvOracleChange extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save MonoCoolerLtvOracleChange entity without an ID",
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type MonoCoolerLtvOracleChange must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerLtvOracleChange", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): MonoCoolerLtvOracleChange | null {
+    return changetype<MonoCoolerLtvOracleChange | null>(
+      store.get_in_block("MonoCoolerLtvOracleChange", id),
+    );
+  }
+
+  static load(id: string): MonoCoolerLtvOracleChange | null {
+    return changetype<MonoCoolerLtvOracleChange | null>(
+      store.get("MonoCoolerLtvOracleChange", id),
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get globalState(): string {
+    let value = this.get("globalState");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set globalState(value: string) {
+    this.set("globalState", Value.fromString(value));
+  }
+
+  get oldOracle(): Bytes {
+    let value = this.get("oldOracle");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set oldOracle(value: Bytes) {
+    this.set("oldOracle", Value.fromBytes(value));
+  }
+
+  get newOracle(): Bytes {
+    let value = this.get("newOracle");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set newOracle(value: Bytes) {
+    this.set("newOracle", Value.fromBytes(value));
+  }
+
+  get oldMaxOriginationLtv(): BigInt {
+    let value = this.get("oldMaxOriginationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set oldMaxOriginationLtv(value: BigInt) {
+    this.set("oldMaxOriginationLtv", Value.fromBigInt(value));
+  }
+
+  get oldLiquidationLtv(): BigInt {
+    let value = this.get("oldLiquidationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set oldLiquidationLtv(value: BigInt) {
+    this.set("oldLiquidationLtv", Value.fromBigInt(value));
+  }
+
+  get newMaxOriginationLtv(): BigInt {
+    let value = this.get("newMaxOriginationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set newMaxOriginationLtv(value: BigInt) {
+    this.set("newMaxOriginationLtv", Value.fromBigInt(value));
+  }
+
+  get newLiquidationLtv(): BigInt {
+    let value = this.get("newLiquidationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set newLiquidationLtv(value: BigInt) {
+    this.set("newLiquidationLtv", Value.fromBigInt(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+}
+
+export class MonoCoolerLoanOrigination extends Entity {
+  constructor(id: Int8) {
+    super();
+    this.set("id", Value.fromI64(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save MonoCoolerLoanOrigination entity without an ID",
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.INT8,
+        `Entities of type MonoCoolerLoanOrigination must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerLoanOrigination", id.toI64().toString(), this);
+    }
+  }
+
+  static loadInBlock(id: Int8): MonoCoolerLoanOrigination | null {
+    return changetype<MonoCoolerLoanOrigination | null>(
+      store.get_in_block("MonoCoolerLoanOrigination", id.toString()),
+    );
+  }
+
+  static load(id: Int8): MonoCoolerLoanOrigination | null {
+    return changetype<MonoCoolerLoanOrigination | null>(
+      store.get("MonoCoolerLoanOrigination", id.toString()),
+    );
+  }
+
+  get id(): i64 {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI64();
+    }
+  }
+
+  set id(value: i64) {
+    this.set("id", Value.fromI64(value));
+  }
+
+  get timestamp(): i64 {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toTimestamp();
+    }
+  }
+
+  set timestamp(value: i64) {
+    this.set("timestamp", Value.fromTimestamp(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get borrowAmount(): BigInt {
+    let value = this.get("borrowAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set borrowAmount(value: BigInt) {
+    this.set("borrowAmount", Value.fromBigInt(value));
+  }
+
+  get resultingLtv(): BigInt {
+    let value = this.get("resultingLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set resultingLtv(value: BigInt) {
+    this.set("resultingLtv", Value.fromBigInt(value));
+  }
+
+  get maxOriginationLtv(): BigInt {
+    let value = this.get("maxOriginationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxOriginationLtv(value: BigInt) {
+    this.set("maxOriginationLtv", Value.fromBigInt(value));
+  }
+
+  get liquidationLtv(): BigInt {
+    let value = this.get("liquidationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set liquidationLtv(value: BigInt) {
+    this.set("liquidationLtv", Value.fromBigInt(value));
+  }
+
+  get collateralAtTime(): BigInt {
+    let value = this.get("collateralAtTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set collateralAtTime(value: BigInt) {
+    this.set("collateralAtTime", Value.fromBigInt(value));
+  }
+
+  get debtAtTime(): BigInt {
+    let value = this.get("debtAtTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set debtAtTime(value: BigInt) {
+    this.set("debtAtTime", Value.fromBigInt(value));
+  }
+
+  get healthFactor(): BigInt {
+    let value = this.get("healthFactor");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set healthFactor(value: BigInt) {
+    this.set("healthFactor", Value.fromBigInt(value));
+  }
+
+  get utilizationRatio(): BigInt {
+    let value = this.get("utilizationRatio");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set utilizationRatio(value: BigInt) {
+    this.set("utilizationRatio", Value.fromBigInt(value));
+  }
+
+  get txHash(): Bytes {
+    let value = this.get("txHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set txHash(value: Bytes) {
+    this.set("txHash", Value.fromBytes(value));
+  }
+}
+
+export class MonoCoolerLiquidation extends Entity {
+  constructor(id: Int8) {
+    super();
+    this.set("id", Value.fromI64(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save MonoCoolerLiquidation entity without an ID",
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.INT8,
+        `Entities of type MonoCoolerLiquidation must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("MonoCoolerLiquidation", id.toI64().toString(), this);
+    }
+  }
+
+  static loadInBlock(id: Int8): MonoCoolerLiquidation | null {
+    return changetype<MonoCoolerLiquidation | null>(
+      store.get_in_block("MonoCoolerLiquidation", id.toString()),
+    );
+  }
+
+  static load(id: Int8): MonoCoolerLiquidation | null {
+    return changetype<MonoCoolerLiquidation | null>(
+      store.get("MonoCoolerLiquidation", id.toString()),
+    );
+  }
+
+  get id(): i64 {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI64();
+    }
+  }
+
+  set id(value: i64) {
+    this.set("id", Value.fromI64(value));
+  }
+
+  get timestamp(): i64 {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toTimestamp();
+    }
+  }
+
+  set timestamp(value: i64) {
+    this.set("timestamp", Value.fromTimestamp(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get liquidator(): Bytes {
+    let value = this.get("liquidator");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set liquidator(value: Bytes) {
+    this.set("liquidator", Value.fromBytes(value));
+  }
+
+  get collateralSeized(): BigInt {
+    let value = this.get("collateralSeized");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set collateralSeized(value: BigInt) {
+    this.set("collateralSeized", Value.fromBigInt(value));
+  }
+
+  get debtWiped(): BigInt {
+    let value = this.get("debtWiped");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set debtWiped(value: BigInt) {
+    this.set("debtWiped", Value.fromBigInt(value));
+  }
+
+  get incentiveReceived(): BigInt {
+    let value = this.get("incentiveReceived");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set incentiveReceived(value: BigInt) {
+    this.set("incentiveReceived", Value.fromBigInt(value));
+  }
+
+  get ltvAtLiquidation(): BigInt {
+    let value = this.get("ltvAtLiquidation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ltvAtLiquidation(value: BigInt) {
+    this.set("ltvAtLiquidation", Value.fromBigInt(value));
+  }
+
+  get maxOriginationLtv(): BigInt {
+    let value = this.get("maxOriginationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxOriginationLtv(value: BigInt) {
+    this.set("maxOriginationLtv", Value.fromBigInt(value));
+  }
+
+  get liquidationLtv(): BigInt {
+    let value = this.get("liquidationLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set liquidationLtv(value: BigInt) {
+    this.set("liquidationLtv", Value.fromBigInt(value));
+  }
+
+  get excessLtv(): BigInt {
+    let value = this.get("excessLtv");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set excessLtv(value: BigInt) {
+    this.set("excessLtv", Value.fromBigInt(value));
+  }
+
+  get healthFactorAtLiquidation(): BigInt {
+    let value = this.get("healthFactorAtLiquidation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set healthFactorAtLiquidation(value: BigInt) {
+    this.set("healthFactorAtLiquidation", Value.fromBigInt(value));
+  }
+
+  get txHash(): Bytes {
+    let value = this.get("txHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set txHash(value: Bytes) {
+    this.set("txHash", Value.fromBytes(value));
+  }
+}
+
 export class ClearinghouseLoader extends Entity {
   _entity: string;
   _field: string;
@@ -2826,5 +4266,77 @@ export class ExtendLoanEventLoader extends Entity {
   load(): ExtendLoanEvent[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<ExtendLoanEvent[]>(value);
+  }
+}
+
+export class MonoCoolerAccountSnapshotLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): MonoCoolerAccountSnapshot[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<MonoCoolerAccountSnapshot[]>(value);
+  }
+}
+
+export class MonoCoolerActivityLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): MonoCoolerActivity[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<MonoCoolerActivity[]>(value);
+  }
+}
+
+export class MonoCoolerGlobalSnapshotLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): MonoCoolerGlobalSnapshot[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<MonoCoolerGlobalSnapshot[]>(value);
+  }
+}
+
+export class MonoCoolerLtvOracleChangeLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): MonoCoolerLtvOracleChange[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<MonoCoolerLtvOracleChange[]>(value);
   }
 }

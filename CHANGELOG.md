@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.1.0 (2025-08-04)
+
+- Amended the schema to use timeseries data
+- Adds Cooler v2 support
+
 ## 2.0.1 (2024-11-26)
 
 - Adds support for Clearinghouse v1.2

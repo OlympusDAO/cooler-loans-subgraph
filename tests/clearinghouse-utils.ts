@@ -1,22 +1,19 @@
-import { newMockEvent } from "matchstick-as"
-import { ethereum } from "@graphprotocol/graph-ts"
-import {
-  Deactivated,
-  Reactivated
-} from "../generated/Clearinghouse/Clearinghouse"
+import { newMockEvent } from "matchstick-as";
+import { ethereum } from "@graphprotocol/graph-ts";
+import { Deactivate, Activate } from "../generated/Clearinghouse_V1/Clearinghouse_V1_2";
 
-export function createDeactivatedEvent(): Deactivated {
-  let deactivatedEvent = changetype<Deactivated>(newMockEvent())
+export function createDeactivatedEvent(): Deactivate {
+  let deactivatedEvent = changetype<Deactivate>(newMockEvent());
 
-  deactivatedEvent.parameters = new Array()
+  deactivatedEvent.parameters = new Array();
 
-  return deactivatedEvent
+  return deactivatedEvent;
 }
 
-export function createReactivatedEvent(): Reactivated {
-  let reactivatedEvent = changetype<Reactivated>(newMockEvent())
+export function createActivateEvent(): Activate {
+  let reactivatedEvent = changetype<Activate>(newMockEvent());
 
-  reactivatedEvent.parameters = new Array()
+  reactivatedEvent.parameters = new Array();
 
-  return reactivatedEvent
+  return reactivatedEvent;
 }

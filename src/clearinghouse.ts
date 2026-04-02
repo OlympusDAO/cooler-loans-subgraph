@@ -3,7 +3,7 @@ import { Clearinghouse, ClearinghouseSingleton, ClearinghouseSnapshot, DefundEve
 import { Clearinghouse as ClearinghouseContract, Defund, Rebalance } from "../generated/Clearinghouse_V1/Clearinghouse";
 import { Clearinghouse_V1_2 } from "../generated/ClearinghouseV1_1/Clearinghouse_V1_2";
 import { ERC20 } from "../generated/Clearinghouse_V1/ERC20";
-import { ERC4626 } from "../generated/Clearinghouse_v1/ERC4626";
+import { ERC4626 } from "../generated/Clearinghouse_V1/ERC4626";
 import { toDecimal } from "./numberHelper";
 import { getISO8601DateStringFromTimestamp } from "./dateHelper";
 import { getTRSRY } from "./bophades";

@@ -12,19 +12,25 @@
     "create-local": "graph create --node http://localhost:8020/ cooler-loans",
     "remove-local": "graph remove --node http://localhost:8020/ cooler-loans",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cooler-loans",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
     "preinstall": "npx only-allow@1.2.2 pnpm"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.97.1",
+    "@graphprotocol/graph-cli": "0.98.1",
     "@graphprotocol/graph-ts": "^0.38.1"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "@types/node": "^18",
     "assemblyscript": "0.19.10",
     "assemblyscript-prettier": "^3.0.1",
+    "eslint": "^8.16.0",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "matchstick-as": "0.6.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
@@ -37,6 +43,8 @@
   },
   "pnpm": {
     "overrides": {
+      "@pnpm/npm-conf": ">=3.0.2",
+      "@pnpm/npm-conf@<3.0.2": ">=3.0.2",
       "axios": ">=0.30.3",
       "axios@<0.30.0": ">=0.30.0",
       "axios@<=0.30.2": ">=0.30.3",

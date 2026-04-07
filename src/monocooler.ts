@@ -1,43 +1,44 @@
 import {
-  BigInt,
+  Address,
   BigDecimal,
+  BigInt,
   Bytes,
   ethereum,
-  Address,
   Int8,
 } from "@graphprotocol/graph-ts";
+
 import {
+  Borrow,
+  BorrowPausedSet,
   CollateralAdded,
   CollateralWithdrawn,
-  Borrow,
-  Repay,
-  Liquidated,
   InterestRateSet,
-  LtvOracleSet,
+  Liquidated,
   LiquidationsPausedSet,
-  BorrowPausedSet,
-  TreasuryBorrowerSet,
+  LtvOracleSet,
   MonoCooler,
+  Repay,
+  TreasuryBorrowerSet,
 } from "../generated/MonoCooler/MonoCooler";
 import {
   MonoCoolerAccount,
-  MonoCoolerGlobalState,
   MonoCoolerAccountSnapshot,
-  MonoCoolerGlobalSnapshot,
   MonoCoolerActivity,
-  MonoCoolerLtvOracleChange,
-  MonoCoolerLoanOrigination,
+  MonoCoolerGlobalSnapshot,
+  MonoCoolerGlobalState,
   MonoCoolerLiquidation,
+  MonoCoolerLoanOrigination,
+  MonoCoolerLtvOracleChange,
 } from "../generated/schema";
 
 // Helper: Get LTV values from the contract (raw BigInt WAD values)
 function getLtvValues(contractAddress: Address): BigInt[] {
-  let contract = MonoCooler.bind(contractAddress);
-  let ltvResult = contract.try_loanToValues();
+  const contract = MonoCooler.bind(contractAddress);
+  const ltvResult = contract.try_loanToValues();
   
   if (!ltvResult.reverted) {
-    let maxOriginationLtv = ltvResult.value.getMaxOriginationLtv();
-    let liquidationLtv = ltvResult.value.getLiquidationLtv();
+    const maxOriginationLtv = ltvResult.value.getMaxOriginationLtv();
+    const liquidationLtv = ltvResult.value.getLiquidationLtv();
     return [maxOriginationLtv, liquidationLtv];
   } else {
     // Fallback values if contract call fails (example values in WAD)
@@ -50,23 +51,23 @@ function getOrCreateGlobalState(
   contractAddress: Address,
   timestamp: BigInt
 ): MonoCoolerGlobalState {
-  let id = "singleton";
+  const id = "singleton";
   let state = MonoCoolerGlobalState.load(id);
   if (!state) {
     state = new MonoCoolerGlobalState(id);
     
     // Load initial values from the contract instead of defaulting to zero
-    let contract = MonoCooler.bind(contractAddress);
+    const contract = MonoCooler.bind(contractAddress);
     
     // Load contract state
-    let totalCollateralResult = contract.try_totalCollateral();
-    let totalDebtResult = contract.try_totalDebt();
-    let interestAccumulatorRayResult = contract.try_interestAccumulatorRay();
-    let interestRateWadResult = contract.try_interestRateWad();
-    let ltvOracleResult = contract.try_ltvOracle();
-    let liquidationsPausedResult = contract.try_liquidationsPaused();
-    let borrowsPausedResult = contract.try_borrowsPaused();
-    let treasuryBorrowerResult = contract.try_treasuryBorrower();
+    const totalCollateralResult = contract.try_totalCollateral();
+    const totalDebtResult = contract.try_totalDebt();
+    const interestAccumulatorRayResult = contract.try_interestAccumulatorRay();
+    const interestRateWadResult = contract.try_interestRateWad();
+    const ltvOracleResult = contract.try_ltvOracle();
+    const liquidationsPausedResult = contract.try_liquidationsPaused();
+    const borrowsPausedResult = contract.try_borrowsPaused();
+    const treasuryBorrowerResult = contract.try_treasuryBorrower();
     
     // Set values from contract or fallback to sensible defaults
     state.totalCollateral = totalCollateralResult.reverted
@@ -125,13 +126,13 @@ function updateAccountMetrics(
   account: MonoCoolerAccount,
   contractAddress: Address
 ): void {
-  let contract = MonoCooler.bind(contractAddress);
-  let positionResult = contract.try_accountPosition(
+  const contract = MonoCooler.bind(contractAddress);
+  const positionResult = contract.try_accountPosition(
     Address.fromBytes(account.address)
   );
 
   if (!positionResult.reverted) {
-    let position = positionResult.value;
+    const position = positionResult.value;
 
     // Store raw WAD values from contract (no conversion)
     account.ltv = position.currentLtv;
@@ -149,7 +150,7 @@ function createAccountSnapshot(
   event: ethereum.Event,
   ltvValues: BigInt[]
 ): void {
-  let snapshot = new MonoCoolerAccountSnapshot(i64(1)); // ID is auto-incremented
+  const snapshot = new MonoCoolerAccountSnapshot(i64(1)); // ID is auto-incremented
   // timestamp is auto-set by The Graph
   snapshot.account = account.id;
   snapshot.collateral = account.collateral;
@@ -167,7 +168,7 @@ function createGlobalSnapshot(
   event: ethereum.Event,
   ltvValues: BigInt[]
 ): void {
-  let snapshot = new MonoCoolerGlobalSnapshot(i64(1)); // ID is auto-incremented
+  const snapshot = new MonoCoolerGlobalSnapshot(i64(1)); // ID is auto-incremented
   // timestamp is auto-set by The Graph
   snapshot.globalState = globalState.id;
   snapshot.totalCollateral = globalState.totalCollateral;
@@ -189,7 +190,7 @@ function createActivity(
   ltvValues: BigInt[],
   liquidationData: BigInt[] | null = null
 ): void {
-  let activity = new MonoCoolerActivity(
+  const activity = new MonoCoolerActivity(
     event.transaction.hash.toHexString() + "-" + event.logIndex.toString()
   );
   activity.type = type;
@@ -215,13 +216,13 @@ function createActivity(
 
 // Event Handlers
 export function handleCollateralAdded(event: CollateralAdded): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
-  let account = getOrCreateAccount(event.params.onBehalfOf);
-  let amount = event.params.collateralAmount;
+  const account = getOrCreateAccount(event.params.onBehalfOf);
+  const amount = event.params.collateralAmount;
 
   // Update account
   account.collateral = account.collateral.plus(amount);
@@ -252,13 +253,13 @@ export function handleCollateralAdded(event: CollateralAdded): void {
 }
 
 export function handleCollateralWithdrawn(event: CollateralWithdrawn): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
-  let account = getOrCreateAccount(event.params.onBehalfOf);
-  let amount = event.params.collateralAmount;
+  const account = getOrCreateAccount(event.params.onBehalfOf);
+  const amount = event.params.collateralAmount;
 
   // Update account
   account.collateral = account.collateral.minus(amount);
@@ -289,13 +290,13 @@ export function handleCollateralWithdrawn(event: CollateralWithdrawn): void {
 }
 
 export function handleBorrow(event: Borrow): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
-  let account = getOrCreateAccount(event.params.onBehalfOf);
-  let amount = event.params.amount;
+  const account = getOrCreateAccount(event.params.onBehalfOf);
+  const amount = event.params.amount;
 
   // Update account
   account.debt = account.debt.plus(amount);
@@ -310,7 +311,7 @@ export function handleBorrow(event: Borrow): void {
   globalState.save();
 
   // Create origination record (timeseries)
-  let origination = new MonoCoolerLoanOrigination(i64(1)); // ID is auto-incremented
+  const origination = new MonoCoolerLoanOrigination(i64(1)); // ID is auto-incremented
   // timestamp is auto-set by The Graph
   origination.account = account.id;
   origination.borrowAmount = amount;
@@ -344,13 +345,13 @@ export function handleBorrow(event: Borrow): void {
 }
 
 export function handleRepay(event: Repay): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
-  let account = getOrCreateAccount(event.params.onBehalfOf);
-  let amount = event.params.repayAmount;
+  const account = getOrCreateAccount(event.params.onBehalfOf);
+  const amount = event.params.repayAmount;
 
   // Update account
   account.debt = account.debt.minus(amount);
@@ -387,22 +388,22 @@ export function handleRepay(event: Repay): void {
 }
 
 export function handleLiquidated(event: Liquidated): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
-  let account = getOrCreateAccount(event.params.account);
-  let collateralSeized = event.params.collateralSeized;
-  let debtWiped = event.params.debtWiped;
-  let incentive = event.params.incentives;
+  const account = getOrCreateAccount(event.params.account);
+  const collateralSeized = event.params.collateralSeized;
+  const debtWiped = event.params.debtWiped;
+  const incentive = event.params.incentives;
   
   // Capture LTV at liquidation before updating account
-  let ltvAtLiquidation = account.ltv;
-  let healthFactorAtLiquidation = account.healthFactor;
+  const ltvAtLiquidation = account.ltv;
+  const healthFactorAtLiquidation = account.healthFactor;
 
   // Create liquidation record (timeseries) before updating account
-  let liquidation = new MonoCoolerLiquidation(i64(1)); // ID is auto-incremented
+  const liquidation = new MonoCoolerLiquidation(i64(1)); // ID is auto-incremented
   // timestamp is auto-set by The Graph
   liquidation.account = account.id;
   liquidation.liquidator = event.params.caller;
@@ -444,7 +445,7 @@ export function handleLiquidated(event: Liquidated): void {
   createGlobalSnapshot(globalState, event, ltvValues);
 
   // Activity
-  let liquidationData = [incentive, collateralSeized, debtWiped];
+  const liquidationData = [incentive, collateralSeized, debtWiped];
   createActivity(
     "liquidate",
     account,
@@ -458,15 +459,15 @@ export function handleLiquidated(event: Liquidated): void {
 }
 
 export function handleLtvOracleSet(event: LtvOracleSet): void {
-  let globalState = getOrCreateGlobalState(
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
-  let oldOracle = globalState.ltvOracle;
-  let newOracle = event.params.oracle;
+  const oldOracle = globalState.ltvOracle;
+  const newOracle = event.params.oracle;
   
   // Get old LTV values (before oracle change)
-  let oldLtvValues = getLtvValues(event.address);
+  const oldLtvValues = getLtvValues(event.address);
   
   // Update global state
   globalState.ltvOracle = newOracle;
@@ -474,10 +475,10 @@ export function handleLtvOracleSet(event: LtvOracleSet): void {
   globalState.save();
   
   // Get new LTV values (after oracle change)
-  let newLtvValues = getLtvValues(event.address);
+  const newLtvValues = getLtvValues(event.address);
   
   // Create LTV oracle change record
-  let oracleChange = new MonoCoolerLtvOracleChange(
+  const oracleChange = new MonoCoolerLtvOracleChange(
     event.transaction.hash.toHexString() + "-" + event.logIndex.toString()
   );
   oracleChange.globalState = globalState.id;
@@ -497,8 +498,8 @@ export function handleLtvOracleSet(event: LtvOracleSet): void {
 }
 
 export function handleInterestRateSet(event: InterestRateSet): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
@@ -513,8 +514,8 @@ export function handleInterestRateSet(event: InterestRateSet): void {
 export function handleLiquidationsPausedSet(
   event: LiquidationsPausedSet
 ): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
@@ -527,8 +528,8 @@ export function handleLiquidationsPausedSet(
 }
 
 export function handleBorrowPausedSet(event: BorrowPausedSet): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );
@@ -541,8 +542,8 @@ export function handleBorrowPausedSet(event: BorrowPausedSet): void {
 }
 
 export function handleTreasuryBorrowerSet(event: TreasuryBorrowerSet): void {
-  let ltvValues = getLtvValues(event.address);
-  let globalState = getOrCreateGlobalState(
+  const ltvValues = getLtvValues(event.address);
+  const globalState = getOrCreateGlobalState(
     event.address,
     event.block.timestamp
   );

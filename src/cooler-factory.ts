@@ -1,28 +1,28 @@
 import { Address, BigDecimal, BigInt, Bytes, ethereum, log } from "@graphprotocol/graph-ts"
+
+import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory_V1/Cooler"
 import {
   ClearRequest,
   DefaultLoan,
+  ExtendLoan,
   RepayLoan,
   RequestLoan,
-  RescindRequest,
-  ExtendLoan
-} from "../generated/CoolerFactory_V1/CoolerFactory"
-import { Cooler, Cooler__getLoanResultValue0Struct } from "../generated/CoolerFactory_V1/Cooler"
+  RescindRequest} from "../generated/CoolerFactory_V1/CoolerFactory"
 import { ERC20 } from "../generated/CoolerFactory_V1/ERC20"
 import {
   ClaimDefaultedLoanEvent,
   ClearLoanRequestEvent,
-  RepayLoanEvent,
   CoolerLoan,
-  ExtendLoanEvent,
   CoolerLoanRequest,
-  RescindLoanRequestEvent,
+  ExtendLoanEvent,
+  RepayLoanEvent,
   RequestLoanEvent,
+  RescindLoanRequestEvent,
 } from "../generated/schema"
-import { toDecimal } from "./numberHelper"
-import { getISO8601DateStringFromTimestamp } from "./dateHelper"
-import { getGOhmPrice } from "./price"
 import { getOrCreateClearinghouse, populateClearinghouseSnapshot } from "./clearinghouse"
+import { getISO8601DateStringFromTimestamp } from "./dateHelper"
+import { toDecimal } from "./numberHelper"
+import { getGOhmPrice } from "./price"
 import { getBorrowerStats, updateBorrowerStats, updateLoanExtensionStats } from "./stats"
 
 // === Helpers ===
@@ -237,7 +237,7 @@ export function handleDefaultLoan(event: DefaultLoan): void {
   // Clearinghouse snapshot
   const clearinghouseSnapshot = populateClearinghouseSnapshot(loanData.lender, event);
 
-  //update the loan record
+  // update the loan record
   loanRecord.principal = BigDecimal.zero();
   loanRecord.interest = BigDecimal.zero();
   loanRecord.collateral = BigDecimal.zero();
@@ -286,7 +286,7 @@ export function handleRepayLoan(event: RepayLoan): void {
   eventRecord.transactionHash = event.transaction.hash;
 
   const debtDecimals = ERC20.bind(cooler.debt()).decimals();
-  let amountPaid = toDecimal(event.params.amount, debtDecimals);
+  const amountPaid = toDecimal(event.params.amount, debtDecimals);
   
   // Skip processing if amountPaid is 0
   if (amountPaid.equals(BigDecimal.zero())) {
@@ -340,7 +340,7 @@ export function handleRepayLoan(event: RepayLoan): void {
     }
   }
 
-  //update the loan record
+  // update the loan record
   loanRecord.principal = loanRecord.principal.plus(principalDelta);
   loanRecord.interest = loanRecord.interest.plus(interestDelta);
   loanRecord.collateral = loanRecord.collateral.plus(collateralDelta);

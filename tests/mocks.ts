@@ -1,13 +1,14 @@
 import { Address, BigDecimal, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts"
-import { ClearRequest } from "../generated/CoolerFactory_V1/CoolerFactory"
+
 import { Cooler } from "../generated/CoolerFactory_V1/Cooler"
+import { ClearRequest } from "../generated/CoolerFactory_V1/CoolerFactory"
 import {
   ClearLoanRequestEvent,
   CoolerLoan,
   CoolerLoanRequest
 } from "../generated/schema"
-import { toDecimal } from "../src/numberHelper"
 import { getISO8601DateStringFromTimestamp } from "../src/dateHelper"
+import { toDecimal } from "../src/numberHelper"
 
 // Function to build loan record ID
 function getLoanRecordId(coolerAddress: Address, loanId: BigInt): string {

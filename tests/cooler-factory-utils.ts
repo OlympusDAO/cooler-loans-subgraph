@@ -1,5 +1,7 @@
+import { Address, BigDecimal, BigInt, Bytes, ethereum, store, Value } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as";
-import { ethereum, Address, BigInt, BigDecimal, Bytes, store, Value } from "@graphprotocol/graph-ts";
+import { createMockedFunction, MockedFunction } from "matchstick-as/assembly/index";
+
 import {
   ClearRequest,
   DefaultLoan,
@@ -8,7 +10,6 @@ import {
   RescindRequest,
 } from "../generated/CoolerFactory_V1/CoolerFactory";
 import { ClearinghouseSnapshot } from "../generated/schema";
-import { createMockedFunction, MockedFunction } from "matchstick-as/assembly/index";
 import { COOLER_LOANS_CLEARINGHOUSE_V1 } from "../src/constants";
 
 // Mock function for ERC4626 previewRedeem calls - returns the same amount (1:1 ratio)
@@ -91,7 +92,7 @@ export function createMockClearinghouseSnapshot(
   timestamp: BigInt
 ): ClearinghouseSnapshot {
   // For a timeseries entity with Int8! ID, we need to use a numeric value in range -128 to 127
-  // @ts-ignore - using numeric constructor parameter for timeseries entity
+  // @ts-expect-error - using numeric constructor parameter for timeseries entity
   const snapshot = new ClearinghouseSnapshot("1");
   
   // Set fields in a different order, avoiding timestamp-related issues
@@ -121,9 +122,9 @@ export function createClearRequestEvent(
   reqID: BigInt,
   loanID: BigInt
 ): ClearRequest {
-  let clearRequestEvent = changetype<ClearRequest>(newMockEvent());
+  const clearRequestEvent = changetype<ClearRequest>(newMockEvent());
 
-  clearRequestEvent.parameters = new Array();
+  clearRequestEvent.parameters = [];
 
   clearRequestEvent.parameters.push(
     new ethereum.EventParam("cooler", ethereum.Value.fromAddress(cooler))
@@ -145,9 +146,9 @@ export function createDefaultLoanEvent(
   cooler: Address,
   loanID: BigInt
 ): DefaultLoan {
-  let defaultLoanEvent = changetype<DefaultLoan>(newMockEvent());
+  const defaultLoanEvent = changetype<DefaultLoan>(newMockEvent());
 
-  defaultLoanEvent.parameters = new Array();
+  defaultLoanEvent.parameters = [];
 
   defaultLoanEvent.parameters.push(
     new ethereum.EventParam("cooler", ethereum.Value.fromAddress(cooler))
@@ -164,9 +165,9 @@ export function createRepayLoanEvent(
   loanID: BigInt,
   amount: BigInt
 ): RepayLoan {
-  let repayLoanEvent = changetype<RepayLoan>(newMockEvent());
+  const repayLoanEvent = changetype<RepayLoan>(newMockEvent());
 
-  repayLoanEvent.parameters = new Array();
+  repayLoanEvent.parameters = [];
 
   repayLoanEvent.parameters.push(
     new ethereum.EventParam("cooler", ethereum.Value.fromAddress(cooler))
@@ -187,9 +188,9 @@ export function createRequestLoanEvent(
   debt: Address,
   reqID: BigInt
 ): RequestLoan {
-  let requestLoanEvent = changetype<RequestLoan>(newMockEvent());
+  const requestLoanEvent = changetype<RequestLoan>(newMockEvent());
 
-  requestLoanEvent.parameters = new Array();
+  requestLoanEvent.parameters = [];
 
   requestLoanEvent.parameters.push(
     new ethereum.EventParam("cooler", ethereum.Value.fromAddress(cooler))
@@ -214,9 +215,9 @@ export function createRescindRequestEvent(
   cooler: Address,
   reqID: BigInt
 ): RescindRequest {
-  let rescindRequestEvent = changetype<RescindRequest>(newMockEvent());
+  const rescindRequestEvent = changetype<RescindRequest>(newMockEvent());
 
-  rescindRequestEvent.parameters = new Array();
+  rescindRequestEvent.parameters = [];
 
   rescindRequestEvent.parameters.push(
     new ethereum.EventParam("cooler", ethereum.Value.fromAddress(cooler))

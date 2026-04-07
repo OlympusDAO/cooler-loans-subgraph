@@ -1,19 +1,18 @@
+import { Address, BigDecimal, BigInt, Bytes,ethereum } from "@graphprotocol/graph-ts"
 import {
-  assert,
-  describe,
-  test,
-  clearStore,
-  beforeAll,
   afterAll,
+  assert,
+  beforeAll,
+  clearStore,
   createMockedFunction,
+  describe,
+  mockFunction,
   newMockEvent,
-  mockFunction
-} from "matchstick-as/assembly/index"
-import { Address, BigInt, ethereum, BigDecimal, Bytes } from "@graphprotocol/graph-ts"
-import { createClearRequestEvent, setupMocks } from "./cooler-factory-utils"
-import { CoolerLoanRequest, ClearinghouseCumulativeStats, BorrowerStats } from "../generated/schema"
-import { COOLER_LOANS_CLEARINGHOUSE_V1 } from "../src/constants"
+  test} from "matchstick-as/assembly/index"
 
+import { BorrowerStats,ClearinghouseCumulativeStats, CoolerLoanRequest } from "../generated/schema"
+import { COOLER_LOANS_CLEARINGHOUSE_V1 } from "../src/constants"
+import { createClearRequestEvent, setupMocks } from "./cooler-factory-utils"
 // Import our custom mock handler directly
 import { handleClearRequestMock } from "./mocks"
 

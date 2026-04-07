@@ -1,12 +1,13 @@
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import {
+  afterAll,
   assert,
+  beforeAll,
+  clearStore,
   describe,
   test,
-  clearStore,
-  beforeAll,
-  afterAll,
 } from "matchstick-as/assembly/index";
-import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+
 import {
   BorrowerStats,
   ClearinghouseCumulativeStats,

@@ -2,3 +2,5 @@ node_modules/
 build/
 tests/.latest.json
 tests/.bin
+
+.pnpm-store/

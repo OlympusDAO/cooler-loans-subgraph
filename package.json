@@ -13,8 +13,7 @@
     "remove-local": "graph remove --node http://localhost:8020/ cooler-loans",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 cooler-loans",
     "lint": "eslint . --fix",
-    "lint:check": "eslint .",
-    "preinstall": "npx only-allow@1.2.2 pnpm"
+    "lint:check": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -37,9 +36,9 @@
   },
   "engines": {
     "node": ">=24",
-    "pnpm": ">=10.33.0",
+    "pnpm": ">=11.13.0 <12",
     "npm": "use-pnpm",
     "yarn": "use-pnpm"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@11.13.0"
 }

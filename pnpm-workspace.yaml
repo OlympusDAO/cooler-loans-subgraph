@@ -4,7 +4,7 @@ minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - "axios@1.16.0"
   - "form-data@4.0.6"
-onlyBuiltDependencies: []
+allowBuilds: {}
 overrides:
   "@pnpm/npm-conf@<3.0.2": "^3.0.2"
   "axios@<1.15.2": "^1.15.2"
